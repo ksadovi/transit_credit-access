@@ -11,7 +11,7 @@ map_station_distances = function(centroids, length = "all"){
   } else{
     end = length
   }
-  for(i in c(1:end)){
+  timing = system.time(for(i in c(1:end)){
     stats = data.frame()
     for(j in 1:length(stations$station)){
       tryCatch(
@@ -37,8 +37,8 @@ map_station_distances = function(centroids, length = "all"){
     tract = dmv_tract_centroids$GEOID[i]
     info2 = cbind(tract, min_dur, min_dist, closest_dur, closest_dist)
     routing = rbind(routing, info2)
-  }
-  return(routing)
+  })
+  return(list(routing, timing))
 }
 
 #This takes a really long time to run because it's super inefficient -- four tracts takes 50 seconds. 
