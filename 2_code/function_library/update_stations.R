@@ -20,4 +20,5 @@ update_stations = function(){
                            crs = 4326, agr = "constant")
   
   fwrite(station_poly, file = "3_output/cleaned_data/station_polygons.csv")
+  return(station_poly)
 }
