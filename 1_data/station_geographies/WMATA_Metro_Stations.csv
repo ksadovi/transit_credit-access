@@ -6,7 +6,7 @@ longitude,latitude ,station,lines_serviced,system ,open_date
 -77.49129547,39.00510972,Ashburn,Silver ,WMATA ,11/15/22
 -77.11142,38.88223,Ballston-MU,"Orange, Silver",WMATA ,12/1/79
 -76.9375,38.89053,Benning Road,"Blue, Silver",WMATA ,11/22/80
--77.09403,38.98436,Bethesda,Red,WMATA ,8/25/84
+-77.09403,38.98436,Bethesda,"Red, Purple",WMATA ,8/25/84
 -77.05277,38.81432,Braddock Road,"Blue, Yellow",WMATA ,12/17/83
 -76.91192,38.82697,Branch Ave,Green,WMATA ,1/13/01
 -76.99474,38.93367,Brookland-CUA,Red,WMATA ,2/4/78
@@ -15,7 +15,7 @@ longitude,latitude ,station,lines_serviced,system ,open_date
 -76.91627,38.91642,Cheverly,"Orange, Silver",WMATA ,11/20/78
 -77.09528,38.88757,Clarendon,"Orange, Silver",WMATA ,12/1/79
 -77.0586,38.93627,Cleveland Park,Red,WMATA ,12/5/81
--76.92776,38.97848,College Park-U of Md,Green,WMATA ,12/11/93
+-76.92776,38.97848,College Park-U of Md,"Green, Purple",WMATA ,12/11/93
 -77.03243,38.92906,Columbia Heights,Green,WMATA ,9/18/99
 -76.9875,38.84587,Congress Heights,Green,WMATA ,1/13/01
 -77.08473,38.89158,Court House,"Orange, Silver",WMATA ,12/1/79
@@ -60,7 +60,7 @@ longitude,latitude ,station,lines_serviced,system ,open_date
 -77.02189219,38.90547016,Mt Vernon Sq 7th St-Convention Center,"Green, Yellow",WMATA ,5/11/91
 -77.00403949,38.87701944,Navy Yard-Ballpark,Green ,WMATA ,12/28/91
 -76.95662697,38.85126864,Naylor Road,Green,WMATA ,1/13/01
--76.87153941,38.94820005,New Carrollton,Orange,WMATA ,11/20/78
+-76.87153941,38.94820005,New Carrollton,"Orange, Purple",WMATA ,11/20/78
 -77.00240978,38.90766839,NoMa-Gallaudet U,Red,WMATA ,11/20/04
 -77.11252571,39.04801228,North Bethesda,Red,WMATA ,12/15/84
 -77.05340062,38.86933089,Pentagon,"Blue, Yellow",WMATA ,7/1/77
@@ -97,6 +97,26 @@ longitude,latitude ,station,lines_serviced,system ,open_date
 -77.05014925,39.03912566,Wheaton,Red,WMATA ,9/22/90
 -77.33959,38.94806,Wiehle-Reston East,Silver,WMATA ,7/26/14
 -77.05191893,38.92466507,Woodley Park-Zoo/Adams Morgan,Red,WMATA ,12/5/81
+-77.076433,38.994713,Connecticut Avenue,Purple,WMATA ,NA
+ -77.053883,39.000362,Lyttonsville,Purple,WMATA ,NA
+-77.037991,38.998425,16th Street–Woodside,Purple,WMATA ,NA
+-77.031321,38.993841,Silver Spring,Purple,WMATA ,NA
+-77.0245347,38.9953099,Silver Spring Library,Purple,WMATA ,NA
+-77.014645,38.9999464,Dale Drive,Purple,WMATA ,NA
+-77.00682087,39.00173724,Manchester Place,Purple,WMATA ,NA
+-77.00178193,38.99986547,Long Branch,Purple,WMATA ,NA
+-76.99524804,38.99994947,Piney Branch Road,Purple,WMATA ,NA
+-76.98800857,38.99038676,Takoma–Langley,Purple,WMATA ,NA
+-76.9793847,38.98398128,Riggs Road,Purple,WMATA ,NA
+-76.95557837,38.98558635,Adelphi Road–UMGC–UMD,Purple,WMATA ,NA
+-76.94543276,38.9876317,Campus Drive–UMD,Purple,WMATA ,NA
+-76.93695338,38.98571373,Baltimore Avenue–UMD,Purple,WMATA ,NA
+-76.9238594,38.9685172,Riverdale Park North–UMD,Purple,WMATA ,NA
+-76.92014309,38.96087833,Riverdale Park–Kenilworth,Purple,WMATA ,NA
+-76.90238226,38.96204171,Beacon Heights–East Pines,Purple,WMATA ,NA
+-76.88545397,38.951707,Glenridge,Purple,WMATA ,NA
+,,,,,
+,,,,,
 ,,,,,
 ,,,,,
 ,,,,,
