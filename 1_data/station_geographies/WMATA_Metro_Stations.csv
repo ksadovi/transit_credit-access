@@ -1,99 +1,103 @@
-longitude,latitude ,station,lines_serviced,system 
--76.8971,38.88614,Addison Road-Seat Pleasant,"Blue, Silver",WMATA 
--76.99528,38.86238,Anacostia,Green,WMATA 
--77.02229,38.89414,Archives-Navy Memorial-Penn Quarter,"Green, Yellow",WMATA 
--77.06364,38.88481,Arlington Cemetery,Blue,WMATA 
--77.49129547,39.00510972,Ashburn,Silver ,WMATA 
--77.11142,38.88223,Ballston-MU,"Orange, Silver",WMATA 
--76.9375,38.89053,Benning Road,"Blue, Silver",WMATA 
--77.09403,38.98436,Bethesda,Red,WMATA 
--77.05277,38.81432,Braddock Road,"Blue, Yellow",WMATA 
--76.91192,38.82697,Branch Ave,Green,WMATA 
--76.99474,38.93367,Brookland-CUA,Red,WMATA 
--76.91329,38.88939,Capitol Heights,"Blue, Silver",WMATA 
--77.00597,38.88609,Capitol South,"Orange, Blue, Silver",WMATA 
--76.91627,38.91642,Cheverly,"Orange, Silver",WMATA 
--77.09528,38.88757,Clarendon,"Orange, Silver",WMATA 
--77.0586,38.93627,Cleveland Park,Red,WMATA 
--76.92776,38.97848,College Park-U of Md,Green,WMATA 
--77.03243,38.92906,Columbia Heights,Green,WMATA 
--76.9875,38.84587,Congress Heights,Green,WMATA 
--77.08473,38.89158,Court House,"Orange, Silver",WMATA 
--77.05144,38.85817,Crystal City,"Blue, Yellow",WMATA 
--76.93507,38.90838,Deanwood,"Orange, Silver",WMATA 
--76.84458,38.9007,Downtown Largo,"Blue, Silver",WMATA 
--77.22723,38.88416,Dunn Loring-Merrifield,Orange,WMATA 
--77.04454,38.91122,Dupont Circle,Red,WMATA 
--77.15701,38.88629,East Falls Church,"Orange, Silver",WMATA 
--76.99585,38.88448,Eastern Market,"Orange, Blue, Silver",WMATA 
--77.07071,38.80062,Eisenhower Avenue,Yellow,WMATA 
--77.03926,38.90292,Farragut North,Red,WMATA 
--77.04183,38.90162,Farragut West,"Orange, Blue, Silver",WMATA 
--77.01562,38.8851,Federal Center SW,"Orange, Blue, Silver",WMATA 
--77.02777,38.89404,Federal Triangle,"Orange, Blue, Silver",WMATA 
--77.05029,38.90105,Foggy Bottom-GWU,"Orange, Blue, Silver",WMATA 
--77.04264,39.01563,Forest Glen,Red,WMATA 
--77.00216,38.9523,Fort Totten,"Red, Green",WMATA 
--77.1689,38.76636,Franconia-Springfield,Blue,WMATA 
--77.08573,38.9611,Friendship Heights,Red,WMATA 
--77.02189,38.8999,Gallery Pl-Chinatown,"Red, Green, Yellow",WMATA 
--77.02419,38.93711,Georgia Ave-Petworth,Green,WMATA 
--77.05328,39.0617,Glenmont,Red,WMATA 
--76.91123,39.01114,Greenbelt,Green,WMATA 
--77.23361078,38.92116301,Greensboro,Silver,WMATA 
--77.10344,39.02928,Grosvenor-Strathmore,Red,WMATA 
--77.38484541,38.95297435,Herndon,Silver ,WMATA 
--77.07526694,38.79398867,Huntington,Yellow,WMATA 
--76.95628683,38.9656112,Hyattsville Crossing,Green,WMATA 
--77.4156335,38.96133847,Innovation Center ,Silver ,WMATA 
--77.01757,38.89779,Judiciary Square,Red,WMATA 
--77.06021,38.80759,King St-Old Town,"Blue, Yellow",WMATA 
--77.02181,38.88531,L'Enfant Plaza,"Orange, Blue, Yellow, Green, Silver",WMATA 
--76.89118,38.9337,Landover,"Orange, Silver",WMATA 
--77.46005997,38.99345196,Loudoun Gateway,Silver ,WMATA 
--77.2102856,38.92454022,McLean,Silver ,WMATA 
--77.03227,38.90135,McPherson Square,"Orange, Blue, Silver",WMATA 
--77.09684,38.99936,Medical Center,Red,WMATA 
--77.02794,38.89873,Metro Center,"Red, Orange, Blue, Silver",WMATA 
--76.94648,38.8993,Minnesota Ave,"Orange, Silver",WMATA 
--76.86855,38.89387,Morgan Boulevard,"Blue, Silver",WMATA 
--77.02189219,38.90547016,Mt Vernon Sq 7th St-Convention Center,"Green, Yellow",WMATA 
--77.00403949,38.87701944,Navy Yard-Ballpark,Green ,WMATA 
--76.95662697,38.85126864,Naylor Road,Green,WMATA 
--76.87153941,38.94820005,New Carrollton,Orange,WMATA 
--77.00240978,38.90766839,NoMa-Gallaudet U,Red,WMATA 
--77.11252571,39.04801228,North Bethesda,Red,WMATA 
--77.05340062,38.86933089,Pentagon,"Blue, Yellow",WMATA 
--77.05941143,38.86284424,Pentagon City ,"Blue, Yellow",WMATA 
--76.98485841,38.88095466,Potomac Ave,"Orange, Blue, Silver",WMATA 
--77.04637598,38.83425239,Potomac Yard,"Blue, Yellow",WMATA 
--77.35967974,38.95287029,Reston Town Center,Silver ,WMATA 
--76.99528654,38.92104738,Rhode Island Ave-Brentwood,Red,WMATA 
--77.14609,39.08439,Rockville,Red,WMATA 
--77.04321432,38.85354125,Ronald Reagan Washington National Airport,"Blue, Yellow",WMATA 
--77.07148447,38.89721305,Rosslyn,"Orange, Blue, Silver",WMATA 
--77.16391,39.12032,Shady Grove,Red,WMATA 
--77.02150951,38.91457909,Shaw-Howard U,Green ,WMATA 
--77.02901866,38.99399388,Silver Spring ,Red,WMATA 
--77.02806989,38.88922464,Smithsonian ,"Orange, Blue, Silver",WMATA 
--76.97524637,38.84061524,Southern Ave,Green ,WMATA 
--77.24051086,38.92915158,Spring Hill ,Silver ,WMATA 
--76.97698697,38.8884899,Stadium-Armory,"Orange, Blue, Silver ",WMATA 
--76.93234463,38.84449725,Suitland,Green ,WMATA 
--77.0173494,38.97588834,Takoma,Red,WMATA 
--77.07882302,38.94826105,Tenleytown-AU,Red,WMATA 
--77.11989467,39.06274493,Twinbrook ,Red,WMATA 
--77.22159567,38.92097464,Tysons,Silver ,WMATA 
--77.02822894,38.91733591,U Street/African-American Civil War Memorial/Cardozo,Green,WMATA 
--77.00656472,38.89804142,Union Station ,Red,WMATA 
--77.12923,38.79952,Van Dorn Street,Blue,WMATA 
--77.06334715,38.94469235,Van Ness-UDC,Red,WMATA 
--77.27218205,38.8776834,Vienna/Fairfax-GMU,Orange,WMATA 
--77.10250001,38.88319321,Virginia Square-GMU,"Orange, Silver ",WMATA 
--77.44815361,38.9559489,Washington Dulles International Airport,Silver,WMATA 
--77.01692567,38.87731705,Waterfront,Green,WMATA 
--77.18885463,38.90102256,West Falls Church ,Orange,WMATA 
--76.96902668,38.95569953,West Hyattsville,Green,WMATA 
--77.05014925,39.03912566,Wheaton,Red,WMATA 
--77.33959,38.94806,Wiehle-Reston East,Silver,WMATA 
--77.05191893,38.92466507,Woodley Park-Zoo/Adams Morgan,Red,WMATA 
+longitude,latitude ,station,lines_serviced,system ,open_date
+-76.8971,38.88614,Addison Road-Seat Pleasant,"Blue, Silver",WMATA ,11/22/80
+-76.99528,38.86238,Anacostia,Green,WMATA ,12/28/91
+-77.02229,38.89414,Archives-Navy Memorial-Penn Quarter,"Green, Yellow",WMATA ,4/30/83
+-77.06364,38.88481,Arlington Cemetery,Blue,WMATA ,7/1/77
+-77.49129547,39.00510972,Ashburn,Silver ,WMATA ,11/15/22
+-77.11142,38.88223,Ballston-MU,"Orange, Silver",WMATA ,12/1/79
+-76.9375,38.89053,Benning Road,"Blue, Silver",WMATA ,11/22/80
+-77.09403,38.98436,Bethesda,Red,WMATA ,8/25/84
+-77.05277,38.81432,Braddock Road,"Blue, Yellow",WMATA ,12/17/83
+-76.91192,38.82697,Branch Ave,Green,WMATA ,1/13/01
+-76.99474,38.93367,Brookland-CUA,Red,WMATA ,2/4/78
+-76.91329,38.88939,Capitol Heights,"Blue, Silver",WMATA ,11/22/80
+-77.00597,38.88609,Capitol South,"Orange, Blue, Silver",WMATA ,7/1/77
+-76.91627,38.91642,Cheverly,"Orange, Silver",WMATA ,11/20/78
+-77.09528,38.88757,Clarendon,"Orange, Silver",WMATA ,12/1/79
+-77.0586,38.93627,Cleveland Park,Red,WMATA ,12/5/81
+-76.92776,38.97848,College Park-U of Md,Green,WMATA ,12/11/93
+-77.03243,38.92906,Columbia Heights,Green,WMATA ,9/18/99
+-76.9875,38.84587,Congress Heights,Green,WMATA ,1/13/01
+-77.08473,38.89158,Court House,"Orange, Silver",WMATA ,12/1/79
+-77.05144,38.85817,Crystal City,"Blue, Yellow",WMATA ,7/1/77
+-76.93507,38.90838,Deanwood,"Orange, Silver",WMATA ,11/20/78
+-76.84458,38.9007,Downtown Largo,"Blue, Silver",WMATA ,12/18/04
+-77.22723,38.88416,Dunn Loring-Merrifield,Orange,WMATA ,6/7/86
+-77.04454,38.91122,Dupont Circle,Red,WMATA ,1/17/77
+-77.15701,38.88629,East Falls Church,"Orange, Silver",WMATA ,6/7/86
+-76.99585,38.88448,Eastern Market,"Orange, Blue, Silver",WMATA ,7/1/77
+-77.07071,38.80062,Eisenhower Avenue,Yellow,WMATA ,12/17/83
+-77.03926,38.90292,Farragut North,Red,WMATA ,3/27/76
+-77.04183,38.90162,Farragut West,"Orange, Blue, Silver",WMATA ,7/1/77
+-77.01562,38.8851,Federal Center SW,"Orange, Blue, Silver",WMATA ,7/1/77
+-77.02777,38.89404,Federal Triangle,"Orange, Blue, Silver",WMATA ,7/1/77
+-77.05029,38.90105,Foggy Bottom-GWU,"Orange, Blue, Silver",WMATA ,7/1/77
+-77.04264,39.01563,Forest Glen,Red,WMATA ,9/22/90
+-77.00216,38.9523,Fort Totten,"Red, Green",WMATA ,2/4/78
+-77.1689,38.76636,Franconia-Springfield,Blue,WMATA ,6/29/97
+-77.08573,38.9611,Friendship Heights,Red,WMATA ,8/25/84
+-77.02189,38.8999,Gallery Pl-Chinatown,"Red, Green, Yellow",WMATA ,12/15/76
+-77.02419,38.93711,Georgia Ave-Petworth,Green,WMATA ,9/18/99
+-77.05328,39.0617,Glenmont,Red,WMATA ,7/25/98
+-76.91123,39.01114,Greenbelt,Green,WMATA ,12/11/93
+-77.23361078,38.92116301,Greensboro,Silver,WMATA ,7/26/14
+-77.10344,39.02928,Grosvenor-Strathmore,Red,WMATA ,8/25/84
+-77.38484541,38.95297435,Herndon,Silver ,WMATA ,11/15/22
+-77.07526694,38.79398867,Huntington,Yellow,WMATA ,12/17/83
+-76.95628683,38.9656112,Hyattsville Crossing,Green,WMATA ,12/11/93
+-77.4156335,38.96133847,Innovation Center ,Silver ,WMATA ,11/15/22
+-77.01757,38.89779,Judiciary Square,Red,WMATA ,3/27/76
+-77.06021,38.80759,King St-Old Town,"Blue, Yellow",WMATA ,12/17/83
+-77.02181,38.88531,L'Enfant Plaza,"Orange, Blue, Yellow, Green, Silver",WMATA ,7/1/77
+-76.89118,38.9337,Landover,"Orange, Silver",WMATA ,11/20/78
+-77.46005997,38.99345196,Loudoun Gateway,Silver ,WMATA ,11/15/22
+-77.2102856,38.92454022,McLean,Silver ,WMATA ,7/26/14
+-77.03227,38.90135,McPherson Square,"Orange, Blue, Silver",WMATA ,7/1/77
+-77.09684,38.99936,Medical Center,Red,WMATA ,8/25/84
+-77.02794,38.89873,Metro Center,"Red, Orange, Blue, Silver",WMATA ,3/27/76
+-76.94648,38.8993,Minnesota Ave,"Orange, Silver",WMATA ,11/20/78
+-76.86855,38.89387,Morgan Boulevard,"Blue, Silver",WMATA ,12/18/04
+-77.02189219,38.90547016,Mt Vernon Sq 7th St-Convention Center,"Green, Yellow",WMATA ,5/11/91
+-77.00403949,38.87701944,Navy Yard-Ballpark,Green ,WMATA ,12/28/91
+-76.95662697,38.85126864,Naylor Road,Green,WMATA ,1/13/01
+-76.87153941,38.94820005,New Carrollton,Orange,WMATA ,11/20/78
+-77.00240978,38.90766839,NoMa-Gallaudet U,Red,WMATA ,11/20/04
+-77.11252571,39.04801228,North Bethesda,Red,WMATA ,12/15/84
+-77.05340062,38.86933089,Pentagon,"Blue, Yellow",WMATA ,7/1/77
+-77.05941143,38.86284424,Pentagon City ,"Blue, Yellow",WMATA ,7/1/77
+-76.98485841,38.88095466,Potomac Ave,"Orange, Blue, Silver",WMATA ,7/1/77
+-77.04637598,38.83425239,Potomac Yard,"Blue, Yellow",WMATA ,5/19/23
+-77.35967974,38.95287029,Reston Town Center,Silver ,WMATA ,11/15/22
+-76.99528654,38.92104738,Rhode Island Ave-Brentwood,Red,WMATA ,3/27/76
+-77.14609,39.08439,Rockville,Red,WMATA ,12/15/84
+-77.04321432,38.85354125,Ronald Reagan Washington National Airport,"Blue, Yellow",WMATA ,7/1/77
+-77.07148447,38.89721305,Rosslyn,"Orange, Blue, Silver",WMATA ,7/1/77
+-77.16391,39.12032,Shady Grove,Red,WMATA ,12/15/84
+-77.02150951,38.91457909,Shaw-Howard U,Green ,WMATA ,5/11/91
+-77.02901866,38.99399388,Silver Spring ,Red,WMATA ,2/4/78
+-77.02806989,38.88922464,Smithsonian ,"Orange, Blue, Silver",WMATA ,7/1/77
+-76.97524637,38.84061524,Southern Ave,Green ,WMATA ,1/13/01
+-77.24051086,38.92915158,Spring Hill ,Silver ,WMATA ,7/26/14
+-76.97698697,38.8884899,Stadium-Armory,"Orange, Blue, Silver ",WMATA ,7/1/77
+-76.93234463,38.84449725,Suitland,Green ,WMATA ,1/13/01
+-77.0173494,38.97588834,Takoma,Red,WMATA ,2/4/78
+-77.07882302,38.94826105,Tenleytown-AU,Red,WMATA ,8/25/84
+-77.11989467,39.06274493,Twinbrook ,Red,WMATA ,12/15/84
+-77.22159567,38.92097464,Tysons,Silver ,WMATA ,7/26/14
+-77.02822894,38.91733591,U Street/African-American Civil War Memorial/Cardozo,Green,WMATA ,5/11/91
+-77.00656472,38.89804142,Union Station ,Red,WMATA ,3/27/76
+-77.12923,38.79952,Van Dorn Street,Blue,WMATA ,6/15/91
+-77.06334715,38.94469235,Van Ness-UDC,Red,WMATA ,12/5/81
+-77.27218205,38.8776834,Vienna/Fairfax-GMU,Orange,WMATA ,6/7/86
+-77.10250001,38.88319321,Virginia Square-GMU,"Orange, Silver ",WMATA ,12/1/79
+-77.44815361,38.9559489,Washington Dulles International Airport,Silver,WMATA ,11/15/22
+-77.01692567,38.87731705,Waterfront,Green,WMATA ,12/28/91
+-77.18885463,38.90102256,West Falls Church ,Orange,WMATA ,6/7/86
+-76.96902668,38.95569953,West Hyattsville,Green,WMATA ,12/11/93
+-77.05014925,39.03912566,Wheaton,Red,WMATA ,9/22/90
+-77.33959,38.94806,Wiehle-Reston East,Silver,WMATA ,7/26/14
+-77.05191893,38.92466507,Woodley Park-Zoo/Adams Morgan,Red,WMATA ,12/5/81
+,,,,,
+,,,,,
+,,,,,
+,,,,,
