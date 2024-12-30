@@ -5,6 +5,7 @@ library(janitor)
 library(tidycensus)
 library(tmap)
 library(osrm)
+library(sf)
 library(tmaptools)
 options(tigris_use_cache = TRUE)
 
