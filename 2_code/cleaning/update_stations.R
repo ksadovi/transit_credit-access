@@ -12,7 +12,7 @@ path_out = "3_output/"
 update_stations = function(){
   stations = data.frame()
   for(i in list.files("1_data/station_geographies")){
-    stations = rbind(stations, fread(i))
+    stations = rbind(stations, fread(paste0("1_data/station_geographies/", i)))
   }
   
   # Here I am converting these coordinates to geometric points
