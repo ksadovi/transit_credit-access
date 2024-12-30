@@ -19,6 +19,6 @@ update_stations = function(){
   station_poly <- st_as_sf(stations, coords = c("longitude", "latitude"), 
                            crs = 4326, agr = "constant")
   
-  fwrite(station_poly, file = "3_output/cleaned_data/station_polygons.csv")
+  fwrite(stations, file = "3_output/cleaned_data/station_polygons.csv")
   return(station_poly)
 }
