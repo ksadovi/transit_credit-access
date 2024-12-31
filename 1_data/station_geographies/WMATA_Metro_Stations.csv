@@ -98,7 +98,7 @@ longitude,latitude ,station,lines_serviced,system ,open_date
 -77.33959,38.94806,Wiehle-Reston East,Silver,WMATA ,7/26/14
 -77.05191893,38.92466507,Woodley Park-Zoo/Adams Morgan,Red,WMATA ,12/5/81
 -77.076433,38.994713,Connecticut Avenue,Purple,WMATA ,NA
- -77.053883,39.000362,Lyttonsville,Purple,WMATA ,NA
+-77.053883,39.000362,Lyttonsville,Purple,WMATA ,NA
 -77.037991,38.998425,16th Street–Woodside,Purple,WMATA ,NA
 -77.031321,38.993841,Silver Spring,Purple,WMATA ,NA
 -77.0245347,38.9953099,Silver Spring Library,Purple,WMATA ,NA
@@ -115,9 +115,3 @@ longitude,latitude ,station,lines_serviced,system ,open_date
 -76.92014309,38.96087833,Riverdale Park–Kenilworth,Purple,WMATA ,NA
 -76.90238226,38.96204171,Beacon Heights–East Pines,Purple,WMATA ,NA
 -76.88545397,38.951707,Glenridge,Purple,WMATA ,NA
-,,,,,
-,,,,,
-,,,,,
-,,,,,
-,,,,,
-,,,,,
