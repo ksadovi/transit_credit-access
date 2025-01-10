@@ -14,7 +14,8 @@ update_stations = function(){
   for(i in list.files("1_data/station_geographies")){
     stations = rbind(stations, fread(paste0("1_data/station_geographies/", i)))
   }
-  
+  stations = stations %>% 
+    mutate(open_date = excel_numeric_to_date(as.numeric(as.character(open_date)), date_system = "modern"))
   # Here I am converting these coordinates to geometric points
   station_poly <- st_as_sf(stations, coords = c("longitude", "latitude"), 
                            crs = 4326, agr = "constant")
