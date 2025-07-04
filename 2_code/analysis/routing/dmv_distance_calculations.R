@@ -1,3 +1,6 @@
+# Name: dmv_distance_calculations.R 
+# Purpose: Calculate the distance between Census tracts in the DMV and their closest WMATA station
+# Last updated: 1/2/2025
 # Preliminaries --------
 source("2_code/packages+defaults.R")
 source("2_code/function_library/run_all_functions.R")
@@ -21,7 +24,7 @@ dc_boundary = counties("District of Columbia", cb = T, year = 2020) %>% st_trans
 dc_metro_tracts <- dmv_tracts[dc_metro, ]
 
 # Creating centroids
-# I need to double check that this is the correct way of finding centroids. 
+# I need to double check that this is the correct way of finding centroids. #
 dmv_tract_centroids = dc_metro_tracts %>% st_centroid() 
 
 # Calculating distances --------
