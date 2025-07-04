@@ -1,3 +1,6 @@
+# Name: worker_flows.R 
+# Purpose: Clean LODES data and calculate worker flows by Census tract
+# Last updated: 1/5/2025
 # Preliminaries  --------
 source("2_code/packages+defaults.R")
 
