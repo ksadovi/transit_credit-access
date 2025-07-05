@@ -1,3 +1,6 @@
+# Name: DMV_flows.R 
+# Purpose: Create spatial objects for DMV worker flows and plot them in a map. 
+# Last updated: 7/4/2025
 source("2_code/packages+defaults.R")
 path_in = "1_data/LODES/"
 path_out = "3_output/"
