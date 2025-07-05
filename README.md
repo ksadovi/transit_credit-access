@@ -24,3 +24,7 @@ This folder is where I store all of the raw data I'm using. These are divided in
 ### Data Dictionaries, Literature
 
 ### Sources
+
+## To Do: 
+- [ ] Re-download the LODES data. Somehow it got deleted in the midst of all of my updates. 
+- [ ] Fix worker_flows.R -- I think I should split this into two different files and make sure each file only does one thing. Further, I also want to make this as replicable as possible, so make sure there isn't any residual DC-area details in there. 
