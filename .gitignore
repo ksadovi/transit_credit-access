@@ -6,7 +6,6 @@
 .DS_Store
 1_data/LODES/raw_files/
 3_output/cleaned_data/station_polygons.csv
-*.pdf
 *.png
 transit_projects.csv
 us_transit.csv
