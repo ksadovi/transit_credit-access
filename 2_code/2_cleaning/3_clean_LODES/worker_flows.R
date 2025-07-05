@@ -1,3 +1,6 @@
+### This rly needs to be updated and I need to come up with better ways to do this 
+
+
 # Name: worker_flows.R 
 # Purpose: Clean LODES data and calculate worker flows by Census tract
 # Last updated: 1/5/2025
@@ -8,8 +11,8 @@ source("2_code/packages+defaults.R")
 
 ## Tracts --------
 DMVW_full_state_tracts = data.frame() %>% as_tibble()
-for(i in dir("1_data/LODES/raw_files/", recursive = T, pattern = "*.csv")){
-  df = fread(paste0("1_data/LODES/raw_files/",i)) %>% as_tibble %>% 
+for(i in dir("1_data/3_LODES/1_raw_files/", recursive = T, pattern = "*.csv")){
+  df = fread(paste0("1_data/3_LODES/1_raw_files/",i)) %>% as_tibble %>% 
     mutate(census_year = as.numeric(str_sub(i, start = -8, end = -5))) %>% 
     subset(select = c(w_geocode, h_geocode, S000, census_year))
   DMVW_full_state_tracts = rbind(DMVW_full_state_tracts, df)
@@ -18,8 +21,8 @@ for(i in dir("1_data/LODES/raw_files/", recursive = T, pattern = "*.csv")){
 
 ## Crosswalks --------
 crosswalk = data.frame()
-for(i in list.files("1_data/LODES/crosswalks/", pattern = "*_xwalk.csv")){
-  crosswalk = rbind(crosswalk, fread(paste0("1_data/LODES/crosswalks/", i)))
+for(i in list.files("1_data/3_LODES/2_crosswalks/", pattern = "*_xwalk.csv")){
+  crosswalk = rbind(crosswalk, fread(paste0("1_data/3_LODES/2_crosswalks/", i)))
 }
 
 # Here, I only want to keep the Census tract code ('trct') and the 2020 Census
@@ -60,7 +63,7 @@ colnames(inflows_main) = c("geocode", "tract", "inflows")
 population <- get_decennial(
   geography = "tract",
   variables = "P1_001N",
-  state = str_sub(list.files("1_data/LODES/raw_files/"), start = 1, end = 2) %>% toupper() %>% unique, 
+  state = str_sub(list.files("1_data/3_LODES/1_raw_files/"), start = 1, end = 2) %>% toupper() %>% unique, 
   year = 2020,
   geometry = TRUE
 ) %>% as_tibble %>% 
