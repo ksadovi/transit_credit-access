@@ -7,8 +7,8 @@
 # Preliminaries #
 #################
 source("2_code/packages+defaults.R")
-path_in = "1_data/TCP/"
-path_out = "3_output/cleaned_data/TCP/"
+path_in = "1_data/1_TCP/"
+path_out = "3_output/1_cleaned_data/1_TCP/"
 
 ############################
 # Load Newest Transit Data #
@@ -16,7 +16,7 @@ path_out = "3_output/cleaned_data/TCP/"
 
 url = "https://ultraviolet.library.nyu.edu/records/9wnjp-kez15/files/Merged-Costs-1-4.csv"
 file_name = "transit_projects.csv"
-file_path = file.path(getwd(), "1_data/TCP/")
+file_path = file.path(getwd(), path_in)
 
 download.file(url = url, destfile = paste0(file_path, file_name, sep = ""))
 
@@ -32,4 +32,4 @@ tcp = fread(paste0(path_in, "transit_projects.csv")) %>% as_tibble
 us_transit = tcp %>% filter(Country == "US" & Start_year >= 2000) %>% subset(select = -c(Country))
 fwrite(tcp, file = paste0(path_out, "all_transit.csv"))
 fwrite(us_transit, file = paste0(path_out, "us_transit.csv"))
-rm(tcp, us_transit, path_in,path_out)
+rm(tcp, us_transit, path_in, path_out, file_name, url, file_path)
