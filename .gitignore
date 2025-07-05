@@ -7,6 +7,4 @@
 1_data/LODES/raw_files/*/
 3_output/cleaned_data/station_polygons.csv
 *.png
-transit_projects.csv
-us_transit.csv
 *.html
