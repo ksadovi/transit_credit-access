@@ -4,7 +4,7 @@
 .Ruserdata
 .RDataTmp
 .DS_Store
-1_data/LODES/raw_files/
+1_data/LODES/raw_files/*/
 3_output/cleaned_data/station_polygons.csv
 *.png
 transit_projects.csv
