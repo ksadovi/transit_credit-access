@@ -9,7 +9,12 @@ source("2_code/packages+defaults.R")
 
 # Data: Worker Flows --------
 
-## Tracts --------
+## Load LODES data --------
+# Here, I recursively search through the raw data folder and load all of the states with data 
+# I've downloaded from Census. I save this as the object DMVW_full_state_tracts, which is a 
+# dataframe showing the number of workers in a unique residence-workplace tract pair in a 
+# specific year. 
+# For example, the tract containing the national mall has 0 residential inhabitants and 
 DMVW_full_state_tracts = data.frame() %>% as_tibble()
 for(i in dir("1_data/3_LODES/1_raw_files/", recursive = T, pattern = "*.csv")){
   df = fread(paste0("1_data/3_LODES/1_raw_files/",i)) %>% as_tibble %>% 
@@ -18,6 +23,23 @@ for(i in dir("1_data/3_LODES/1_raw_files/", recursive = T, pattern = "*.csv")){
   DMVW_full_state_tracts = rbind(DMVW_full_state_tracts, df)
   rm(df)
 }
+
+# Example code for checking: 
+gwu_work_tract = (DMVW_full_state_tracts %>% filter(substr(w_geocode, start = 1, stop = 11) == 11001010800)) 
+gwu_home_tract = (DMVW_full_state_tracts %>% filter(substr(h_geocode, start = 1, stop = 11) == 11001010800)) 
+gwu_work_tract_count = aggregate(data = gwu_work_tract, S000 ~ census_year, FUN = sum) %>% 
+  mutate(home_is = "Outside FB")
+gwu_home_tract_count = aggregate(data = gwu_home_tract, S000 ~ census_year, FUN = sum) %>% 
+  mutate(home_is = "Foggy Bottom")
+gwu_tract_count = rbind(gwu_home_tract_count, gwu_work_tract_count)
+ggplot(data = gwu_tract_count) + 
+  geom_line(aes(x = census_year, y = S000, color = home_is)) + 
+  labs(y = "Number of workers", x = "Year", title = "Workers in Foggy Bottom") + 
+  guides(color=guide_legend(title="Resident of:")) + 
+  theme(legend.position.inside = c(.8,.5)) + 
+  theme_classic() + 
+  geom_vline(xintercept = 2020)
+# Seems right to me. 
 
 ## Crosswalks --------
 crosswalk = data.frame()
