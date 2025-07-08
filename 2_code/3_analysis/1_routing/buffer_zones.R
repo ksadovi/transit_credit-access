@@ -1,6 +1,5 @@
 source("2_code/packages+defaults.R")
 source("2_code/function_library/run_all_functions.R")
-update_stations()
 stations = fread("3_output/cleaned_data/station_polygons.csv") %>% as_tibble
 station_poly = update_stations()
 
