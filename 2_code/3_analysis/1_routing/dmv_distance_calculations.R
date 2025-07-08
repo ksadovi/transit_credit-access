@@ -1,6 +1,8 @@
 # Name: dmv_distance_calculations.R 
 # Purpose: Calculate the distance between Census tracts in the DMV and their closest WMATA station
 # Last updated: 1/2/2025
+# The main packages used here are purrr, tigris, and osrm (implicit in my function 
+# map_station_distances). All in all, this is a very inefficient way to do this. 
 # Preliminaries --------
 source("2_code/packages+defaults.R")
 source("2_code/function_library/run_all_functions.R")
