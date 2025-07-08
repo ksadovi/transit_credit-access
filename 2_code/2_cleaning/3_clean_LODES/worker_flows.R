@@ -39,7 +39,7 @@ ggplot(data = gwu_tract_count) +
   theme(legend.position.inside = c(.8,.5)) + 
   theme_classic() + 
   geom_vline(xintercept = 2020)
-# Seems right to me. 
+# Seems slightly off to me. 
 
 ## Crosswalks --------
 crosswalk = data.frame()
