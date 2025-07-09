@@ -10,3 +10,4 @@
 3_output/1_cleaned_data/1_TCP/*.csv
 *.png
 *.html
+*.rds
