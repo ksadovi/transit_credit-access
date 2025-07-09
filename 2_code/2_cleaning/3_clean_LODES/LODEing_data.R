@@ -30,8 +30,8 @@ LODEing_data = function(states, metro_name){
 
 # Note that LODES only started to add federal jobs in 2010, so this really throws off the worker counts for 
 # the DC area.
-DMV_LODES_blocks = LODEing_data(c("WV", "VA", "DC", "MD"), "DMV")
-IL_LODES_blocks = LODEing_data(c("IL"), "IL")
+# DMV_LODES_blocks = LODEing_data(c("WV", "VA", "DC", "MD"), "DMV")
+# IL_LODES_blocks = LODEing_data(c("IL"), "IL")
 
 # Sanity Check: --------
 # Here I'm calculating the number of employed people who live in one of the Hyde 
