@@ -5,6 +5,7 @@
 .RDataTmp
 .DS_Store
 1_data/3_LODES/1_raw_files/*/
+1_data/3_LODES/2_crosswalks/*/
 3_output/cleaned_data/station_polygons.csv
 3_output/1_cleaned_data/1_TCP/*.csv
 *.png
