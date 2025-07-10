@@ -11,6 +11,11 @@ source("2_code/2_cleaning/2_clean_TCP/transit_costs.R")
 
 # Process the LODES origin-destination data
 source("2_code/2_cleaning/3_clean_LODES/LODEing_data.R")
+LODEing_data()
+
+# Calculate the worker flow numbers by Census tract, year, and state. 
+source("2_code/3_analysis/1_worker_flows/flow_calcs.R")
+flow_calcs()
 
 # This is pretty much what I've got for now. The next step is standardizing the distance calculations and buffer
 # zones in the analysis folder; I think this is going to be very region-specific so I'll probably have a bunch 
