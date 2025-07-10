@@ -13,25 +13,34 @@ source("2_code/packages+defaults.R")
 # given metro (for example, DC, MD, VA, and WV in the DC metro area) and save 
 # that as a single RDS file to be used later. 
 # Note that this data is at the Census block level. 
-LODEing_data = function(states, metro_name){
-  dat = data.frame() %>% as_tibble()
-  for(i in list.files(paste0("1_data/3_LODES/1_raw_files/", states), recursive = T, pattern = "*.csv", full.names = T)){
-    df = fread(i) %>% as_tibble %>% 
-      mutate(census_year = as.numeric(str_sub(i, start = -8, end = -5)), 
-             w_geocode = as.character(w_geocode), 
-             h_geocode = as.character(h_geocode)) %>% 
-      subset(select = c(w_geocode, h_geocode, S000, census_year))
-    dat = rbind(dat, df)
-    rm(df)
+LODEing_data = function(states="all"){
+  if((states == c("all"))[1]){
+    states = c()
+    for(i in list.dirs("1_data/3_LODES/1_raw_files/", full.names = F) %>% Filter(function(x) x != "", .)){
+      states = append(states, i)
+    }
+  } else{
+    if((states %in% state.abb) == F) 
+      stop("Error: You didn't error a correct state abbreviation or the string 'all'. Please check your argument inputs.")
   }
-  saveRDS(dat, file = paste0("3_output/1_cleaned_data/3_LODES/1_preaggregated_metros/", "worker_flows_blocks_", metro_name, ".rds"))
-  return(dat)
+  for(j in states){
+    dat = data.frame() %>% as_tibble()
+    for(i in list.files(paste0("1_data/3_LODES/1_raw_files/", j), recursive = T, pattern = "*.csv", full.names = T)){
+      df = fread(i) %>% as_tibble %>% 
+        mutate(census_year = as.numeric(str_sub(i, start = -8, end = -5)), 
+               w_geocode = as.character(w_geocode), 
+               h_geocode = as.character(h_geocode)) %>% 
+        subset(select = c(w_geocode, h_geocode, S000, census_year))
+      dat = rbind(dat, df)
+      rm(df)
+    }
+    saveRDS(dat, file = paste0("3_output/1_cleaned_data/3_LODES/1_preaggregated_metros/", "worker_flows_blocks_", j, ".rds"))
+  } 
 }
 
 # Note that LODES only started to add federal jobs in 2010, so this really throws off the worker counts for 
 # the DC area.
-# DMV_LODES_blocks = LODEing_data(c("WV", "VA", "DC", "MD"), "DMV")
-# IL_LODES_blocks = LODEing_data(c("IL"), "IL")
+# system.time(LODEing_data())
 
 # Sanity Check: --------
 # Here I'm calculating the number of employed people who live in one of the Hyde 
