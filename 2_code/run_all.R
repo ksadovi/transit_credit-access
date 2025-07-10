@@ -10,7 +10,7 @@ update_stations()
 source("2_code/2_cleaning/2_clean_TCP/transit_costs.R")
 
 # Process the LODES origin-destination data
-source("2_code/2_cleaning/3_clean_LODES/worker_flows.R")
+source("2_code/2_cleaning/3_clean_LODES/LODEing_data.R")
 
 # This is pretty much what I've got for now. The next step is standardizing the distance calculations and buffer
 # zones in the analysis folder; I think this is going to be very region-specific so I'll probably have a bunch 

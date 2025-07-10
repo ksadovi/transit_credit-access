@@ -24,7 +24,7 @@ LODEing_data = function(states, metro_name){
     dat = rbind(dat, df)
     rm(df)
   }
-  saveRDS(dat, file = paste0("3_output/1_cleaned_data/3_LODES/", "worker_flows_blocks_", metro_name, ".rds"))
+  saveRDS(dat, file = paste0("3_output/1_cleaned_data/3_LODES/1_preaggregated_metros/", "worker_flows_blocks_", metro_name, ".rds"))
   return(dat)
 }
 
