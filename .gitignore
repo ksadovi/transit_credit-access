@@ -10,4 +10,4 @@
 3_output/1_cleaned_data/1_TCP/*.csv
 *.png
 *.html
-*.rds
+3_output/1_cleaned_data/3_LODES/1_preaggregated_metros/
