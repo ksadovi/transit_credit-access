@@ -5,9 +5,9 @@
 map_station_distances = function(centroids, length = "all", exclude = "none"){
   centroids = centroids
   if(exclude == "none"){
-    stations = fread("3_output/1_cleaned_data/2_station_geographies/station_polygons.csv")
+    stations = fread("3_output/1_cleaned_data/2_station_geographies/stations_timeline_comprehensive.csv")
   } else{
-    stations = fread("3_output/1_cleaned_data/2_station_geographies/station_polygons.csv") %>% 
+    stations = fread("3_output/1_cleaned_data/2_station_geographies/stations_timeline_comprehensive.csv") %>% 
       filter(lines_serviced != exclude)
   }
   routing = data.frame()
