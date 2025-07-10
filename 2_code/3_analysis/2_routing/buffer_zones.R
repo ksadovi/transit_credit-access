@@ -1,6 +1,7 @@
 source("2_code/packages+defaults.R")
 source("2_code/function_library/run_all_functions.R")
 stations = fread("3_output/cleaned_data/station_polygons.csv") %>% as_tibble
+stations = fread("3_output/1_cleaned_data/2_station_geographies/stations_timeline_comprehensive.csv") %>% as_tibble
 station_poly = update_stations()
 
 library(sf)
