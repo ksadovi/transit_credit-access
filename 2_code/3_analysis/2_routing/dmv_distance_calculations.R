@@ -14,6 +14,11 @@ dmv_tracts <- map_dfr(c("DC", "MD", "VA", "WV"), ~{
 }, geometry = T) %>%
   st_transform(4326)
 
+il_tracts <- map_dfr(c("IL"), ~{
+  tracts(.x, cb = TRUE, year = 2020)
+}, geometry = T) %>%
+  st_transform(4326)
+
 # Getting the CBSA boundary
 dc_metro <- core_based_statistical_areas(cb = TRUE, year = 2020) %>%
   filter(str_detect(NAME, "Washington-Arlington-Alexandria, DC-VA-MD-WV")) %>%
