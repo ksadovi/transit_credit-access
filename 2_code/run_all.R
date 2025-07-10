@@ -10,6 +10,11 @@ run_all = function(){
   # Here is functionally an order of operations for reproducing this repo
   source("2_code/1_function_library/run_all_functions.R")
   
+  # Update the TCP data. This doesn't get updated too often, so not really necessary,
+  # but doesn't take long. 
+  source("2_code/2_cleaning/2_clean_TCP/update_TCP_data.R")
+  update_TCP_data()
+  
   # Update the CSV with all of the stations I've geolocated and matched w construction
   # delays. This is my manual work. 
   source("2_code/2_cleaning/1_clean_station_geographies/update_stations.R")
