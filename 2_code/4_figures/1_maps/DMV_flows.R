@@ -11,9 +11,8 @@ path_out = "3_output/"
 
 station_poly = update_stations()
 
-dc_flows = fread("3_output/cleaned_data/LODES/worker_flows.csv") %>% 
-  rename(GEOID = tract) %>% 
-  mutate(GEOID = as.character(GEOID))
+dc_flows = read_rds("3_output/1_cleaned_data/3_LODES/2_workerflow_tabs/flows_tracts_DC.rds") %>% 
+  filter(census_year == 2015) %>% mutate(GEOID = tract) %>% subset(select = -c(tract))
 
 dc_metro <- core_based_statistical_areas(cb = TRUE, year = 2020) %>%
   filter(str_detect(NAME, "Washington-Arlington-Alexandria, DC-VA-MD-WV")) %>%
@@ -43,7 +42,7 @@ dc_metro_tracts <- dmv_tracts[dc_counties, ] %>%
 ggplot() + 
   # geom_sf(data = dc_metro_tracts, fill = "white", color = "black") +
   # geom_sf(data = dc_counties, fill = NA, color = "black") +
-  geom_sf(data = dc_metro_tracts, color = "blue", aes(fill = outflows)) +
+  geom_sf(data = dc_metro_tracts, color = "blue", aes(fill = inflows)) +
   geom_sf(data = dc_metro_tracts %>% filter(AFFGEOID == "1400000US51059980200"), color = "red", fill ="red") + 
   geom_sf(data = station_poly %>% filter(grepl(pattern = "Green", x = lines_serviced)), size = 3, shape = 23, fill = "green") +
   geom_sf(data = station_poly %>% filter(grepl(pattern = "Red", x = lines_serviced)), size = 3, shape = 23, fill = "red") +

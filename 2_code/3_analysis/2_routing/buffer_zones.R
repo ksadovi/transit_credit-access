@@ -1,15 +1,5 @@
 source("2_code/packages+defaults.R")
 source("2_code/function_library/run_all_functions.R")
-stations = fread("3_output/cleaned_data/station_polygons.csv") %>% as_tibble
-stations = fread("3_output/1_cleaned_data/2_station_geographies/stations_timeline_comprehensive.csv") %>% as_tibble
-station_poly = update_stations()
-
-library(sf)
-library(dplyr)
-library(ggplot2)
-library(tidycensus)
-
-source("2_code/figures/maps/DMV_flows.R")
 
 # buffer of 50 miles around Raleigh city centre
 station_poly = update_stations()
