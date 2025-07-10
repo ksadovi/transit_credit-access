@@ -6,8 +6,6 @@
 # Preliminaries --------
 source("2_code/packages+defaults.R")
 source("2_code/function_library/run_all_functions.R")
-path_in = "3_output/cleaned_data/LODES/"
-path_out = "3_output/"
 
 # Creating centroids --------
 # Pulling tracts from all DMV states
