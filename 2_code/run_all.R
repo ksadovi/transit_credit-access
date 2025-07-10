@@ -1,21 +1,33 @@
-# Here is functionally an order of operations for reproducing this repo
-source("2_code/1_function_library/run_all_functions.R")
+run_all = function(){
+  answer <- readline(prompt = "Are you sure you want to run this? It will take a long time and will 
+                     run all states and files. Type 'yes' to continue: ")
+  
+  if (tolower(answer) != "yes") {
+    message("Aborted.")
+    return(invisible(NULL))
+  }
+  
+  # Here is functionally an order of operations for reproducing this repo
+  source("2_code/1_function_library/run_all_functions.R")
+  
+  # Update the CSV with all of the stations I've geolocated and matched w construction
+  # delays. This is my manual work. 
+  source("2_code/2_cleaning/1_clean_station_geographies/update_stations.R")
+  update_stations()
+  
+  # Update the CSV with the most updated version of the TCP data. 
+  source("2_code/2_cleaning/2_clean_TCP/transit_costs.R")
+  
+  # Process the LODES origin-destination data
+  source("2_code/2_cleaning/3_clean_LODES/LODEing_data.R")
+  LODEing_data()
+  
+  # Calculate the worker flow numbers by Census tract, year, and state. 
+  source("2_code/3_analysis/1_worker_flows/flow_calcs.R")
+  flow_calcs()
+}
 
-# Update the CSV with all of the stations I've geolocated and matched w construction
-# delays. This is my manual work. 
-source("2_code/2_cleaning/1_clean_station_geographies/update_stations.R")
-update_stations()
-
-# Update the CSV with the most updated version of the TCP data. 
-source("2_code/2_cleaning/2_clean_TCP/transit_costs.R")
-
-# Process the LODES origin-destination data
-source("2_code/2_cleaning/3_clean_LODES/LODEing_data.R")
-LODEing_data()
-
-# Calculate the worker flow numbers by Census tract, year, and state. 
-source("2_code/3_analysis/1_worker_flows/flow_calcs.R")
-flow_calcs()
+run_all()
 
 # This is pretty much what I've got for now. The next step is standardizing the distance calculations and buffer
 # zones in the analysis folder; I think this is going to be very region-specific so I'll probably have a bunch 
