@@ -1,4 +1,5 @@
 # Here is functionally an order of operations for reproducing this repo
+source("2_code/packages+defaults.R")
 source("2_code/1_function_library/run_all_functions.R")
 
 # Update the CSV with all of the stations I've geolocated and matched w construction
