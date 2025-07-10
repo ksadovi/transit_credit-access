@@ -28,5 +28,6 @@ This folder is where I store all of the raw data I'm using. These are divided in
 ## To Do: 
 - [ ] Standardize distance calculations 
   - [ ] Try to implement [this solution](https://www.youtube.com/watch?v=tjNEoIYr_ag&t=773s) for spatial joins, will be more efficient 
-  - [ ] Implement [r5r](https://ipeagit.github.io/r5r/) for network travel times. 
+  - [ ] Keep in mind that what I want to do here is identify tracts that are within .25 miles from closest station, and those that are within 1 mile of closest station, and those that are farther than 1 mile. If I can make this continuous from jump, that'd be best. 
+- [ ] Implement [r5r](https://ipeagit.github.io/r5r/) for network travel times. 
 - [ ] Get started on Seattle lines
