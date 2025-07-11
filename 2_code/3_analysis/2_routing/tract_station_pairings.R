@@ -78,7 +78,7 @@ tract_station_pairings = function(transit_system, rads = c(0.25,1), map_title = 
              ylim = ggplot_borders(metro_tracts$geometry[which(!is.na(metro_tracts$stations_far))], dim = "lat")) + 
     guides(fill = guide_legend(title = "Proximity to Closest Station")) + 
     theme(legend.position = "bottom") + 
-    labs(title = map_title, subtitle = paste0("Transit System: ", transit_system, ", ", year))
+    labs(title = map_title, subtitle = paste0("Transit System: ", transit_system, ", open stations as of ", year))
   
   ggsave(filename = paste0("3_output/2_figures/1_maps/1_station_geographies/", transit_system, ".png"), plot)
 }
