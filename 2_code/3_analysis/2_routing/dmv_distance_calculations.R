@@ -9,7 +9,7 @@ source("2_code/function_library/run_all_functions.R")
 
 # Creating centroids --------
 # Pulling tracts from all DMV states
-dmv_tracts <- map_dfr(c("DC", "MD", "VA", "WV"), ~{
+dmv_tracts <- map_dfr(c("DC", "MD", "VA"), ~{
   tracts(.x, cb = TRUE, year = 2020)
 }, geometry = T) %>%
   st_transform(4326)
