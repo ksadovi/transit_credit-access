@@ -27,6 +27,10 @@ run_all = function(){
   # Calculate the worker flow numbers by Census tract, year, and state. 
   source("2_code/3_analysis/1_worker_flows/flow_calcs.R")
   flow_calcs()
+  
+  # Identify closest transit station to each Census tract 
+  # Should make this into a for loop at some point
+  tract_station_pairings(transit_system = "WMATA", map_title = "Census Tracts' Proximities to Closest Transit Station")
 }
 
 run_all()
