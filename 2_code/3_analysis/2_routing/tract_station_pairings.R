@@ -1,6 +1,6 @@
 source("2_code/packages+defaults.R")
 
-tract_station_pairings = function(transit_system, rads = c(0.25,1), map_title = "Map title"){
+tract_station_pairings = function(transit_system, rads = c(0.25,1), map_title = "Map title", year = 2024){
   stopifnot(length(rads) == 2)
   
   # Need to load the state geographies to identify which states we need to pull 
@@ -12,7 +12,7 @@ tract_station_pairings = function(transit_system, rads = c(0.25,1), map_title = 
   station_poly = update_stations() %>%
     st_join(usa) %>%
     # Focusing on one transit system at a time
-    filter(system == transit_system) %>% 
+    filter(system == transit_system & is.na(open_date) == F & open_date <= year) %>% 
     # We want to identify tracts which are close by and tracts that are farther 
     # by creating two buffers (circles) of different radii. This is imprecise and 
     # should be rewritten using the r5r package.
@@ -24,7 +24,7 @@ tract_station_pairings = function(transit_system, rads = c(0.25,1), map_title = 
   
   # Grab tracts by state
   metro_tracts <- map_dfr(unique(station_poly$state), ~{
-    tracts(.x, cb = TRUE, year = 2024)
+    tracts(.x, cb = TRUE, year = year)
   }, geometry = T) %>%
     st_transform(4326) 
   
@@ -78,7 +78,7 @@ tract_station_pairings = function(transit_system, rads = c(0.25,1), map_title = 
              ylim = ggplot_borders(metro_tracts$geometry[which(!is.na(metro_tracts$stations_far))], dim = "lat")) + 
     guides(fill = guide_legend(title = "Proximity to Closest Station")) + 
     theme(legend.position = "bottom") + 
-    labs(title = map_title, subtitle = paste0("Transit System: ", transit_system))
+    labs(title = map_title, subtitle = paste0("Transit System: ", transit_system, ", ", year))
   
   ggsave(filename = paste0("3_output/2_figures/1_maps/1_station_geographies/", transit_system, ".png"), plot)
 }
