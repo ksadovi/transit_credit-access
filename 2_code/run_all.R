@@ -20,9 +20,6 @@ run_all = function(){
   source("2_code/2_cleaning/1_clean_station_geographies/update_stations.R")
   update_stations()
   
-  # Update the CSV with the most updated version of the TCP data. 
-  source("2_code/2_cleaning/2_clean_TCP/transit_costs.R")
-  
   # Process the LODES origin-destination data
   source("2_code/2_cleaning/3_clean_LODES/LODEing_data.R")
   LODEing_data()
