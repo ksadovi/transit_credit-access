@@ -12,12 +12,12 @@ tract_station_pairings = function(transit_system, rads = c(0.25,1), map_title = 
   station_poly = update_stations() %>%
     st_join(usa) %>%
     # Focusing on one transit system at a time
-    filter(system == transit_system & is.na(open_date) == F & open_date <= year) %>% 
+    filter(system == transit_system & year(open_date)<=year) %>% 
     # We want to identify tracts which are close by and tracts that are farther 
     # by creating two buffers (circles) of different radii. This is imprecise and 
     # should be rewritten using the r5r package.
-    mutate(station_buffers_small = st_buffer(station_poly$geometry %>% st_transform(2264), min(rads)*5280) %>% st_transform(4326),
-           station_buffers_big = st_buffer(station_poly$geometry %>% st_transform(2264), max(rads)*5280) %>% st_transform(4326), 
+    mutate(station_buffers_small = st_buffer(geometry %>% st_transform(2264), min(rads)*5280) %>% st_transform(4326),
+           station_buffers_big = st_buffer(geometry %>% st_transform(2264), max(rads)*5280) %>% st_transform(4326), 
            # Finding states for mapping
            state = append(state.abb, "DC")[match(str_to_title(ID), append(state.name, "District Of Columbia"))]) %>% 
     subset(select = -c(ID))
