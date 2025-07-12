@@ -30,6 +30,7 @@ run_all = function(){
   
   # Identify closest transit station to each Census tract 
   # Should make this into a for loop at some point
+  source("2_code/3_analysis/2_routing/tract_station_pairings.R")
   tract_station_pairings(transit_system = "WMATA", map_title = "Census Tracts' Proximities to Closest Transit Station")
 }
 
