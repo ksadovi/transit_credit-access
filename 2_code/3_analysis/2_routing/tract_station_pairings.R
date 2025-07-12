@@ -12,7 +12,7 @@ tract_station_pairings = function(transit_system, rads = c(0.25,1), map_title = 
   station_poly = update_stations() %>%
     st_join(usa) %>%
     # Focusing on one transit system at a time
-    filter(system == transit_system & year(open_date)<=year) %>% 
+    filter(system == transit_system & year(open_date)<= year) %>% 
     # We want to identify tracts which are close by and tracts that are farther 
     # by creating two buffers (circles) of different radii. This is imprecise and 
     # should be rewritten using the r5r package.
