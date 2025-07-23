@@ -11,3 +11,6 @@
 *.png
 *.html
 3_output/1_cleaned_data/3_LODES/1_preaggregated_metros/
+.Rprofile
+.Renviron
+rjavaenv/*
