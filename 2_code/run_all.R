@@ -22,14 +22,13 @@ run_all = function(){
   
   # Process the LODES origin-destination data
   source("2_code/2_cleaning/3_clean_LODES/LODEing_data.R")
-  LODEing_data()
+  LODEing_data(states = "all", overwrite = T)
   
   # Calculate the worker flow numbers by Census tract, year, and state. 
   source("2_code/3_analysis/1_worker_flows/flow_calcs.R")
-  flow_calcs()
+  flow_calcs(states = c("all"), overwrite = F)
   
   # Identify closest transit station to each Census tract 
-  # Should make this into a for loop at some point
   source("2_code/3_analysis/2_routing/tract_station_pairings.R")
   tract_station_pairings(transit_system = "WMATA", map_title = "Census Tracts' Proximities to Closest Transit Station")
 }
