@@ -4,18 +4,35 @@
 # Preliminaries  --------
 source("2_code/packages+defaults.R")
 
-flow_calcs = function(states=c("all")){
-  if((states == c("all"))[1]){
-    states = c()
-    for(i in list.files("3_output/1_cleaned_data/3_LODES/1_preaggregated_metros/")){
-      stat = str_extract(i, "(?<=_)[^_\\.]+(?=\\.)")
-      states = append(states, stat)
-    }
-  } else{
-    if((states %in% state.abb) == F) 
-      stop("Error: You didn't error a correct state abbreviation or the string 'all'. Please check your argument inputs.")
+flow_calcs = function(states=c("all"), overwrite = F){
+  states_preag = c()
+  for(i in list.files("3_output/1_cleaned_data/3_LODES/1_preaggregated_metros/")){
+    stat = str_extract(i, "(?<=_)[^_\\.]+(?=\\.)")
+    states_preag = append(states_preag, stat)
   }
-  for(i in states){
+  states_completed = c()
+  for(i in list.files("3_output/1_cleaned_data/3_LODES/2_workerflow_tabs/")){
+    stat = str_extract(i, "(?<=_)[^_\\.]+(?=\\.)")
+    states_completed = append(states_completed, stat)
+  }
+  if(overwrite == F){
+    if((states %in% state.abb) == F & (states != c("all"))[1]) {
+      stop("Error: You didn't error a correct state abbreviation or the string 'all'. Please check your argument inputs.")
+    } else if((states != c("all"))[1]){
+      states_new = setdiff(states, states_completed)
+    } else if((states == c("all"))[1]){
+      states_new = setdiff(states_preag, states_completed)
+    }
+  } else{ # the case where overwrite == T
+    if((states %in% state.abb) == F & (states != c("all"))[1]) {
+      stop("Error: You didn't error a correct state abbreviation or the string 'all'. Please check your argument inputs.")
+    } else if((states != c("all"))[1]){
+      states_new = states
+    } else if((states == c("all"))[1]){
+      states_new = states_preag
+    }
+  }
+  for(i in states_new){
     blocks = read_rds(paste0("3_output/1_cleaned_data/3_LODES/1_preaggregated_metros/worker_flows_blocks_", i, ".rds"))
     # Outflows  --------
     # Here, I sum the number of people who live in each tract and go to work anywhere 
