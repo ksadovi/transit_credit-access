@@ -15,3 +15,6 @@
 .Renviron
 rjavaenv/*
 1_data/2_station_geographies/us-south-latest.osm.pbf
+*.log
+*.json
+*.dat
