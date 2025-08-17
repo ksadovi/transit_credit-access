@@ -145,11 +145,20 @@ tract_station_pairings = function(transit_system, map_title = "Map title", year 
   # plot
   plot = ggplot() +
     geom_sf(data = affected_tracts, color = "black") +
-    geom_sf(data = stations, color = "purple") +
-    geom_sf(data = iso_poly, color = "black", aes(fill = as.factor(isochrone))) + 
+    geom_sf(data = stations, aes(color = "Station Location"), show.legend = TRUE) +
+    geom_sf(data = iso_poly, aes(fill = as.factor(isochrone)), color = "black") + 
+    scale_color_manual(values = c("Station Location" = "purple")) +
     theme_void() + 
-    guides(fill = guide_legend(title = "Proximity to Closest Station (minutes)")) + 
-    theme(legend.position = "bottom") + 
+    guides(
+      fill = guide_legend(title = "Station Travel Time Isochrones", nrow = 1),
+      color = guide_legend(title = "", override.aes = list(size = 4))
+    ) +
+    theme(
+      legend.position = "bottom",
+      legend.box = "horizontal",
+      legend.key.size = unit(0.5, "lines"),
+      legend.text = element_text(size = 8)
+    ) +
     labs(title = map_title, subtitle = paste0("Transit System: ", transit_system, ", open stations as of ", year))
   
   ggsave(filename = paste0("3_output/2_figures/1_maps/1_station_geographies/", transit_system, ".png"), plot)
