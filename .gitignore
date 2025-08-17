@@ -11,3 +11,10 @@
 *.png
 *.html
 3_output/1_cleaned_data/3_LODES/1_preaggregated_metros/
+.Rprofile
+.Renviron
+rjavaenv/*
+1_data/2_station_geographies/us-south-latest.osm.pbf
+*.log
+*.json
+*.dat

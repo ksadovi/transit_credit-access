@@ -13,17 +13,35 @@ source("2_code/packages+defaults.R")
 # given metro (for example, DC, MD, VA, and WV in the DC metro area) and save 
 # that as a single RDS file to be used later. 
 # Note that this data is at the Census block level. 
-LODEing_data = function(states="all"){
-  if((states == c("all"))[1]){
-    states = c()
-    for(i in list.dirs("1_data/3_LODES/1_raw_files/", full.names = F) %>% Filter(function(x) x != "", .)){
-      states = append(states, i)
-    }
-  } else{
-    if((states %in% state.abb) == F) 
-      stop("Error: You didn't error a correct state abbreviation or the string 'all'. Please check your argument inputs.")
+LODEing_data = function(states="all", overwrite = F){
+  states_preag = c()
+  for(i in list.files("3_output/1_cleaned_data/3_LODES/1_preaggregated_metros/")){
+    stat = str_extract(i, "(?<=_)[^_\\.]+(?=\\.)")
+    states_preag = append(states_preag, stat)
   }
-  for(j in states){
+  states_completed = c()
+  for(i in list.files("3_output/1_cleaned_data/3_LODES/2_workerflow_tabs/")){
+    stat = str_extract(i, "(?<=_)[^_\\.]+(?=\\.)")
+    states_completed = append(states_completed, stat)
+  }
+  if(overwrite == F){
+    if((states %in% state.abb) == F & (states != c("all"))[1]) {
+      stop("Error: You didn't error a correct state abbreviation or the string 'all'. Please check your argument inputs.")
+    } else if((states != c("all"))[1]){
+      states_new = setdiff(states, states_completed)
+    } else if((states == c("all"))[1]){
+      states_new = setdiff(states_preag, states_completed)
+    }
+  } else{ # the case where overwrite == T
+    if((states %in% state.abb) == F & (states != c("all"))[1]) {
+      stop("Error: You didn't error a correct state abbreviation or the string 'all'. Please check your argument inputs.")
+    } else if((states != c("all"))[1]){
+      states_new = states
+    } else if((states == c("all"))[1]){
+      states_new = states_preag
+    }
+  }
+  for(j in states_new){
     dat = data.frame() %>% as_tibble()
     for(i in list.files(paste0("1_data/3_LODES/1_raw_files/", j), recursive = T, pattern = "*.csv", full.names = T)){
       df = fread(i) %>% as_tibble %>% 

@@ -1,32 +1,3 @@
-Column name,Explanation,Format,Notes
-Country,The country code of the project,,
-City,The city of the project,,
-Line,The name of the project,,
-Phase,The phase of the project,,
-Start year,Start year of construction,YYYY,
-End year,End year of construction,YYYY,
-RR?,Is it a regional rail project?,"0,1","Regional rail denotes a line running on mainline or mainline-compatible tracks, including commuter rail tunnels and RER and S-Bahn projects"
-Length,The length of the line or phase in kilometers,,
-TunnelPer,Percentage of tunnel,0-100%,
-Tunnel,Length of tunnel in kilometers,,"Tunnel length and percentage are the most accurate among the tunnel, elevated and at-grade values. Tunnel length information was often retrieved from the same sources as the cost and length information but elevated and at-grade lengths were calculated or derived from Open Street Maps."
-Elevated,Length of the section that is elevated,,"Tunnel length and percentage are the most accurate among the tunnel, elevated and at-grade values. Tunnel length information was often retrieved from the same sources as the cost and length information but elevated and at-grade lengths were calculated or derived from Open Street Maps."
-Atgrade,Length of the section that is at grade,,"Tunnel length and percentage are the most accurate among the tunnel, elevated and at-grade values. Tunnel length information was often retrieved from the same sources as the cost and length information but elevated and at-grade lengths were calculated or derived from Open Street Maps."
-Stations,The number of stations,,
-Platform Length (Meters),The length of platforms in meters,,
-Source1,"Source type for length, tunnel, station and platform data","Media
-Trade: Specialized industry journals such as railway gazette and railjournal
-Plan: Government Document, Wiki","Trade denotes specialized trade media, distinct from general mass media"
-Cost,Cost in original currency,,"For the majority of the entries, costs exclude rolling stock. In a few cases where disaggregated data doesn't exist, it may include rolling stock. See https://docs.google.com/spreadsheets/d/16GoHcbW-eVzHUUP_XCWVXS1s_i3ZBnmZh4kvdSX7muU/edit?usp=sharing for comments."
-Currency,Currency,,
-Year,"Year used to adjust cost for PPP and inflation. Often the mid year of construction, unless the Cost value is already adjusted for a given year.",,
-PPP rate,Purchasing power parity (2023),,Source: https://data.worldbank.org/indicator/PA.NUS.PPP
-Real cost,Cost in dollars adjusted for PPP (2023),,
-Cost/km (Millions),Cost per kilometer in dollars,,
-Inflation Index,Inflation index,,
-Real cost (2023 dollars),Cost in dollars adjusted for PPP and inflation (2023),,
-Cost/km (2023 dollars),Adjusted cost per kilometer,,
-Source2,Source type for cost data,"Media
-Trade: Specialized industry journals such as railway gazette and railjournal
-Plan: Government Document, Wiki""","Trade denotes specialized trade media, distinct from general mass media"
-Reference 1,Source link,,
-Reference 2,Additional source link,,
+version https://git-lfs.github.com/spec/v1
+oid sha256:6b6c4a20c0ea766224a0ee8259b3421a64111358fb4bf0c03a867be2f811bffd
+size 3020
