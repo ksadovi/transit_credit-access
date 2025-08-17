@@ -26,8 +26,8 @@ This folder is where I store all of the raw data I'm using. These are divided in
 ### Sources
 
 ## To Do: 
-- [ ] Standardize distance calculations 
+- [X] Standardize distance calculations 
   - [X] Try to implement [this solution](https://www.youtube.com/watch?v=tjNEoIYr_ag&t=773s) for spatial joins, will be more efficient 
   - [X] Keep in mind that what I want to do here is identify tracts that are within .25 miles from closest station, and those that are within 1 mile of closest station, and those that are farther than 1 mile. 
-- [ ] Implement [r5r](https://ipeagit.github.io/r5r/) for network travel times. Use this method for continuous vs discrete radii. 
+- [X] Implement [r5r](https://ipeagit.github.io/r5r/) for network travel times. Use this method for continuous vs discrete radii. 
 - [ ] Get started on Seattle lines
