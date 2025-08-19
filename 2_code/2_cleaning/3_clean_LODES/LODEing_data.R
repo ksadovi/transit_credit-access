@@ -4,7 +4,7 @@
 # Last updated: 7/9/2025
 
 # Preliminaries  --------
-source("2_code/packages+defaults.R")
+source("2_code/1_utilities/packages+defaults.R")
 
 # Load LODES data --------
 # This function allows the user to specify the states she wishes to save LODES
