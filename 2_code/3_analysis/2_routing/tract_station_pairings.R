@@ -1,4 +1,8 @@
-source("2_code/packages+defaults.R")
+# Name: 
+# Purpose: 
+# Last updated: 
+# Preliminaries  --------
+source("2_code/1_utilities/packages+defaults.R")
 
 tract_station_pairings = function(transit_system, map_title = "Map title", year = 2024, 
                                   overwrite_all = F){
