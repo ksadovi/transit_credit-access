@@ -1,14 +1,13 @@
-run_all = function(){
-  answer <- readline(prompt = "Are you sure you want to run this? It will take a long time and will 
-                     run all states and files. Type 'yes' to continue: ")
+run_all = function(overwrite = F){
+  answer <- readline(prompt = "Are you sure you want to run this? It will take a long time and will run all states and files. Set overwrite to false to shorten runtime. Type 'yes' to continue: ")
   
   if (tolower(answer) != "yes") {
     message("Aborted.")
     return(invisible(NULL))
   }
   
-  # Here is functionally an order of operations for reproducing this repo
-  source("2_code/1_function_library/run_all_functions.R")
+  # Load all necessary packages for this repo
+  source("2_code/1_utilities/packages+defaults.R")
   
   # Update the TCP data. This doesn't get updated too often, so not really necessary,
   # but doesn't take long. 
@@ -22,18 +21,18 @@ run_all = function(){
   
   # Process the LODES origin-destination data
   source("2_code/2_cleaning/3_clean_LODES/LODEing_data.R")
-  LODEing_data(states = "all", overwrite = T)
+  LODEing_data(states = "all", overwrite = overwrite)
   
   # Calculate the worker flow numbers by Census tract, year, and state. 
   source("2_code/3_analysis/1_worker_flows/flow_calcs.R")
-  flow_calcs(states = c("all"), overwrite = F)
+  flow_calcs(states = c("all"), overwrite = overwrite)
   
   # Identify closest transit station to each Census tract 
   source("2_code/3_analysis/2_routing/tract_station_pairings.R")
   tract_station_pairings(transit_system = "WMATA", map_title = "Census Tracts' Proximities to Closest Transit Station")
 }
 
-run_all()
+run_all(overwrite = F)
 
 # This is pretty much what I've got for now. The next step is standardizing the distance calculations analysis folder; 
 # I think this is going to be very region-specific so I'll probably have a bunch 
