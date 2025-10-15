@@ -1,0 +1,127 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=black,      
+    urlcolor=blue,
+    pdftitle={Overleaf Example},
+    pdfpagemode=FullScreen,
+    citecolor=black
+    }
+\usepackage{titlesec}
+\usepackage{ebgaramond} % Garamond font
+\usepackage{titling} % Control title spacing
+\usepackage[backend=biber,style=authoryear]{biblatex}
+\addbibresource{references.bib}
+
+
+% Set page margins
+\geometry{letterpaper, margin=1in}
+
+% Single-spacing with spacing between paragraphs
+\setstretch{1}
+\setlength{\parskip}{.5em}
+
+% Custom section formatting
+\titleformat{\section}{\normalfont\Large\bfseries}{\thesection.}{0.5em}{}[\titlerule] % Horizontal line under section title
+\titleformat{\subsection}{\normalfont\large\bfseries}{\thesubsection.}{0.5em}{} % Subsections without lines
+
+% Title and author
+\title{\textbf{Effects of Increased Access to Public Transit}}
+\author{}
+\date{\vspace{-2em}\today} % Minimal space for the date
+
+\begin{document}
+
+% Custom concise header
+\noindent
+\textbf{Kyra Sadovi} \\
+\textbf{Effects of Increased Access to Public Transit}\\
+\textbf{ECON 34460}\\
+\textbf{\today} 
+
+% Introduction
+\section{Introduction}
+I want to measure the impact of increased access to public transit on nearby residents. Specifically, I want to measure the impact of physical access to a new train station on the welfare of residents surrounding the station. I am interested in ``welfare'' from a consumer-finance perspective. My definition of welfare will focus on three metrics:  (1) worker flows, (2) income, and (3) credit access (as a function of credit scores, debt-to-income ratios, and homeownership). 
+
+I posit there are three mechanisms that would affect residents' welfare. First, residents are more likely to be able to retain current jobs with a more reliable mode of transportation. I am starting my analysis by measuring the impact of transit on worker flows for this reason. Second, this newfound mobility allows residents to search for higher-paying jobs in a wider selection of areas in their metro region. Third, having access to new networks that are less constrained by physical proximity will increase financial literacy (I talk about existing evidence for this in my discussion of \hyperref[sec:network_effects]{network effects}). To evaluate this effectively, I will exploit the random variation of transit project construction delays to parse out public transit’s effects on these metrics from exogenous labor-market trends.
+
+% Grounding in Existing Literature
+\section{Grounding in Existing Literature}
+\subsection{Welfare Impacts of Transit}
+Pérez, Vial, and Zárate address a very similar question in their 2022 paper on the effects of urban transit on labor market outcomes \parencite{perez_urban_2022}. They find that increased access to a subway system results in more market power for workers, as evidenced by higher wages for residents of a neighborhood which is newly connected to the transit system. The two major distinctions between my proposal and their paper are as follows: first, their setting is in Santiago, Chile, whereas I would be using American data to measure this effect. While the metro system in Santiago is much newer than many of the existing American subway systems (the first line opened in 1975), I will be focusing on new American stations in areas that are often receiving public transit access for the first time (Seattle, Los Angeles expansion, etc.). The second distinction between Pérez et al. and my proposal is that I aim to take the analysis a step further: in addition to measuring the impact of public transit on labor market outcomes, I want to also measure its impact on credit access and financial health of households. 
+
+The most well-known transit paper of late is certainly Nick Tsivanidis's work on the bus rapid transit system in Bogotá, Colombia \parencite{tsivanidis_evaluating_2022}. His paper centers on Bogotá’s Bus Rapid Transit (BRT) system—TransMilenio—which offers subway-like service at a fraction of the cost and was rolled out in three phases from 2000 to 2013. Rather than relying on distance-to-station methods, Tsivanidis develops and applies a quantitative urban model where transit infrastructure impacts city outcomes through a measure called “commuter market access” (CMA), which captures how transit connectivity influences access to jobs and workers across locations. Key findings show that TransMilenio increased GDP per capita by 2.4–4.1\% and accounted for up to 12\% of Bogotá’s GDP growth between 2000 and 2016. The study also shows that feeder buses, which extend access to outlying neighborhoods, yield greater welfare gains than central trunk lines. These results highlight the importance of modeling the full city-wide network structure when evaluating transit impacts and show that infrastructure’s indirect effects are substantial. 
+
+Another useful paper on the impacts of public transit on welfare is Justin Tyndall's work using airport lines as an instrument \parencite{tyndall_airports}. Tyndall finds that while there are positive labor market effects, these are offset by higher rents in the neighborhoods nearby to stations. However, while his instrument is innovative and his variables of interest are very similar to mine, my proposal will have two advantages. First, I intend to study \textit{individual-level} effects of transit: rather than focusing on the neighborhood level, I want to measure the impact of new transit on the individual. This will allow me to control for more heterogeneity and get more precise results than observing higher rents in an area. Second, I will attempt to use all new transit projects in the United States in the last two decades, where Tyndall only uses four cities in his sample. 
+
+Sanchez (1999) was an early paper to establish the importance of public transit in labor market outcomes, though his results were not easily generalizable and had the same problem as Tyndall's paper: its unit of observation was geographic, not individual \parencite{sanchez_connection_1999}. A recent paper demonstrating the clear positive impact of physical mobility on employment asserts robust findings for the positive impacts of vehicle ownership on youth employment after a meta-analysis of many such studies \parencite{bastiaanssen_transport_employmentfx}. However, while this supports my assertion that the key to the positive effects of public transit is physical mobility, Bastiaanssen et al. do not find robust results for non-private-vehicle settings (public transit).
+
+\subsection{Network Effects}
+\label{sec:network_effects}
+Network effects are a foundational component of this analysis because one of my fundamental assertions is that public transit improves consumer finance outcomes as a function of improved access to resources. One particularly important paper supporting this idea is Barwick et al.'s findings that ``information flow (measured by call volume) correlates strongly
+with worker flows'' \parencite{patacchini_referral_fx}. While this finding has little to do with spatial interactions, I assert that physical proximity does in fact matter for information exchange.
+
+\subsection{Spatial Proximity Effects}
+
+One paper that supports this idea is Kim et al. (one common coauthor with Barwick et al.) which demonstrates the importance of physical proximity for welfare gains \parencite{kim_spatial_2023}. They find ``greater geographical dispersion decreases the average welfare from social interactions''. 
+
+Similarly, Lindsay Relihan found compelling evidence that bank branches operated by local lenders benefit low-socioeconomic-status borrowers \parencite{Relihan2017BranchesIL}. More recently, Sakong and Zentefis found that poor access to neighborhood bank branches in the U.S. fully accounts for reduced use of branches among Black customers \parencite{sakong_bank_branches_geolocation}. These findings speak to my interest in measuring the effect of public transit on credit access: they demonstrate the importance of physical proximity to financial and professional resources for building credit and making informed financial decisions.
+
+% Econometric Strategy
+\section{Econometric Strategy}
+Anticipatory effects arise because of the long timeline of rail transit construction projects. In McMillen and McDonald's analysis of the construction of the Orange Line in Chicago, they find “the anticipated benefits of the new transit line began to be capitalized into house prices as early as...6 years before construction was completed,” \parencite{mcmillen_reaction_2004}. This implies that community residents, local businesses, and others adjust to the news of enhanced transit years before they gain access to it. In order to address anticipation effects, I will exploit exogenous variation in the timing of station openings generated by the unpredictable length of environmental reviews.
+
+One other identification challenge, however, is the fact that neighborhood selection is not a random choice. In order to address this, I aim to use a difference-in-differences model which somewhat mirrors Diamond et al.'s comparison of treated vs. untreated renters when measuring the impact of rent control, a neighborhood amenity somewhat similar to public transit \parencite{diamond_rent_control}. Diamond et al. exploit the fact that the rent control measure was quasi-randomly assigned within a given neighborhood $j$; I believe a similar logic is appropriate here. 
+
+Hector Blanco and coauthors use a similar logic for parsing out the effects of public housing demolitions on nearby residents and house prices \parencite{blanco_regenerations}. They study neighborhoods in England which demolish dilapidated public housing developments and replace them with mixed-income housing. Using an approach similar to the one I use below, they find that the effects of these new developments dissipate with space -- areas close to these regenerations experience larger increases in housing prices than do areas further away. 
+
+While sorting into particular neighborhoods is not random, the distribution of people within a neighborhood is somewhat more random. I therefore aim to measure the difference in outcomes between residents who live within 0.25 miles of the planned station (a threshold often used in the transit literature, see \parencite{tyndall_airports}to those who live in the same neighborhood but are more than 0.25 miles from the station. I can then compare this difference in neighborhoods who have experienced delays to those whose stations opened on time (or slightly closer to on-schedule). I will identify all workers who live within 2 miles of a train station as my sample. 
+
+$$\text{Worker Flows}_{i,j} = \alpha + \beta \text{Open Station}_{i,j} + \gamma \text{Proximity}_i +\lambda (\text{Open Station} \times \text{Proximity})_{i,j} + \delta_{i,j} + X_i + \varepsilon_{i,j}$$
+
+\begin{itemize}
+    \item $i$ denotes individual
+    \item $j$ denotes time period (in terms of the index I mention in my \hyperref[sec:data]{data} section)
+    \item $\text{Open Station}_{i,j}$ is a dummy for whether person $i$'s station is open in period $j$
+    \item $\text{Proximity}_{i}$ is a dummy for whether person $i$'s nearest station is within 0.25 miles of their home.
+    \item $\delta_{i,j}$ is calendar year fixed effects
+    \item $X_{i}$ is worker-level controls
+\end{itemize}
+
+% Data Sources
+\section{Data Sources}
+\label{sec:data}
+I am using data from the LEHD Origin-Destination Employment Statistics (LODES) for the purposes of measuring the impact of public transit on worker flows. The publicly accessible version only includes data at the Census tract level. My current plan is to run preliminary regressions demonstrating my idea's feasibility using geographic units, but I am hoping to gain access to the individual-level data. It would make my idea slightly more novel (many transit papers only use geographic instead of individual data) and certainly make my results more precise. 
+
+In order to construct the time index needed for my model, I am building a dataset of US transit projects. I begin with the \href{https://transitcosts.com/data/}{Transit Costs Project's} database of US transit projects from the last 20 years (constrained in order to best maximize LODES data use), I am collecting implementation data on each recent major public train project in the US. This information comes from Environmental Impact Statements (EIS) archived in the EPA's \href{https://cdxapps.epa.gov/cdx-enepa-II/public/action/eis/search}{EIS database}. I am logging: 
+\begin{itemize}
+    \item When these projects were finalized and announced (using EIS drafts as the metric for this)
+    \item When (or if) these projects were successfully completed and opened to the public
+    \item The intended opening date of each project
+\end{itemize}
+In so doing, I am creating a time index for each of these projects and tracking the construction delays on each. Such an index would equal $t=0$ when the transit project was scheduled to open; it would allow me to compare two projects, one which is open and one which is delayed, at the same timeline relative to when the projects were planned to be open to the public. Negative time periods will exist to denote the time between announcement of the station and the projected opening. 
+
+In addition to being a useful index for my proposal, creating this database of new transit projects with detailed data on their operation status by year will benefit other researchers in the future, and could result in a more policy-oriented proposal. For example, understanding the impact of delays on transit take-up could allow for a cost analysis of delays over time, allowing municipalities to measure how expensive it is to delay completion of such public transit projects. This approach could be replicated and generalized to public infrastructure projects writ large. 
+
+% Current Progress
+\section{Current Progress and Next Steps}
+I'm currently in the process of constructing the aforementioned transit dataset with information from the EPA. I have so far collected and cleaned  all data necessary to start running regressions for the DC-Maryland-Virginia area, which features an (albeit imperfect) example of two new train stations, one which was finalized and opened in 2022 (the Silver Line) and one which is still under construction and has been severely delayed (the Purple Line). I have also begun work mapping these stations over Census tracts and mapped the areas denoting worker flows by tract, as shown in figure \ref{fig:DC_map} below. While my aim is to be able to compare across MSAs and transit systems, my current aim is to get some results by the end of the summer which could be used to substantiate my request for more granular LEHD data. If such a request is not granted, though, I think this paper could still be written at the Census Tract level. In fact, my proposal even using the public LEHD data would be similar to the data used by Pérez et al. \parencite{perez_urban_2022}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{3_output/2_}
+\caption{Worker Outflows in the DC Metro Area by Census Tract}
+\label{fig:DC_map}
+\end{figure}
+
+\newpage
+\printbibliography
+\end{document}
