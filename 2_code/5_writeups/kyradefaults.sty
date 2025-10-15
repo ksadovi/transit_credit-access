@@ -1,0 +1,35 @@
+\ProvidesPackage{kyradefaults}
+
+%%% Math packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+%%% Tables and formatting
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xparse}
+
+%%% Language setup
+\usepackage[english]{babel}
+\usepackage{csquotes}
+
+%need to fix this so that it can take multiple citations
+%\newcommand{\kyracite}[1]{\textcolor{gray}{\scriptsize\citeauthor{#1} \citeyear{#1}}}
+
+%%%%% My functions 
+\newcommand{\var}[1]{\text{Var}(#1)}
+
+\NewDocumentCommand{\kyracite}{>{\SplitList{,}}m}{%
+  \ProcessList{#1}{\mycmdprocess}%
+}
+
+\NewDocumentCommand{\mycmdprocess}{m}{%
+  % Define what happens to each argument here
+  {\textcolor{gray}{\scriptsize\citeauthor{#1} \citeyear{#1}}}
+}
+
