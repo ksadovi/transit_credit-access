@@ -1,0 +1,55 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{geometry}
+\geometry{letterpaper, margin=1in}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage[style=authoryear,sorting=ynt]{biblatex}
+\bibliography{references}
+
+\title{Notes on BH 2024}
+\author{Kyra Sadovi}
+\date{}
+
+\begin{document}
+\section{Overview and Synopsis of Contributions}
+Start with the idealized example of exogenous transportation shocks from an RCT are used to estimate the local effects of market access (MA) growth. MA captures the average cost of transportation from region $l$ to other regions. The linear structural equation relating MA growth to the growth of a regional outcome like land value is: 
+\begin{equation}
+    \Delta\log V_l=\beta\Delta\log MA_l+\varepsilon_l\label{idealized_struct_eq}
+\end{equation}
+We see that $\varepsilon_l$ captures unobserved shocks to local productivity and amenities occurring in region $l$ between the two periods. \\
+Three key insights of this paper: 
+\begin{enumerate}
+    \item Even in this idealized example in equation (\ref{idealized_struct_eq}), non-random exposure to exogenous transportation shocks can generate omitted variable bias in regression estimates of $\beta$. \textbf{Eliminating OVB is one of the main objectives of this approach.}
+    \begin{itemize}
+        \item The way I'm thinking about this is that randomizing shocks doesn't randomize exposure \textit{if/when} we're in a setting (like this one) where the instrument is affected by multiple sources of variation
+    \end{itemize}
+    \item Construct a recentered measure: 
+    \begin{equation}
+        \tilde{z}_l=\Delta\log MA_l-\mu_l\label{z_tilde}
+    \end{equation}
+    We can then use (\ref{z_tilde}) as an instrument in equation (\ref{idealized_struct_eq}). In OLS estimation one can leverage the same as-good-as-random variation by controlling for $\mu_l$. This ``can be seen as a systematic way to pick the appropriate function of geography that purges bias from non-random exposure''\parencite[p. 9]{borusyak_non-random_2020}
+    \item Problems with statistical inference on $\beta$ can also be overcome by simulating counterfactual transportation upgrades. 
+\end{enumerate}
+\section{General Econometric Framework}
+Assume $y_l$ and $x_l$ are \textbf{observed}. This is going to be important for deciding which stations to include. We want to estimate the structural parameter $\beta$ (causal effect) such that: 
+\begin{equation}
+    y_l=\beta x_l+\varepsilon_l\label{causal_model}
+\end{equation}
+We (the researcher) construct a candidate instrument $z_l$ which incorporates variation from exogenous shocks $g$, an $N\times1$ vector, and $w$, which are predetermined variables that govern a unit's exposure to shocks. Then they're combined in the unit-level function: 
+\begin{equation}
+    z_l=f_l(g;w)\label{f_gw}
+\end{equation}
+
+Assumptions (or lack thereof):
+\begin{enumerate}
+    \item We don't assume that $x_l,y_l$ are $iid$ because we anticipate common exposure across $l$ to observed and unobserved shocks. 
+    \item \textbf{Shock exogeneity}: $g\perp\varepsilon|w$
+    \begin{itemize}
+        \item This imposes an exclusion restriction: the realization of shocks only affects the outcome of each unit via its treatment $x_l$ and not $\varepsilon_l$. This is violated when equation (\ref{causal_model}) is misspecified (i.e. when the chosen instrument inadequately captures the effects of the shock on the dependent variable). 
+        \item But this assumption also allows $w$ to contain variables that govern the shock assignment process. (look at appendix c.1)
+    \end{itemize}
+\end{enumerate}
+\newpage
+\printbibliography
+\end{document}
