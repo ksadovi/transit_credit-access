@@ -1,7 +1,7 @@
 # Name: DMV_flows.R 
 # Purpose: Create spatial objects for DMV worker flows and plot them in a map. 
 # Last updated: 7/4/2025
-source("2_code/packages+defaults.R")
+source("2_code/1_utilities/packages+defaults.R")
 path_in = "1_data/LODES/"
 path_out = "3_output/"
 
@@ -9,10 +9,11 @@ path_out = "3_output/"
 ## DMV Polygons ##
 ##################
 
-station_poly = update_stations()
+station_poly = update_stations()[which(year(as.Date(station_poly$initial_DEIS_date, format = "%m/%d/%y")) >= 
+                              first_lodes_year & station_poly$lines_serviced != "Purple"),]
 
 dc_flows = read_rds("3_output/1_cleaned_data/3_LODES/2_workerflow_tabs/flows_tracts_DC.rds") %>% 
-  filter(census_year == 2015) %>% mutate(GEOID = tract) %>% subset(select = -c(tract))
+  filter(census_year == 2018) %>% mutate(GEOID = tract) %>% subset(select = -c(tract))
 
 dc_metro <- core_based_statistical_areas(cb = TRUE, year = 2020) %>%
   filter(str_detect(NAME, "Washington-Arlington-Alexandria, DC-VA-MD-WV")) %>%
@@ -39,20 +40,31 @@ dc_tracts = map_dfr(c("DC"), ~{
 dc_metro_tracts <- dmv_tracts[dc_counties, ] %>% 
   erase_water() %>% 
   left_join(dc_flows)
+
+# Just for now, filtering from tract_station_pairings
+
 ggplot() + 
   # geom_sf(data = dc_metro_tracts, fill = "white", color = "black") +
   # geom_sf(data = dc_counties, fill = NA, color = "black") +
-  geom_sf(data = dc_metro_tracts, color = "blue", aes(fill = inflows)) +
-  geom_sf(data = dc_metro_tracts %>% filter(AFFGEOID == "1400000US51059980200"), color = "red", fill ="red") + 
+  geom_sf(data = dc_metro_tracts %>% filter(TRACTCE %in% affected_tracts$TRACTCE) %>% 
+            mutate(outflows = ifelse(STUSPS %in% c("DC", "MD"), NA, outflows)), color = "blue", aes(fill = outflows)) +
   geom_sf(data = station_poly %>% filter(grepl(pattern = "Green", x = lines_serviced)), size = 3, shape = 23, fill = "green") +
   geom_sf(data = station_poly %>% filter(grepl(pattern = "Red", x = lines_serviced)), size = 3, shape = 23, fill = "red") +
-  geom_sf(data = station_poly %>% filter(grepl(pattern = "Silver", x = lines_serviced)), size = 3, shape = 23, fill = "gray") +
+  geom_sf(data = station_poly %>% filter(grepl(pattern = "Silver", x = lines_serviced)), aes(color = "Silver Line Station"), size = 3, shape = 23, fill = "gray") +
   geom_sf(data = station_poly %>% filter(grepl(pattern = "Blue", x = lines_serviced)), size = 3, shape = 23, fill = "blue") +
-  geom_sf(data = station_poly %>% filter(grepl(pattern = "Yellow", x = lines_serviced)), size = 3, shape = 23, fill = "yellow") +
+  geom_sf(data = station_poly %>% filter(grepl(pattern = "Yellow", x = lines_serviced)), aes(color = "Yellow Line Station"),size = 3, shape = 23, fill = "yellow") +
   geom_sf(data = station_poly %>% filter(grepl(pattern = "Orange", x = lines_serviced)), size = 3, shape = 23, fill = "orange") +
   # geom_sf(data = dmv_tract_centroids, size = 1, shape = 15, fill = "red") + 
-  geom_sf(data = dc_boundary, color = "yellow", fill = NA, size = 10) + 
-  theme_classic() + 
+  # geom_sf(data = dc_boundary, color = "yellow", fill = NA, size = 10) + 
+  theme_void() + 
+  scale_color_manual(name = "Metro Lines", values = c("Silver Line Station" = "gray", "Yellow Line Station" = "yellow")) + 
+  scale_fill_viridis_c(na.value = "white", option = "F", name = "Outflows") + 
+  theme(
+    legend.position = "bottom",
+    legend.box = "vertical",
+    legend.key.size = unit(0.5, "lines"),
+    legend.text = element_text(size = 8)
+  ) +
   # Entire metro view
   # coord_sf(default_crs = sf::st_crs(4326),
   #          xlim = c(-77.25, -76.8),
@@ -60,11 +72,15 @@ ggplot() +
   # )
   # DC view
   coord_sf(default_crs = sf::st_crs(4326),
-           xlim = c(-77.29, -76.83),
-           ylim = c(38.75, 39.1)
+           xlim = c(-77.53, -77.02),
+           ylim = c(38.8, 39.06)
   ) + 
-  guides(fill=guide_legend(title="Number of Workers")) + 
-  theme(legend.position="bottom")
+  guides(fill=guide_legend(title="Number of Workers"),
+         color=guide_legend(title="Metro Lines")
+         ) + 
+  theme(legend.position="bottom") + 
+  labs(title = "Worker Outflows by Tract in 2022", 
+       subtitle = "Transit System: WMATA, open stations as of 2023")
 
 ggsave(filename = "3_output/dmv_map.png")
 
