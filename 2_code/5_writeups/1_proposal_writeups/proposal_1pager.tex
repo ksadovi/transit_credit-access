@@ -6,6 +6,9 @@
 \usepackage{setspace}
 \usepackage{soul}
 \usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{subcaption}
 \hypersetup{
     colorlinks=true,
     linkcolor=blue,
@@ -140,6 +143,28 @@ For each tract centroid, I calculate walking-time isochrones at 5, 10, 15, and 3
 In my next steps, I can leverage \texttt{r5r::travel\_time\_matrix()} to compute $\tau_{ck}(t;g_t)$ across origin–destination pairs for both realized and counterfactual network configurations. This step allows the CMA-based specification to reflect how the effective job-access radius expands or contracts under each simulated delay schedule.
 
 The level of granularity achievable through this package underscores why getting access to individual LODES data will be useful for this project. I would be able to measure CMA continuously with higher confidence, whereas relying on tract centroids at the moment makes it more defensible to use the binning strategy in equation (\hyperref[eq:bins]{\ref{eq:bins}}).
+
+\begin{figure}[H]
+  \centering
+  % First subfigure
+  \begin{subfigure}[b]{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{3_output/2_figures/1_maps/1_station_geographies/WMATA.png}
+    \caption{Isochrones}
+    \label{fig:dmv_walkingmap}
+  \end{subfigure}
+  \hfill
+  % Second subfigure
+  \begin{subfigure}[b]{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{3_output/dmv_map.png}
+    \caption{Worker Outflows}
+    \label{fig:outflows}
+  \end{subfigure}
+  %
+  \caption{Example of what \texttt{r5r} Implementation will look like. This will become more compelling as I use change in worker flows (this is just a cross-section here).}
+  \label{fig:two_side_by_side}
+\end{figure}
 
 \newpage
 \printbibliography
