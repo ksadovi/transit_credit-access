@@ -1,0 +1,276 @@
+% Unofficial UChicago CS Poster Template
+% https://github.com/k4rtik/uchicago-poster
+
+\documentclass[final]{beamer}
+
+% ====================
+% Packages
+% ====================
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[size=custom,width=120,height=72,scale=1.0]{beamerposter}
+\usetheme{gemini}
+\usecolortheme{uchicago}
+
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{doi}
+\usepackage[patch=none]{microtype}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{anyfontsize}
+\usepackage{amsmath,amssymb}
+
+\pdfstringdefDisableCommands{%
+\def\translate#1{#1}%
+}
+
+% ====================
+% Lengths
+% ====================
+% (N+1)*\sepwidth + N*\colwidth = \paperwidth
+\newlength{\sepwidth}
+\newlength{\colwidth}
+\setlength{\sepwidth}{0.025\paperwidth}
+\setlength{\colwidth}{0.3\paperwidth}
+\newcommand{\separatorcolumn}{\begin{column}{\sepwidth}\end{column}}
+
+% ====================
+% Title
+% ====================
+\title{All Aboard? Causal Evidence on Labor-Market Effects of New Rail Stations}
+
+\author{Kyra Sadovi}
+
+\institute[shortinst]{Harris School of Public Policy, University of Chicago}
+
+% ====================
+% Footer (optional)
+% ====================
+\footercontent{
+  19th Winter School on Inequality and Social Welfare Theory \hfill
+  \href{mailto:ksadovi@uchicago.edu}{ksadovi@uchicago.edu} \hfill
+  \texttt{Draft poster: design + data construction (no results yet)}
+}
+
+% ====================
+% Logo (optional)
+% ====================
+% If you *have* these logo files, you can uncomment and compile with them.
+% Otherwise, leave commented to avoid missing-file errors.
+%
+% \addtobeamertemplate{headline}{}
+% {
+%     \begin{tikzpicture}[remember picture,overlay]
+%       \node [anchor=north west, inner sep=2.5cm] at ([xshift=0.0cm,yshift=1.0cm]current page.north west)
+%       {\includegraphics[height=5.0cm]{logos/uc-logo-white.eps}};
+%     \end{tikzpicture}
+% }
+
+% ====================
+% Body
+% ====================
+\begin{document}
+
+\begin{frame}[t]
+\begin{columns}[t]
+\separatorcolumn
+
+% ====================
+% Column 1
+% ====================
+\begin{column}{\colwidth}
+
+  \begin{block}{Motivation}
+  \textbf{Question:} What is the causal effect of gaining \emph{walking-time access} to a new rail station on local labor-market outcomes?
+
+  \vspace{0.7em}
+  \textbf{Outcomes (LODES):}
+  \begin{itemize}
+    \item Worker flows (retention, job-to-job moves, inflows/outflows)
+    \item Income proxies (where available)
+  \end{itemize}
+
+  \vspace{0.7em}
+  \textbf{Mechanisms:}
+  \begin{itemize}
+    \item \textbf{Retention:} reliability reduces separation risk
+    \item \textbf{Search/match:} expands feasible job set
+    \item \textbf{Networks:} broader geographic reach increases referrals
+  \end{itemize}
+  \end{block}
+
+  \begin{block}{Data + Measurement (emphasizing visuals)}
+  \textbf{Transit projects and delays:} Transit Costs Project + EPA EIS timeline data.
+  \begin{itemize}
+    \item Planned opening $P_s$, realized opening $R_s$, delay $D_s = R_s - P_s$
+  \end{itemize}
+
+  \vspace{0.6em}
+  \textbf{Walking-time exposure:} \texttt{r5r} routing on pre-period pedestrian network.
+  \begin{itemize}
+    \item Isochrones: 5 / 10 / 15 / 30 minute walks from tract centroids
+    \item Replaces simple Euclidean buffers; incorporates barriers + street connectivity
+  \end{itemize}
+  \end{block}
+
+  \begin{block}{Identification challenges}
+  \begin{itemize}
+    \item \textbf{Anticipation:} projects are announced years before opening $\Rightarrow$ outcomes adjust pre-treatment.
+    \item \textbf{Resident sorting:} households/firms sort into connected neighborhoods.
+    \item \textbf{Planner sorting:} stations placed in dense/central neighborhoods.
+  \end{itemize}
+
+  \vspace{0.7em}
+  \textbf{Design choice:} focus on \emph{timing variation} from delays while acknowledging \emph{non-random exposure}.
+  \end{block}
+
+\end{column}
+
+\separatorcolumn
+
+% ====================
+% Column 2
+% ====================
+\begin{column}{\colwidth}
+  \begin{block}{Proof of concept: walking isochrones + worker flows}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.98\linewidth]{3_output/2_figures/1_maps/1_station_geographies/WMATA.png}
+  \end{figure}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.98\linewidth]{3_output/dmv_map.png}
+  \end{figure}
+  \end{block}
+
+  \begin{block}{Core setup (units, shocks, exposure)}
+  Units are Census tracts $c$ (public LODES). Stations indexed by $s$; time by $t$ (months).
+
+  \vspace{0.7em}
+  \textbf{Station open indicator:}
+  \[
+    O_{st}(g_t) = \mathbf{1}\{t \ge P_s + D_s\}, \quad D_s = R_s - P_s.
+  \]
+
+  \vspace{0.6em}
+  \textbf{Walking-time station set:}
+  \[
+    \mathcal{S}_c(T)=\{ s : d^{\text{walk}}_{cs} \le T \},\quad T=30.
+  \]
+
+  \vspace{0.6em}
+  \textbf{Binary bands (baseline spec):}
+  \[
+  z^{\text{bin}}_{ct} = \sum_{s\in \mathcal{S}_c(T)} O_{st}\Big[
+  \mathbf{1}\{d^{\text{walk}}_{cs}\in[0,5]\}
+  +\tfrac{2}{3}\mathbf{1}\{d^{\text{walk}}_{cs}\in(5,10]\}
+  +\tfrac{1}{3}\mathbf{1}\{d^{\text{walk}}_{cs}\in(10,15]\}\Big].
+  \]
+  \end{block}
+
+  \begin{alertblock}{Key move: Borusyak--Hull recentered instrument}
+  Even if \emph{timing} (delays) is quasi-random, \emph{exposure} is predictable from geography and centrality.
+
+  \vspace{0.6em}
+  \textbf{Recentering:} simulate counterfactual delay schedules (within “similar” cohorts) to compute expected exposure,
+  \[
+    \mu_{ct} = \frac{1}{B}\sum_{b=1}^B z^{\text{bin},(b)}_{ct},
+    \qquad
+    \tilde z_{ct} = z^{\text{bin}}_{ct} - \mu_{ct}.
+  \]
+  \textbf{Interpretation:} $\tilde z_{ct}$ isolates the “as-good-as-random” component of access driven by realized delays rather than deterministic spatial structure.
+  \end{alertblock}
+
+\end{column}
+
+\separatorcolumn
+
+% ====================
+% Column 3
+% ====================
+\begin{column}{\colwidth}
+
+  \begin{block}{Counterfactual assignment (how $\mu_{ct}$ is built)}
+  \textbf{Goal:} approximate the delay assignment process while preserving planned schedules.
+
+  \vspace{0.4em}
+  \textbf{Hold fixed:} planned opening dates $P_s$.
+
+  \textbf{Randomize:} delays $D_s$ \emph{within cohorts} that capture similarity:
+  \begin{itemize}
+    \item line type (light rail / tram / commuter rail)
+    \item baseline centrality class (CBD / inner / outer)
+    \item (optionally) corridor / metro area
+  \end{itemize}
+
+  \vspace{0.6em}
+  \begin{center}
+  \begin{tikzpicture}[
+    node distance=1.2cm,
+    box/.style={draw, rounded corners, align=center, inner sep=6pt},
+    arr/.style={-Latex, thick}
+  ]
+    \node[box] (obs) {Observed\\delays $\{D_s\}$};
+    \node[box, below=of obs] (perm) {Permute delays\\within cohorts};
+    \node[box, below=of perm] (net) {Counterfactual\\open dates $R_s^{(b)}=P_s+D_s^{(b)}$};
+    \node[box, below=of net] (exp) {Compute $z^{(b)}_{ct}$\\and average $\mu_{ct}$};
+
+    \draw[arr] (obs) -- (perm);
+    \draw[arr] (perm) -- (net);
+    \draw[arr] (net) -- (exp);
+  \end{tikzpicture}
+  \end{center}
+  \end{block}
+
+  \begin{block}{Your contribution: recentering + stacked DiD for dynamics}
+  \textbf{Why stack:} make cohort baselines transparent and recover event-time dynamics under staggered adoption.
+
+  \vspace{0.6em}
+  Define adoption time $A_c$ (baseline: realized opening threshold), event time $e=t-A_c$.
+
+  \vspace{0.4em}
+  For each adoption cohort $a$:
+  \begin{itemize}
+    \item treated: tracts with $A_c=a$
+    \item controls: tracts untreated within the event window
+  \end{itemize}
+
+  \vspace{0.6em}
+  \textbf{Where the BH piece enters:}
+  \begin{itemize}
+    \item treat $\tilde z_{ct}$ as the (exogenous) access shock inside each stacked sub-experiment, or
+    \item run stacked IV with $\tilde z_{ct}$ instrumenting $x_{ct}$ (e.g., CMA / access index)
+  \end{itemize}
+
+  \vspace{0.4em}
+  \textbf{Interpretation:} event-time ATTs among neighborhoods selected to receive stations (timing variation from delays).
+  \end{block}
+
+  \begin{block}{Next steps (what the audience should remember)}
+  \begin{itemize}
+    \item Build national station--timeline panel (EIS-based planned vs realized dates)
+    \item Validate delay “as-good-as-random” within cohorts (balance / placebo tests)
+    \item Estimate dynamic effects on flows and earnings proxies (LODES tract panel)
+  \end{itemize}
+  \end{block}
+
+  % \begin{block}{Selected references (short)}
+  % \small
+  % \begin{itemize}
+  %   \item Borusyak, Hull (and coauthors): recentered instruments for non-random exposure
+  %   \item Wing et al.: stacked difference-in-differences
+  %   \item Tsivanidis: market access / commuting-time accessibility logic
+  %   \item r5r: multimodal routing + isochrone construction
+  % \end{itemize}
+  % \end{block}
+
+\end{column}
+
+\separatorcolumn
+\end{columns}
+\end{frame}
+
+\end{document}
