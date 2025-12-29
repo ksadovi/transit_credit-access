@@ -161,7 +161,9 @@ tract_station_pairings = function(transit_system, map_title = "Map title", year 
       legend.position = "bottom",
       legend.box = "horizontal",
       legend.key.size = unit(0.5, "lines"),
-      legend.text = element_text(size = 8)
+      legend.text = element_text(size = 8), 
+      plot.margin  = margin(0, 0, 0, 0),
+      panel.spacing = unit(0, "lines")
     ) +
     labs(title = map_title, subtitle = paste0("Transit System: ", transit_system, ", open stations as of ", year))
   
