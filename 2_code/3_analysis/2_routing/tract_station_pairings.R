@@ -161,12 +161,12 @@ tract_station_pairings = function(transit_system, map_title = "Map title", year 
       legend.position = "bottom",
       legend.box = "horizontal",
       legend.key.size = unit(0.5, "lines"),
-      legend.text = element_text(size = 8), 
-      plot.margin  = margin(0, 0, 0, 0),
-      panel.spacing = unit(0, "lines")
+      legend.text = element_text(size = 8)
     ) +
     labs(title = map_title, subtitle = paste0("Transit System: ", transit_system, ", open stations as of ", year))
   
-  ggsave(filename = paste0("3_output/2_figures/1_maps/1_station_geographies/", transit_system, ".png"), plot)
+  graph_path = paste0("3_output/2_figures/1_maps/1_station_geographies/", transit_system, ".pdf")
+  ggsave(filename = graph_path, plot)
+  system(paste0("pdfcrop ", graph_path, " ", graph_path))
 }
 
