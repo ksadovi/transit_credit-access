@@ -1,76 +1,103 @@
-# Name: LODEing_data.R 
-# Purpose: Creates a function that loads LODES data by state required, cleans
-# it a bit, and saves it as an RDS file.
-# Last updated: 7/9/2025
-
-# Preliminaries  --------
-source("2_code/1_utilities/packages+defaults.R")
-
-# Load LODES data --------
-# This function allows the user to specify the states she wishes to save LODES
-# data from, clean it, and save it as an RDS file in the output subdirectory. My
-# intent here was to allow the user to combine states which will appear in a 
-# given metro (for example, DC, MD, VA, and WV in the DC metro area) and save 
-# that as a single RDS file to be used later. 
-# Note that this data is at the Census block level. 
-LODEing_data = function(states="all", overwrite = F){
-  states_preag = c()
-  for(i in list.files("3_output/1_cleaned_data/3_LODES/1_preaggregated_metros/")){
-    stat = str_extract(i, "(?<=_)[^_\\.]+(?=\\.)")
-    states_preag = append(states_preag, stat)
+LODEing_data <- function(overwrite   = FALSE,
+                         version     = "LODES8",
+                         job_type    = "JT01",
+                         segment     = "S000") {
+  
+  out_path     <- "3_output/1_cleaned_data/3_LODES/tract_station_lodes.rds"
+  cache_dir    <- "1_data/3_LODES/1_raw_files"
+  pairings_dir <- "3_output/1_cleaned_data/2_station_geographies"
+  
+  dir.create(dirname(out_path), recursive = TRUE, showWarnings = FALSE)
+  dir.create(cache_dir,         recursive = TRUE, showWarnings = FALSE)
+  
+  if (file.exists(out_path) && !overwrite) {
+    message("Output already exists. Use overwrite = TRUE to regenerate.")
+    return(invisible(read_rds(out_path)))
   }
-  states_completed = c()
-  for(i in list.files("3_output/1_cleaned_data/3_LODES/2_workerflow_tabs/")){
-    stat = str_extract(i, "(?<=_)[^_\\.]+(?=\\.)")
-    states_completed = append(states_completed, stat)
-  }
-  if(overwrite == F){
-    if((states %in% state.abb) == F & (states != c("all"))[1]) {
-      stop("Error: You didn't error a correct state abbreviation or the string 'all'. Please check your argument inputs.")
-    } else if((states != c("all"))[1]){
-      states_new = setdiff(states, states_completed)
-    } else if((states == c("all"))[1]){
-      states_new = setdiff(states_preag, states_completed)
-    }
-  } else{ # the case where overwrite == T
-    if((states %in% state.abb) == F & (states != c("all"))[1]) {
-      stop("Error: You didn't error a correct state abbreviation or the string 'all'. Please check your argument inputs.")
-    } else if((states != c("all"))[1]){
-      states_new = states
-    } else if((states == c("all"))[1]){
-      states_new = states_preag
-    }
-  }
-  for(j in states_new){
-    dat = data.frame() %>% as_tibble()
-    for(i in list.files(paste0("1_data/3_LODES/1_raw_files/", j), recursive = T, pattern = "*.csv", full.names = T)){
-      df = fread(i) %>% as_tibble %>% 
-        mutate(census_year = as.numeric(str_sub(i, start = -8, end = -5)), 
-               w_geocode = as.character(w_geocode), 
-               h_geocode = as.character(h_geocode)) %>% 
-        subset(select = c(w_geocode, h_geocode, S000, census_year))
-      dat = rbind(dat, df)
-      rm(df)
-    }
-    saveRDS(dat, file = paste0("3_output/1_cleaned_data/3_LODES/1_preaggregated_metros/", "worker_flows_blocks_", j, ".rds"))
-  } 
+  
+  # Step 1: collect all completed tract-station pairings --------------------
+  pairing_files <- list.files(pairings_dir,
+                              pattern   = "_tract_station_pairings\\.rds$",
+                              recursive = TRUE,
+                              full.names = TRUE)
+  if (length(pairing_files) == 0)
+    stop("No tract_station_pairings files found. Run tract_station_pairings() first.")
+  
+  pairings <- map_dfr(pairing_files, ~{
+    read_rds(.x) %>%
+      st_drop_geometry() %>%
+      dplyr::select(GEOID, STATEFP, starts_with("within_"))
+  })
+  
+  affected_geoids <- unique(pairings$GEOID)
+  
+  # Step 2: FIPS -> state abbreviation lookup --------------------------------
+  fips_lookup <- tigris::fips_codes %>%
+    dplyr::select(state_abb = state, state_code) %>%
+    distinct() %>%
+    mutate(state_code = str_pad(state_code, 2, pad = "0"))
+  
+  pairings <- pairings %>%
+    mutate(state_code = str_pad(STATEFP, 2, pad = "0")) %>%
+    left_join(fips_lookup, by = "state_code")
+  
+  states_needed <- unique(pairings$state_abb) %>% na.omit()
+  
+  # Step 3: download LODES for each state, filter immediately ----------------
+  years <- 2002:2023
+  
+  raw_lodes <- map_dfr(states_needed, function(st) {
+    message("Fetching LODES for ", st, "...")
+    map_dfr(years, function(yr) {
+      tryCatch(
+        lehdr::grab_lodes(
+          state        = tolower(st),
+          year         = yr,
+          version      = version,
+          lodes_type   = "od",
+          job_type     = job_type,
+          segment      = segment,
+          state_part   = "main",
+          agg_geo      = "tract",
+          download_dir = file.path(cache_dir, st),
+          use_cache    = TRUE
+        ) %>%
+          mutate(w_tract     = as.character(w_tract),
+                 h_tract     = as.character(h_tract),
+                 S000        = as.numeric(S000),
+                 census_year = yr) %>%
+          filter(w_tract %in% affected_geoids | h_tract %in% affected_geoids),
+        error = function(e) {
+          message("  No data for ", st, " ", yr, ": ", conditionMessage(e))
+          tibble()
+        }
+      )
+    })
+  })
+  
+  # Step 4: aggregate to (GEOID, year) inflows and outflows ------------------
+  inflows <- raw_lodes %>%
+    filter(w_tract %in% affected_geoids, h_tract != w_tract) %>%
+    group_by(GEOID = w_tract, census_year) %>%
+    summarise(inflows = sum(S000, na.rm = TRUE), .groups = "drop")
+  
+  outflows <- raw_lodes %>%
+    filter(h_tract %in% affected_geoids, h_tract != w_tract) %>%
+    group_by(GEOID = h_tract, census_year) %>%
+    summarise(outflows = sum(S000, na.rm = TRUE), .groups = "drop")
+  
+  flows <- full_join(inflows, outflows, by = c("GEOID", "census_year")) %>%
+    mutate(inflows  = replace_na(inflows,  0),
+           outflows = replace_na(outflows, 0))
+  
+  # Step 5: join station pairing metadata ------------------------------------
+  result <- flows %>%
+    left_join(
+      pairings %>% dplyr::select(GEOID, starts_with("within_")),
+      by = "GEOID"
+    )
+  
+  write_rds(result, out_path)
+  message("Saved ", nrow(result), " tract-year observations to ", out_path)
+  invisible(result)
 }
-
-# Note that LODES only started to add federal jobs in 2010, so this really throws off the worker counts for 
-# the DC area.
-# system.time(LODEing_data())
-
-# Sanity Check: --------
-# Here I'm calculating the number of employed people who live in one of the Hyde 
-# Park census tracts in Chicago. I'm checking this against this source, and it seems
-# approximately correct: 
-# https://datacommons.org/browser/geoId/17031410200?statVar=Count_Person_Years16Onwards_Employed_ResidesInHousehold
-
-# IL_LODES_blocks = read_rds("3_output/1_cleaned_data/3_LODES/worker_flows_blocks_IL.rds")
-# hp_home_tract = IL_LODES_blocks %>% filter(substr(h_geocode, start = 1, stop = 11) == '17031410200') %>% 
-#   aggregate(S000 ~ census_year, FUN = sum)
-# ggplot(data = hp_home_tract) +
-#   geom_line(aes(x = census_year, y = S000)) +
-#   labs(y = "Number of workers", x = "Year", title = "Employed Residents of Hyde Park, Chicago",
-#        subtitle = "Census Tract No. 17031410200") +
-#   theme_classic()

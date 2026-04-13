@@ -4,153 +4,190 @@
 # Preliminaries  --------
 source("2_code/1_utilities/packages+defaults.R")
 
-tract_station_pairings = function(transit_system, map_title = "Map title", year = 2024, 
-                                  overwrite_all = F){
-  # Paths as strings 
-  data_in_path = paste0("1_data/2_station_geographies/") 
-  data_out_path = paste0("3_output/1_cleaned_data/2_station_geographies/", transit_system)
+tract_station_pairings = function(transit_system, overwrite_all = F){
+  # Register an on.exit handler so the r5r Java core is *always* stopped, even
+  # if the function errors before reaching the explicit stop_r5() call below.
+  # Without this, each failed iteration in "all" mode leaks a live Java core,
+  # and subsequent setup_r5() calls accumulate on top of stale ones.
+  r5r_core = NULL
+  on.exit({
+    if (!is.null(r5r_core)) {
+      tryCatch(r5r::stop_r5(r5r_core), error = function(e) NULL)
+      rJava::.jgc()
+    }
+  }, add = TRUE, after = TRUE)
   
-  # Need to load the state geographies to identify which states we need to pull 
-  # Census tracts from. 
-  usa = st_as_sf(map("state", plot = F, fill = TRUE)) %>%
-    st_transform(4326) 
+  
+  # Paths as strings
+  data_in_path = paste0("1_data/2_station_geographies/")
+  data_out_path = paste0("3_output/1_cleaned_data/2_station_geographies/", transit_system)
+  dir.create(data_out_path, recursive = TRUE, showWarnings = FALSE)
+  
+  # Load state boundaries from tigris (covers all 50 states + DC, including Hawaii)
+  # and spatial-join to identify which state each station falls in.
+  usa = tigris::states(cb = TRUE) %>%
+    st_transform(4326) %>%
+    dplyr::select(state = STUSPS)
   
   sf_use_s2(FALSE)
-  # Updating stations using our function previously defined in eponymous file. 
+  
+  # Updating stations using our function previously defined in eponymous file.
   station_poly = update_stations() %>%
     st_join(usa) %>%
     # Focusing on one transit system at a time
-    filter(system == transit_system & year(open_date) <= year) %>% 
-    mutate(# Finding states for mapping
-           state = append(state.abb, "DC")[match(str_to_title(ID), append(state.name, "District Of Columbia"))]) %>% 
-    subset(select = -c(ID))
+    filter(system == transit_system) %>%
+    # Drop any rows where spatial join didn't match a state (shouldn't happen, but safe)
+    filter(!is.na(state))
   
   sf_use_s2(T)
   
-  # Grab tracts by state
+  # Grab tracts by state; validate immediately so s2 doesn't reject degenerate
+  # coastal geometries (duplicate vertices, etc.) during st_intersects below.
   metro_tracts <- map_dfr(unique(station_poly$state), ~{
-    tracts(.x, cb = TRUE, year = year)
+    tracts(.x, cb = TRUE)
   }, geometry = T) %>%
-    st_transform(4326) 
+    st_transform(4326) %>%
+    st_make_valid()
   
-  # Want to load the worker flow data because it's only worth looking at the stations
-  # which have opened after the beginning of the LODES data. We do this because some 
-  # metro areas are so large it's impossible to load, so this helps narrow the geographic
-  # area down for the r5r package. 
-  lodes_data = tibble()
-  for(i in unique(station_poly$state)){
-    lodes_data = read_rds(paste0("3_output/1_cleaned_data/3_LODES/2_workerflow_tabs/flows_tracts_", i, ".rds")) %>% 
-      rbind(lodes_data)
-  }
-  first_lodes_year = min(lodes_data$census_year)
+  affected_area = st_bbox(station_poly$geometry)
+  affected_sfc  = (affected_area + c(-0.05, -0.05, 0.05, 0.05)) %>% st_as_sfc() %>% st_transform(4326)
+  affected_tracts <- metro_tracts[st_intersects(metro_tracts, affected_sfc, sparse = FALSE)[, 1], ] %>% 
+    erase_water()
   
-  affected_area = st_bbox(station_poly$geometry[which(year(as.Date(station_poly$initial_DEIS_date, format = "%m/%d/%y")) >= 
-                                                       first_lodes_year)]) 
-  
-  affected_tracts <- metro_tracts[st_intersects(metro_tracts, affected_area %>% st_as_sfc %>%
-                                              st_transform(4326) , sparse = FALSE)[,1], ] %>%
-    erase_water(year = year)
-  
-  # Check that all of the relevant Open Street Maps packages are installed. 
-  osmosis_path = Sys.which("osmosis")[[1]]
+  # Verify all OSM CLI tools are available before doing any work
+  osmosis_path   = Sys.which("osmosis")[[1]]
   osmfilter_path = Sys.which("osmfilter")[[1]]
   osmconvert_path = Sys.which("osmconvert")[[1]]
-  necessary_packages = tibble(names = c("Osmosis", "OSMFilter", "OSMConvert"), 
-                              paths = c(osmosis_path, osmfilter_path, osmconvert_path))
-  if("" %in% necessary_packages$paths){
-    stop(paste0("You need to install the following packages: ", paste0(necessary_packages$names[which(necessary_packages$paths == "")], collapse = ", "),"."))
+  missing_tools = c(Osmosis = osmosis_path, OSMFilter = osmfilter_path, OSMConvert = osmconvert_path)
+  missing_tools = names(missing_tools[missing_tools == ""])
+  if (length(missing_tools) > 0)
+    stop("Missing required CLI tools: ", paste(missing_tools, collapse = ", "))
+  
+  best_match = suppressMessages(oe_match(st_make_valid(affected_sfc)))
+  message("Using Geofabrik extract for ", transit_system, ": ", best_match$url)
+  
+  large_pbf_path = paste(getwd(), data_in_path, basename(best_match$url), sep = "/")
+  system_pbf     = paste(getwd(), data_out_path, paste0(transit_system, ".pbf"), sep = "/")
+  
+  # overwrite_all = TRUE forces a fresh download of the full Geofabrik extract.
+  # The clipped system_pbf is always rebuilt whenever the large PBF is (re)downloaded.
+  if(!file.exists(large_pbf_path) || file.size(large_pbf_path) < 1000 || overwrite_all){
+    large_pbf_path = oe_download(best_match$url, download_directory = data_in_path,
+                                 max_file_size = Inf)
+    if(!file.exists(large_pbf_path))
+      stop("Download of ", best_match$url, " failed. ",
+           "Try downloading it manually and saving it as ", large_pbf_path, ".")
   }
   
-  large_pbf_path = paste(getwd(), data_in_path, basename(oe_match(affected_area)$url), sep = "/") %>% suppressMessages()
-  # path where you want to save the smaller .pbf file
-  smaller_pbf = paste(getwd(), data_out_path, paste0(transit_system, ".pbf"), sep = "/")
-  
-  # See if either of the above PBFs have already been downloaded. 
-  if(!file.exists(smaller_pbf)){
-    if(!file.exists(large_pbf_path)){
-      if(oe_match(affected_area)[2] >= 1.5) {
-        stop(paste0("The file you need is too big. Try downloading it from ", oe_match(affected_area)$url, " from your browser and save it as ", large_pbf_path, "."))
-      }
-      oe_download(oe_match(affected_area)$url, download_directory = data_path, max_file_size = 1.5, quiet = T)
+  if(!file.exists(system_pbf) || file.size(system_pbf) < 1000 || overwrite_all){
+    # Helper to run a system command and stop immediately on non-zero exit
+    run_cmd = function(cmd, step){
+      exit = system(cmd)
+      if(exit != 0) stop(step, " failed (exit code ", exit, ").\nCommand was: ", cmd)
     }
-    # prepare call to osmosis
-    osmosis_cmd = sprintf("%s --read-pbf %s --bounding-box left=%s bottom=%s right=%s top=%s --write-pbf %s",
-                          osmosis_path, large_pbf_path, 
-                          affected_area$xmin, affected_area$ymin, affected_area$xmax, affected_area$ymax,
-                          smaller_pbf)
     
-    osm_path = str_replace(smaller_pbf, ".pbf", ".osm")
+    # Step 1: Clip large PBF to the bounding box, padded by ~5 km in each direction
+    # so that isochrones from edge stations aren't cut off at the network boundary.
+    # At walking speed (~5 km/h), a 30-min isochrone can reach ~2.5 km; 0.05 degrees
+    # is ~5 km — enough headroom for the full walkable extent.
+    osmosis_area = affected_area + c(-0.05, -0.05, 0.05, 0.05)
+    osmosis_cmd = sprintf('%s --read-pbf "%s" --bounding-box left=%s bottom=%s right=%s top=%s --write-pbf "%s"',
+                          osmosis_path, large_pbf_path,
+                          osmosis_area["xmin"], osmosis_area["ymin"],
+                          osmosis_area["xmax"], osmosis_area["ymax"],
+                          system_pbf)
+    run_cmd(osmosis_cmd, "osmosis bbox clip")
+    if(file.size(system_pbf) < 1000)
+      stop("osmosis produced an empty or near-empty PBF for ", transit_system,
+           ". The bounding box may not overlap the extract — check that the correct PBF was downloaded.")
+    
+    # Steps 2–4: PBF → OSM → filter highways → PBF (reduces r5r network size)
+    osm_path = str_replace(system_pbf, ".pbf", ".osm")
     newosm_path = paste(getwd(), data_in_path, "highways.osm", sep = "/")
-    osmconvert_cmd = sprintf("osmconvert %s -o=%s", 
-                             smaller_pbf, osm_path)
-    osmfilter_cmd = sprintf("osmfilter %s --keep='highway=' -o=%s", 
-                            osm_path, newosm_path)
-    osmconvertback_cmd = sprintf("osmconvert %s -o=%s", 
-                                 newosm_path, smaller_pbf)
-    
-    # call to osmosis
-    system(osmosis_cmd)
-    system(osmconvert_cmd)
-    system(osmfilter_cmd)
-    system(osmconvertback_cmd)
+    run_cmd(sprintf('osmconvert "%s" -o="%s"', system_pbf, osm_path),  "osmconvert pbf→osm")
+    run_cmd(sprintf('osmfilter "%s" --keep="highway=" -o="%s"', osm_path, newosm_path), "osmfilter")
+    if(file.size(newosm_path) < 1000)
+      stop("osmfilter produced an empty result for ", transit_system,
+           ". The clipped area may contain no highway features.")
+    run_cmd(sprintf('osmconvert "%s" -o="%s"', newosm_path, system_pbf), "osmconvert osm→pbf")
   }
   
-  
-  
-  ###################################################################################
-  # 1.2 Setup elevation data 
-  affected_area2 = affected_area %>% st_as_sfc() %>% st_as_sf()
-  elev = get_elev_raster(locations = affected_area2, z = 10) # something's wrong here
-  try(writeRaster(elev, paste0(data_out_path, '/elev.tif'), options=c('TFW=NO'), overwrite = overwrite_all)) %>% 
+  # Setup elevation data
+  elev = get_elev_raster(locations = affected_sfc %>% st_as_sf(), z = 10) 
+  try(writeRaster(elev, paste0(data_out_path, '/elev.tif'), options = c('TFW=NO'), overwrite = overwrite_all)) %>%
     suppressWarnings() %>% suppressMessages()
-  # Setup r5r core
-  r5r_core = setup_r5(data_path = data_out_path, verbose = F, overwrite = overwrite_all)
+  
+  if (!file.exists(system_pbf) || file.size(system_pbf) < 1000)
+    stop("PBF file for ", transit_system, " is missing or empty: ", system_pbf)
+  
+  r5r_core = setup_r5(data_path = data_out_path, verbose = FALSE, overwrite = overwrite_all)
+  if(is.null(r5r_core) || !inherits(r5r_core, "jobjRef")){
+    stop("setup_r5() failed for ", transit_system, " — check that the PBF file in ",
+         data_out_path, " is valid and that Java has enough memory.")
+  }
   
   # 2) load origin/destination points and set arguments
-  stations = station_poly %>% 
-    mutate(lat = st_coordinates(geometry)[,2], 
-           lon = st_coordinates(geometry)[,1], 
-           id = station) %>%
-    #Really, we only care about the stations that opened after our first LODES observation 
-    filter(year(as.Date(initial_DEIS_date, format = "%m/%d/%y")) >= first_lodes_year)
+  stations = station_poly %>%
+    mutate(lat = st_coordinates(geometry)[,2],
+           lon = st_coordinates(geometry)[,1],
+           id = station) 
   
   mode <- c("WALK")
-  max_walk_time <- 30 # minutes
-  max_trip_duration <- max_walk_time # minutes
   departure_datetime <- as.POSIXct("13-05-2019 14:00:00",
                                    format = "%d-%m-%Y %H:%M:%S", tz = 'America/New_York')
-  iso_poly <- isochrone(
-    r5r_core = r5r_core,
-    origins = stations %>% subset(select = c(id, lon, lat)),
-    mode = mode,
-    polygon_output = T,
-    departure_datetime = departure_datetime, 
-    cutoffs = c(5,15,30), verbose = F
-  ) 
   
-  iso_poly$tracts <- lapply(iso_poly$polygons, function(p) {
+  origins_df = stations %>% subset(select = c(id, lon, lat))
+  
+  net = r5r::street_network_to_sf(r5r_core)
+  
+  # Keep only vertices that sit on at least one walkable edge
+  walk_edges    = net$edges %>% dplyr::filter(walk == TRUE)
+  walkable_vids = unique(c(walk_edges$from_vertex, walk_edges$to_vertex))
+  walk_verts    = net$vertices %>% dplyr::filter(index %in% walkable_vids) %>%
+    st_transform(4326)
+  
+  # Snap each origin to the nearest such vertex
+  origins_sf     = st_as_sf(origins_df, coords = c("lon", "lat"), crs = 4326)
+  nearest_idx    = st_nearest_feature(origins_sf, walk_verts)
+  snapped_coords = st_coordinates(walk_verts)[nearest_idx, , drop = FALSE]
+  origins_snapped = origins_df %>%
+    mutate(lon = snapped_coords[, "X"],
+           lat = snapped_coords[, "Y"])
+  
+  iso_poly <- isochrone(r5r_core = r5r_core, origins = origins_snapped, mode = mode,
+                        polygon_output = TRUE, departure_datetime = departure_datetime,
+                        cutoffs = c(5, 15, 30), verbose = FALSE)
+  
+  # Free the r5r core as soon as we're done with routing
+  r5r::stop_r5(r5r_core)
+  rJava::.jgc()
+  r5r_core = NULL
+  
+  iso_geom_col = attr(iso_poly, "sf_column")
+  iso_poly$tracts <- lapply(iso_poly[[iso_geom_col]], function(p) {
     metro_tracts$GEOID[st_intersects(p, metro_tracts$geometry)[[1]]]
   })
   
-  merge = affected_tracts %>% st_drop_geometry() %>% 
+  merge = affected_tracts %>% st_drop_geometry() %>%
     left_join(
       iso_poly %>%
         unnest(tracts) %>%
-        pivot_wider(names_from = isochrone, 
-                    values_from = id, 
-                    names_prefix = "within_", 
-                    values_fill = NA) %>% group_by(tracts) %>% 
+        pivot_wider(names_from = isochrone,
+                    values_from = id,
+                    names_prefix = "within_",
+                    values_fill = NA) %>% group_by(tracts) %>%
         mutate(GEOID = tracts) %>% subset(select = -c(tracts)) %>% st_drop_geometry()
-    ) %>% 
-    left_join(metro_tracts) 
+    ) %>%
+    left_join(metro_tracts)
   
-  write_rds(merge, file = paste0("3_output/1_cleaned_data/2_station_geographies/", transit_system, 
+  write_rds(merge, file = paste0("3_output/1_cleaned_data/2_station_geographies/", transit_system,
                                  "_tract_station_pairings.rds"))
   # plot
-  plot = ggplot() +
+  plot =
+    ggplot() +
     geom_sf(data = affected_tracts, color = "black") +
+    geom_sf(data = iso_poly, aes(fill = as.factor(isochrone)), color = "black") +
     geom_sf(data = stations, aes(color = "Station Location"), show.legend = TRUE) +
-    geom_sf(data = iso_poly, aes(fill = as.factor(isochrone)), color = "black") + 
     scale_color_manual(values = c("Station Location" = "purple")) +
     theme_void() + 
     guides(
@@ -163,10 +200,10 @@ tract_station_pairings = function(transit_system, map_title = "Map title", year 
       legend.key.size = unit(0.5, "lines"),
       legend.text = element_text(size = 8)
     ) +
-    labs(title = map_title, subtitle = paste0("Transit System: ", transit_system, ", open stations as of ", year))
+    labs(title = "Census Tracts' Proximities to Closest Transit Station", subtitle = paste0("Transit System: ", transit_system, ", open stations."))
   
   graph_path = paste0("3_output/2_figures/1_maps/1_station_geographies/", transit_system, ".pdf")
+  dir.create(dirname(graph_path), recursive = TRUE, showWarnings = FALSE)
   ggsave(filename = graph_path, plot)
-  system(paste0("pdfcrop ", graph_path, " ", graph_path))
+  system(sprintf('pdfcrop "%s" "%s"', graph_path, graph_path))
 }
-
