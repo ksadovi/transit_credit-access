@@ -29,7 +29,7 @@ run_all = function(overwrite = F){
   
   # Identify closest transit station to each Census tract 
   source("2_code/3_analysis/2_routing/tract_station_pairings.R")
-  tract_station_pairings(transit_system = "WMATA", map_title = "Census Tracts' Proximities to Closest Transit Station")
+  tract_station_pairings(transit_system = "WMATA")
 }
 
 run_all(overwrite = F)
