@@ -39,6 +39,18 @@ df_state <- st_join(
 library(knitr)
 library(kableExtra)
 
+# Wrap the tabular environment in \resizebox{\linewidth}{!}{...} so every
+# table file is self-sizing.  Beamer frames then only need \input{file.tex}
+# with no adjustbox wrapper in the .tex source.
+wrap_for_beamer <- function(filepath) {
+  lines <- readLines(filepath, warn = FALSE)
+  begin_tab <- grep("\\\\begin\\{tabular", lines)[1]
+  end_tab   <- tail(grep("\\\\end\\{tabular", lines), 1)
+  lines[begin_tab] <- paste0("\\resizebox{\\linewidth}{!}{%\n", lines[begin_tab])
+  lines[end_tab]   <- paste0(lines[end_tab], "%\n}")
+  writeLines(lines, filepath)
+}
+
 desc_tab_dir <- file.path("3_output", "3_tables", "0_descriptive")
 desc_fig_dir <- file.path("3_output", "2_figures", "0_descriptive")
 dir.create(desc_tab_dir, showWarnings = FALSE, recursive = TRUE)
@@ -65,20 +77,24 @@ sum_tbl <- tibble::tribble(
                                          )
 )
 
-kable(
-  sum_tbl,
-  format    = "latex",
-  booktabs  = TRUE,
-  escape    = FALSE,
-  col.names = c("", ""),
-  linesep   = ""
-) %>%
-  kable_styling(
-    latex_options = c("hold_position"),
-    font_size     = 10,
-    full_width    = FALSE
-  ) %>%
-  save_kable(file.path(desc_tab_dir, "delay_descriptive.tex"))
+# Write bare LaTeX fragments (no \documentclass wrapper) so \input{} works in Beamer.
+# save_kable() adds a full document preamble; writeLines(as.character()) does not.
+# Also omit hold_position: it wraps in a table float, which Beamer can't place.
+writeLines(
+  as.character(
+    kable(
+      sum_tbl,
+      format    = "latex",
+      booktabs  = TRUE,
+      escape    = FALSE,
+      col.names = c("", ""),
+      linesep   = ""
+    ) %>%
+      kable_styling(font_size = 10, full_width = FALSE)
+  ),
+  file.path(desc_tab_dir, "delay_descriptive.tex")
+)
+wrap_for_beamer(file.path(desc_tab_dir, "delay_descriptive.tex"))
 
 # Per-system breakdown (for appendix)
 sys_sum <- df_desc %>%
@@ -93,19 +109,19 @@ sys_sum <- df_desc %>%
   ) %>%
   arrange(desc(`Mean (days)`))
 
-kable(
-  sys_sum,
-  format   = "latex",
-  booktabs = TRUE,
-  linesep  = "",
-  caption  = "Delay statistics by transit system",
-  label    = "tab:delay_by_system"
-) %>%
-  kable_styling(
-    latex_options = c("hold_position", "scale_down"),
-    font_size     = 9
-  ) %>%
-  save_kable(file.path(desc_tab_dir, "delay_by_system.tex"))
+writeLines(
+  as.character(
+    kable(
+      sys_sum,
+      format   = "latex",
+      booktabs = TRUE,
+      linesep  = ""
+    ) %>%
+      kable_styling(latex_options = "scale_down", font_size = 9)
+  ),
+  file.path(desc_tab_dir, "delay_by_system.tex")
+)
+wrap_for_beamer(file.path(desc_tab_dir, "delay_by_system.tex"))
 
 # Delay distribution histogram (x-axis in years for readability)
 df_desc <- df_desc %>% mutate(delay_yrs = delay_days / 365.25)
@@ -178,6 +194,7 @@ etable(m0, m1, vcov = "hetero",
        headers = c("No covariates", "Income"),
        file    = file.path(tab_dir, "delay_income_state_system_fe.tex"),
        replace = T)
+wrap_for_beamer(file.path(tab_dir, "delay_income_state_system_fe.tex"))
 
 # ── 4. Plot: delay vs. income, colored by system ──────────────────────────────
 p_income <- ggplot(df_full, aes(x = median_income / 1000, y = delay_days, color = system)) +
@@ -322,6 +339,7 @@ etable(
   file    = file.path(tab_dir, "delay_labormarket_within_system.tex"),
   replace = T
 )
+wrap_for_beamer(file.path(tab_dir, "delay_labormarket_within_system.tex"))
 
 # Joint Wald test: all labor market coefficients simultaneously zero
 cat("\n=== Joint Wald test: labor market vars jointly zero? ===\n")
@@ -384,6 +402,7 @@ etable(
   file    = file.path(tab_dir, "delay_labormarket_cross_system.tex"),
   replace = T
 )
+wrap_for_beamer(file.path(tab_dir, "delay_labormarket_cross_system.tex"))
 
 cat("\n=== Joint Wald test (cross-system): labor market vars jointly zero? ===\n")
 wald(m_cs_full, covar_z)

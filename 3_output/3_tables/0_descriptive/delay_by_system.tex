@@ -1,10 +1,9 @@
-\begin{table}[!h]
-\centering
-\caption{\label{tab:tab:delay_by_system}Delay statistics by transit system}
-\centering
+\begin{table}
+\centering\begingroup\fontsize{9}{11}\selectfont
+
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
-\fontsize{9}{11}\selectfont
-\begin{tabular}[t]{lrrrrrl}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lrrrrrl}
 \toprule
 system & N & Mean (days) & Median (days) & SD (days) & Max (days) & geometry\\
 \midrule
@@ -19,5 +18,7 @@ Sound Transit & 38 & 1865 & 1294 & 1387 & 5753 & MULTIPOINT ((-122.2965 47.8...\
 MTA NYCT & 4 & 1639 & 1492 & 294 & 2081 & MULTIPOINT ((-73.9478 40.78...\\
 LA Metro & 12 & 1404 & 1406 & 539 & 2379 & MULTIPOINT ((-118.3787 33.9...\\
 \bottomrule
-\end{tabular}}
+\end{tabular}}%
+}
+\endgroup{}
 \end{table}
