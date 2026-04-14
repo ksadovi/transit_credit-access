@@ -14,6 +14,7 @@
 \usepackage{subcaption}
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
+\usepackage{adjustbox}
 
 % Theme setup
 \usetheme{Madrid}
@@ -184,42 +185,16 @@ on nearby residents' labor-market outcomes?
   \item \textbf{Instrument design (in progress):} Adapt \textcite{borusyak_nonrandom_2023}
         recentering to a stacked DiD framework, purging non-random exposure from baseline
         geography.
+  \item \textbf{Labor-market focus:} Unlike Tyndall's airport IV (city-specific geography),
+        Baum-Snow's highway decentralization (metro-level spatial reorganization), and
+        Tsivanidis's structural welfare model of Bogotá BRT, this paper uses delays ---
+        endemic to every US rail project --- to isolate tract-level employment and earnings effects.
 \end{enumerate}
-
-\medskip
-{\small\textit{Related: \textcite{tyndall_airports} (airport rail as instrument);
-Baum-Snow and Kahn (transit network expansion); Tsivranidis (Athens metro).}}
 \end{frame}
 
 % ══════════════════════════════════════════════════════════════════
 \section{Identification Design}
 % ══════════════════════════════════════════════════════════════════
-
-% ------ Slide 9 (Project-time index) ------
-\begin{frame}{The Project-Time Index}
-\small
-I organize all variation around a \textbf{project-time index}:
-\[
-  j = t - P_s
-\]
-where $t$ is the calendar year and $P_s$ is the projected opening year for station $s$.
-
-\bigskip
-\begin{itemize}
-  \item $j = 0$: the projected opening date --- all projects share this common origin.
-  \item $j < 0$: pre-opening period (announced but not yet open).
-  \item $j > 0$: post-projected-opening (station either open or delayed).
-\end{itemize}
-
-\bigskip
-Indexing by $j$ rather than calendar time lets me compare neighborhoods
-\emph{within} project time --- holding constant how far along each project is ---
-regardless of when construction started.
-
-\bigskip
-A station open at $j = 0$ opened on schedule. One that opens at $j = D_s > 0$
-was delayed by $D_s$ periods.
-\end{frame}
 
 % ------ Slide 10 ------
 \begin{frame}{The Basic Estimating Equation}
@@ -494,73 +469,34 @@ not state-level political economy.
 \includegraphics[width=0.85\textwidth]{3_output/2_figures/3_delay_robustness/mean_delay_by_state.png}
 \end{frame}
 
-% ------ Slide 19 (Income: argument) ------
+% ------ Slide 19 (Income: figure + button) ------
 \begin{frame}{Test 2: Neighborhood Income Does Not Predict Delay}
 \label{slide:income}
-\small
-\textbf{Specification:} OLS with state + system fixed effects (HC1 robust SEs)
-\[
-  \text{Delay}_s = \alpha_{\text{state}} + \alpha_{\text{system}}
-  + \beta \cdot \widetilde{\text{Income}}_c + \varepsilon_s
-\]
+\centering
+\includegraphics[width=0.82\textwidth]{3_output/2_figures/3_delay_robustness/delay_vs_income.png}
 
-\bigskip
-Standardized tract median income does not significantly predict delay length
-conditional on state and system FEs.\; Within-R$^2 \approx 0.002$.
-
-\bigskip
+\medskip
 \hyperlink{app:income_table}{\beamerbutton{Regression table $\to$}}
 \end{frame}
 
-% ------ Slide 20 (Income: figure) ------
-\begin{frame}{Neighborhood Income Does Not Predict Delay}
-\centering
-\includegraphics[width=0.85\textwidth]{3_output/2_figures/3_delay_robustness/delay_vs_income.png}
-\end{frame}
-
-% ------ Slide 21 (Within-system: merged figure + note) ------
+% ------ Slide 21 (Within-system: figure + button) ------
 \begin{frame}{Test 3: Labor Market Chars.\ Don't Predict Delay (Within System)}
 \label{slide:withinsystem}
-\small
-\begin{columns}[T]
-  \begin{column}{0.55\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{3_output/2_figures/3_delay_robustness/within_system_coef_plot.png}
-  \end{column}
-  \begin{column}{0.41\textwidth}
-    \vspace{1.5em}
-    \texttt{feols} with system FEs (HC1 SEs).
+\centering
+\includegraphics[width=0.82\textwidth]{3_output/2_figures/3_delay_robustness/within_system_coef_plot.png}
 
-    \medskip
-    Six labor-market predictors --- income, LFP rate, unemployment, employment rate,
-    bachelor's share, and poverty rate --- are jointly insignificant within systems.
-    Within-R$^2 = 0.056$.
-
-    \bigskip
-    \hyperlink{app:within_table}{\beamerbutton{Full regression table $\to$}}
-  \end{column}
-\end{columns}
+\medskip
+\hyperlink{app:within_table}{\beamerbutton{Full regression table $\to$}}
 \end{frame}
 
-% ------ Slide 23 (Cross-system: argument) ------
+% ------ Slide 23 (Cross-system: figure + button) ------
 \begin{frame}{Test 4: No Cross-System Pattern Either}
 \label{slide:crosssystem}
-\small
-No fixed effects --- state FEs dropped due to too few observations per state;
-system FEs dropped so cross-system co-movement is fully visible.
-
-\bigskip
-Estimates shift but remain insignificant with all FEs removed.
-The cross-system pattern is no more organized than the within-system one.
-
-\bigskip
-\hyperlink{app:cross_table}{\beamerbutton{Regression table $\to$}}
-\end{frame}
-
-% ------ Slide 24 (Cross-system: figure) ------
-\begin{frame}{No Cross-System Pattern Either}
 \centering
-\includegraphics[width=0.85\textwidth]{3_output/2_figures/3_delay_robustness/cross_vs_within_system_coef_plot.png}
+\includegraphics[width=0.82\textwidth]{3_output/2_figures/3_delay_robustness/cross_vs_within_system_coef_plot.png}
+
+\medskip
+\hyperlink{app:cross_table}{\beamerbutton{Regression table $\to$}}
 \end{frame}
 
 % ══════════════════════════════════════════════════════════════════
@@ -650,7 +586,9 @@ The cross-system pattern is no more organized than the within-system one.
 \begin{frame}[noframenumbering]{Appendix: Income Regression Table}
 \hypertarget{app:income_table}{}
 \centering
-{\small\input{3_output/3_tables/3_delay_robustness/delay_income_state_system_fe.tex}}
+\begin{adjustbox}{max width=\linewidth, max totalheight=0.82\textheight, center}
+  \input{3_output/3_tables/3_delay_robustness/delay_income_state_system_fe.tex}
+\end{adjustbox}
 
 \bigskip
 \hyperlink{slide:income}{\beamerbutton{$\leftarrow$ Back}}
@@ -660,7 +598,9 @@ The cross-system pattern is no more organized than the within-system one.
 \begin{frame}[noframenumbering]{Appendix: Within-System Regression Table}
 \hypertarget{app:within_table}{}
 \centering
-{\scriptsize\input{3_output/3_tables/3_delay_robustness/delay_labormarket_within_system.tex}}
+\begin{adjustbox}{max width=\linewidth, max totalheight=0.82\textheight, center}
+  \input{3_output/3_tables/3_delay_robustness/delay_labormarket_within_system.tex}
+\end{adjustbox}
 
 \bigskip
 \hyperlink{slide:withinsystem}{\beamerbutton{$\leftarrow$ Back}}
@@ -670,7 +610,9 @@ The cross-system pattern is no more organized than the within-system one.
 \begin{frame}[noframenumbering]{Appendix: Cross-System Regression Table}
 \hypertarget{app:cross_table}{}
 \centering
-{\scriptsize\input{3_output/3_tables/3_delay_robustness/delay_labormarket_cross_system.tex}}
+\begin{adjustbox}{max width=\linewidth, max totalheight=0.82\textheight, center}
+  \input{3_output/3_tables/3_delay_robustness/delay_labormarket_cross_system.tex}
+\end{adjustbox}
 
 \bigskip
 \hyperlink{slide:crosssystem}{\beamerbutton{$\leftarrow$ Back}}
