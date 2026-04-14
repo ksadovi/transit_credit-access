@@ -419,109 +419,98 @@ Four anticipated challenges:
 \textit{Next four slides address concerns 1--3 directly.}
 \end{frame}
 
-% ------ Slide 17 ------
+% ------ Slide 17 (Political: argument) ------
 \begin{frame}{Delay Length Is Not Politically Structured}
 \label{slide:political}
 \small
-\begin{columns}[T]
-  \begin{column}{0.50\textwidth}
-    \centering
-    % TODO: update path once figure regenerated from delay_robustness.R
-    \includegraphics[width=\textwidth]{3_output/2_figures/3_delay_robustness/mean_delay_by_state.png}
-  \end{column}
-  \begin{column}{0.46\textwidth}
-    \textbf{Political heterogeneity argument:}
-    \begin{itemize}
-      \item MA and FL have similar delay distributions despite being politically
-            polar opposites.
-      \item MA, CA, NY, and VA are politically similar yet span the \emph{full range}
-            of delay lengths.
-      \item HI's outlier status reflects HART's project-specific funding crisis,
-            not politics.
-    \end{itemize}
+\textbf{Political heterogeneity argument:}
+\begin{itemize}
+  \item MA and FL have similar delay distributions despite being politically
+        polar opposites.
+  \item MA, CA, NY, and VA are politically similar yet span the \emph{full range}
+        of delay lengths.
+  \item HI's outlier status reflects HART's project-specific funding crisis,
+        not politics.
+\end{itemize}
 
-    \bigskip
-    $\Rightarrow$ Delay length reflects project characteristics,
-    not state-level political economy.
-  \end{column}
-\end{columns}
+\bigskip
+$\Rightarrow$ Delay length reflects project characteristics,
+not state-level political economy.
+
+\bigskip
+\hyperlink{app:system_plot}{\beamerbutton{Delays by transit system $\to$}}
 \end{frame}
 
-% ------ Slide 18 ------
+% ------ Slide 18 (Political: figure) ------
+\begin{frame}{Delay Length Is Not Politically Structured}
+\centering
+\includegraphics[width=0.85\textwidth]{3_output/2_figures/3_delay_robustness/mean_delay_by_state.png}
+\end{frame}
+
+% ------ Slide 19 (Income: argument) ------
 \begin{frame}{Test 2: Neighborhood Income Does Not Predict Delay}
 \label{slide:income}
 \small
-\textbf{Specification:} OLS with state + system fixed effects (HC3 robust SEs)
+\textbf{Specification:} OLS with state + system fixed effects (HC1 robust SEs)
 \[
   \text{Delay}_s = \alpha_{\text{state}} + \alpha_{\text{system}}
   + \beta \cdot \widetilde{\text{Income}}_c + \varepsilon_s
 \]
 
-\begin{columns}[T]
-  \begin{column}{0.52\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{3_output/2_figures/3_delay_robustness/delay_vs_income.png}
-  \end{column}
-  \begin{column}{0.44\textwidth}
-    \vspace{4pt}
-    {\footnotesize
-    \input{3_output/3_tables/3_delay_robustness/delay_income_state_system_fe.tex}
-    }
-  \end{column}
-\end{columns}
-
-\vspace{2pt}
+\bigskip
 Standardized tract median income does not significantly predict delay length
-conditional on state and system FEs. Within-R$^2 \approx 0.002$.
+conditional on state and system FEs.\; Within-R$^2 \approx 0.002$.
+
+\bigskip
+\hyperlink{app:income_table}{\beamerbutton{Regression table $\to$}}
 \end{frame}
 
-% ------ Slide 19 ------
+% ------ Slide 20 (Income: figure) ------
+\begin{frame}{Neighborhood Income Does Not Predict Delay}
+\centering
+\includegraphics[width=0.85\textwidth]{3_output/2_figures/3_delay_robustness/delay_vs_income.png}
+\end{frame}
+
+% ------ Slide 21 (Within-system: argument) ------
 \begin{frame}{Test 3: Labor Market Characteristics Don't Predict Delay (Within System)}
 \label{slide:withinsystem}
 \small
-\textbf{Specification:} \texttt{feols} with system fixed effects (HC3 SEs)
+\textbf{Specification:} \texttt{feols} with system fixed effects (HC1 SEs)
 
-\begin{columns}[T]
-  \begin{column}{0.48\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{3_output/2_figures/3_delay_robustness/within_system_coef_plot.png}
-  \end{column}
-  \begin{column}{0.48\textwidth}
-    \vspace{4pt}
-    {\scriptsize
-    \input{3_output/3_tables/3_delay_robustness/delay_labormarket_within_system.tex}
-    }
-  \end{column}
-\end{columns}
-
-\vspace{2pt}
-Six labor-market predictors are jointly insignificant within systems.
+\bigskip
+Six labor-market predictors --- income, LFP rate, unemployment, employment rate,
+bachelor's share, and poverty rate --- are jointly insignificant within systems.
 Within-R$^2 = 0.056$.
+
+\bigskip
+\hyperlink{app:within_table}{\beamerbutton{Full regression table $\to$}}
 \end{frame}
 
-% ------ Slide 20 ------
+% ------ Slide 22 (Within-system: figure) ------
+\begin{frame}{Labor Market Chars.\ Don't Predict Delay (Within System)}
+\centering
+\includegraphics[width=0.85\textwidth]{3_output/2_figures/3_delay_robustness/within_system_coef_plot.png}
+\end{frame}
+
+% ------ Slide 23 (Cross-system: argument) ------
 \begin{frame}{Test 4: No Cross-System Pattern Either}
 \label{slide:crosssystem}
 \small
 \textbf{Specification:} State FEs only --- system-level co-movement between
 neighborhood characteristics and delay length is now visible.
 
-\begin{columns}[T]
-  \begin{column}{0.52\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{3_output/2_figures/3_delay_robustness/cross_vs_within_system_coef_plot.png}
-  \end{column}
-  \begin{column}{0.44\textwidth}
-    \vspace{4pt}
-    {\scriptsize
-    \input{3_output/3_tables/3_delay_robustness/delay_labormarket_cross_system.tex}
-    }
-  \end{column}
-\end{columns}
-
-\vspace{2pt}
+\bigskip
 Estimates move but remain insignificant when system FEs are removed.
 The cross-system pattern is no more organized than the within-system one.
+
+\bigskip
+\hyperlink{app:cross_table}{\beamerbutton{Regression table $\to$}}
+\end{frame}
+
+% ------ Slide 24 (Cross-system: figure) ------
+\begin{frame}{No Cross-System Pattern Either}
+\centering
+\includegraphics[width=0.85\textwidth]{3_output/2_figures/3_delay_robustness/cross_vs_within_system_coef_plot.png}
 \end{frame}
 
 % ══════════════════════════════════════════════════════════════════
@@ -589,6 +578,50 @@ The cross-system pattern is no more organized than the within-system one.
 % ══════════════════════════════════════════════════════════════════
 \begin{frame}[noframenumbering,plain,allowframebreaks]{References}
   \printbibliography[heading=none]
+\end{frame}
+
+% ══════════════════════════════════════════════════════════════════
+\appendix
+% ══════════════════════════════════════════════════════════════════
+
+% ------ Appendix A: Delays by transit system ------
+\begin{frame}[noframenumbering]{Appendix: Delays by Transit System}
+\hypertarget{app:system_plot}{}
+\centering
+\includegraphics[width=0.85\textwidth]{3_output/2_figures/3_delay_robustness/mean_delay_by_system.png}
+
+\bigskip
+\hyperlink{slide:political}{\beamerbutton{$\leftarrow$ Back}}
+\end{frame}
+
+% ------ Appendix B: Income regression table ------
+\begin{frame}[noframenumbering]{Appendix: Income Regression Table}
+\hypertarget{app:income_table}{}
+\centering
+{\small\input{3_output/3_tables/3_delay_robustness/delay_income_state_system_fe.tex}}
+
+\bigskip
+\hyperlink{slide:income}{\beamerbutton{$\leftarrow$ Back}}
+\end{frame}
+
+% ------ Appendix C: Within-system regression table ------
+\begin{frame}[noframenumbering]{Appendix: Within-System Regression Table}
+\hypertarget{app:within_table}{}
+\centering
+{\scriptsize\input{3_output/3_tables/3_delay_robustness/delay_labormarket_within_system.tex}}
+
+\bigskip
+\hyperlink{slide:withinsystem}{\beamerbutton{$\leftarrow$ Back}}
+\end{frame}
+
+% ------ Appendix D: Cross-system regression table ------
+\begin{frame}[noframenumbering]{Appendix: Cross-System Regression Table}
+\hypertarget{app:cross_table}{}
+\centering
+{\scriptsize\input{3_output/3_tables/3_delay_robustness/delay_labormarket_cross_system.tex}}
+
+\bigskip
+\hyperlink{slide:crosssystem}{\beamerbutton{$\leftarrow$ Back}}
 \end{frame}
 
 \end{document}
