@@ -245,21 +245,17 @@ p_coef <- ggplot(coef_df, aes(x = estimate, y = reorder(term, estimate))) +
 ggsave(file.path(out_dir, "within_system_coef_plot.png"),
        p_coef, width = 7, height = 5, dpi = 300)
 
-# ── 11. Cross-system regressions (state FE only, no system FE) ────────────────
+# ── 11. Cross-system regressions (no FEs) ─────────────────────────────────────
 # Tests whether systems serving lower-income / worse-labor-market neighborhoods
-# have systematically longer delays. System FE is dropped so that cross-system
-# variation is visible; state FE absorbs broad geographic / political economy
-# differences.
-df_lm_cross <- df_lm %>%
-  filter(!is.na(state))
+# have systematically longer delays. Both system and state FEs are dropped so
+# that the full cross-system variation is visible with no absorption.
+fml_cs_null <- as.formula("delay_days ~ 1")
+fml_cs_full <- as.formula(paste("delay_days ~", paste(covar_z, collapse = " + ")))
 
-fml_cs_null <- as.formula("delay_days ~ 1 | state")
-fml_cs_full <- as.formula(paste("delay_days ~", paste(covar_z, collapse = " + "), "| state"))
+m_cs_null <- feols(fml_cs_null, data = df_lm, vcov = "hetero")
+m_cs_full <- feols(fml_cs_full, data = df_lm, vcov = "hetero")
 
-m_cs_null <- feols(fml_cs_null, data = df_lm_cross, vcov = "hetero")
-m_cs_full <- feols(fml_cs_full, data = df_lm_cross, vcov = "hetero")
-
-cat("=== Cross-system: labor market → delay (state FE only, HC3 SEs) ===\n")
+cat("=== Cross-system: labor market → delay (no FEs, HC1 SEs) ===\n")
 etable(
   m_cs_null, m_cs_full,
   dict = c(
@@ -286,7 +282,7 @@ coef_df_cs <- tidy(m_cs_full, conf.int = TRUE) %>%
 # Combine within- and cross-system results for a side-by-side comparison
 coef_combined <- bind_rows(
   coef_df    %>% mutate(spec = "Within-system (system FE)"),
-  coef_df_cs %>% mutate(spec = "Cross-system (state FE only)")
+  coef_df_cs %>% mutate(spec = "Cross-system (no FEs)")
 )
 
 p_coef_cs <- ggplot(coef_combined,
@@ -296,13 +292,13 @@ p_coef_cs <- ggplot(coef_combined,
   geom_errorbarh(aes(xmin = conf.low, xmax = conf.high),
                  height = 0.25, position = position_dodgev(height = 0.5)) +
   geom_point(size = 3,           position = position_dodgev(height = 0.5)) +
-  scale_color_manual(values = c("Within-system (system FE)"    = "steelblue",
-                                "Cross-system (state FE only)" = "#c0392b")) +
-  scale_shape_manual(values = c("Within-system (system FE)"    = 16,
-                                "Cross-system (state FE only)" = 17)) +
+  scale_color_manual(values = c("Within-system (system FE)" = "steelblue",
+                                "Cross-system (no FEs)"     = "#c0392b")) +
+  scale_shape_manual(values = c("Within-system (system FE)" = 16,
+                                "Cross-system (no FEs)"     = 17)) +
   labs(
     title    = "Labor market predictors of station delay",
-    subtitle = "State FE only (cross-system) vs. system FE (within-system) | HC1 robust 95% CIs",
+    subtitle = "No FEs (cross-system) vs. system FE (within-system) | HC1 robust 95% CIs",
     x        = "Effect on delay (days per SD)",
     y        = NULL,
     color    = NULL,
