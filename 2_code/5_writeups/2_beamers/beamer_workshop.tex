@@ -74,16 +74,13 @@ transit --- the largest federal investment in US transit history.
 
 \bigskip
 \begin{itemize}
-  \item New Starts program: \$23B in capital grants to rail and BRT projects nationwide.
+  \item Capital Investment Grants program: \$23B in capital grants to rail and BRT projects nationwide.
   \item Dozens of new lines planned, under construction, or recently opened across the country.
+  \item Urban congestion is rising and demand for accessible cities is growing.
 \end{itemize}
 
 \bigskip
-Urban congestion is rising and demand for accessible cities is growing ---
-yet it is unclear whether transit investment actually delivers for workers.
-
-\bigskip
-\textbf{Yet we lack causal estimates:} Does physical access to a new rail station
+Does physical access to a new rail station
 actually improve labor-market outcomes for nearby residents?
 \end{frame}
 
@@ -105,12 +102,12 @@ A new rail station expands the reach of workers in three distinct but interconne
 \end{enumerate}
 
 \bigskip
-My focus: the reduced-form question --- does gaining a station increase
+My reduced-form question --- does gaining a station increase
 employment and earnings for nearby residents?
 \end{frame}
 
 % ------ Slide 5 ------
-\begin{frame}{Geographic Friction Is Heterogeneous}
+\begin{frame}{Transit Impacts are Heterogeneous}
 \small
 Transit access is far from uniform:
 
@@ -166,7 +163,7 @@ on nearby residents' labor-market outcomes?
 \bigskip\bigskip
 \textbf{Outcomes:}
 \begin{itemize}
-  \item Employment and earnings (LODES)
+  \item Employment and earnings 
   \item Worker flows: job retention, job-to-job transitions
 \end{itemize}
 
@@ -181,8 +178,7 @@ on nearby residents' labor-market outcomes?
         in off-the-shelf data.
   \item \textbf{Identification:} Construction delays create quasi-random variation in
         \emph{when} neighborhoods gain access, holding \emph{which} neighborhoods were
-        chosen constant.
-  \item \textbf{Instrument design (in progress):} Adapt \textcite{borusyak_nonrandom_2023}
+        chosen constant. In progress: adapt \textcite{borusyak_nonrandom_2023}
         recentering to a stacked DiD framework, purging non-random exposure from baseline
         geography.
   \item \textbf{Labor-market focus:} Unlike Tyndall's airport IV (city-specific geography),
@@ -201,28 +197,31 @@ on nearby residents' labor-market outcomes?
 \small
 \textbf{Baseline TWFE:}
 \[
-  y_{i,j} = \alpha_i + \alpha_j
-           + \beta \cdot \text{Open}_{s(i),j} + \varepsilon_{i,j}
+  y_{i,j} =\alpha_j + \beta \cdot \text{Open}_{s(i),j} + \varepsilon_{i,j}
 \]
 \begin{itemize}
+  \item $i$: Catchment region of a given station
   \item $j = t - P_s$: project-time index (0 = projected opening for station $s$)
   \item $\text{Open}_{s(i),j} = \mathbf{1}\!\left\{j \ge D_{s(i)}\right\}$:
         station is open by project-time $j$
-  \item $\alpha_i$: census tract FE;\quad $\alpha_j$: project-time FE
 \end{itemize}
 
 \medskip
 \textbf{Event-study extension:}
 \[
-  y_{i,j} = \alpha_i + \alpha_j
-  + \sum_{k \ne -1} \beta_k \cdot
-    \mathbf{1}\!\left\{j = D_{s(i)} + k\right\} + \varepsilon_{i,j}
+  y_{i,j} = \alpha_j +\sum_{k \ne -1} \beta_k \cdot
+     \mathbf{1}\!\left\{j \geq D_{s(i)} + k\right\} + \varepsilon_{i,j}
 \]
-Traces the dynamic ATT around the actual opening date.
 
 \medskip
 \textit{Problem:} $D_{s(i)}$ is the delay --- delay length may be endogenous.
 The next slides explain why and how I address it.
+\end{frame}
+
+\begin{frame}{Catchment Region Visual}
+    \begin{figure}
+        \includegraphics[width=0.65\linewidth]{3_output/2_figures/1_maps/1_station_geographies/MTA NYCT.pdf}
+    \end{figure}
 \end{frame}
 
 % ------ Slide 10 ------
@@ -259,7 +258,7 @@ The delayed neighborhood acts as a within-project-time control.
 origin $j=0$. Variation in $D_s$ shifts when $\text{Open}_{s,j}$ flips from 0 to 1.
 
 \bigskip
-\textbf{Requires:} Delay length $D_s$ is ``as good as random'' conditional on
+\textbf{Requires:} Delay length $D_s$ is exogenous conditional on
 baseline geography and neighborhood characteristics.
 
 \medskip
@@ -269,28 +268,20 @@ baseline geography and neighborhood characteristics.
 
 % ------ Slide 12a: Delay type 1 ------
 \begin{frame}{Delay Type 1: Funding Freezes / Cost Overruns}
-\small
-{\footnotesize\textit{Shock: federal fiscal/institutional --- project-level, not neighborhood-level}}
+\begin{minipage}[t]{0.48\textwidth}
+  \includegraphics[width=\linewidth]{6_sources/anecdotal_evidence/Screenshot 2026-04-14 at 10.48.01 AM.png}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+  \includegraphics[width=\linewidth]{6_sources/anecdotal_evidence/Screenshot 2026-04-14 at 10.49.01 AM.png}
+\end{minipage}
 
 \medskip
-\begin{columns}[T]
-  \begin{column}{0.50\textwidth}
-    \begin{itemize}
-      \item \textit{HART (Honolulu):} FTA flagged a \$1B overrun and 5-year delay,
-            threatening to withhold federal funds mid-construction \parencite{HART_FTA_2016}.
-      \item \textit{NYC East Side Access:} Budget grew \$6.3B $\to$ \$11B+;
-            opening slipped from 2013 to 2023 \parencite{NYT_ESA_2014}.
-    \end{itemize}
-  \end{column}
-  \begin{column}{0.46\textwidth}
-    \begin{minipage}[t]{0.48\linewidth}
-      \includegraphics[width=\linewidth]{6_sources/anecdotal_evidence/Screenshot 2026-04-14 at 10.48.01 AM.png}
-    \end{minipage}\hfill
-    \begin{minipage}[t]{0.48\linewidth}
-      \includegraphics[width=\linewidth]{6_sources/anecdotal_evidence/Screenshot 2026-04-14 at 10.49.01 AM.png}
-    \end{minipage}
-  \end{column}
-\end{columns}
+\begin{itemize}
+  \item \textit{HART (Honolulu):} FTA flagged a \$1B overrun and 5-year delay,
+  threatening to withhold federal funds mid-construction.
+  \item \textit{NYC East Side Access:} Budget grew \$6.3B $\to$ \$11B+;
+  opening slipped from 2013 to 2023.
+  \end{itemize}
 \end{frame}
 
 % ------ Slide 12b: Delay type 2 ------
@@ -299,24 +290,20 @@ baseline geography and neighborhood characteristics.
 {\footnotesize\textit{Shock: organized interest groups --- not diffuse SES of affected neighborhood}}
 
 \medskip
-\begin{columns}[T]
-  \begin{column}{0.50\textwidth}
-    \begin{itemize}
-      \item \textit{LA Purple Line:} Beverly Hills USD sued to block tunneling
-            under Beverly Hills High School, delaying the extension by years.
-      \item \textit{MD Purple Line:} Georgetown Branch trail advocates contested
-            right-of-way since 1983; FEIS not issued until August 2013.
-    \end{itemize}
-  \end{column}
-  \begin{column}{0.46\textwidth}
-    \begin{minipage}[t]{0.48\linewidth}
-      \includegraphics[width=\linewidth]{6_sources/anecdotal_evidence/Screenshot 2026-04-14 at 10.51.12 AM.png}
-    \end{minipage}\hfill
-    \begin{minipage}[t]{0.48\linewidth}
-      \includegraphics[width=\linewidth]{6_sources/anecdotal_evidence/Screenshot 2026-04-14 at 10.53.26 AM.png}
-    \end{minipage}
-  \end{column}
-\end{columns}
+\begin{minipage}[t]{0.48\textwidth}
+  \includegraphics[width=\linewidth]{6_sources/anecdotal_evidence/Screenshot 2026-04-14 at 10.51.12 AM.png}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+  \includegraphics[width=\linewidth]{6_sources/anecdotal_evidence/Screenshot 2026-04-14 at 10.53.26 AM.png}
+\end{minipage}
+
+\medskip
+\begin{itemize}
+  \item \textit{LA Purple Line:} Beverly Hills USD sued to block tunneling
+  under Beverly Hills High School, delaying the extension by years.
+  \item \textit{MD Purple Line:} Georgetown Branch trail advocates contested
+  right-of-way since 1983; FEIS not issued until August 2013.
+  \end{itemize}
 \end{frame}
 
 % ------ Slide 12c: Delay type 3 ------
@@ -325,25 +312,22 @@ baseline geography and neighborhood characteristics.
 {\footnotesize\textit{Shock: regulatory / engineering process --- federal NEPA requirements}}
 
 \medskip
-\begin{columns}[T]
-  \begin{column}{0.50\textwidth}
-    \begin{itemize}
-      \item \textit{LA Purple Line:} Five-year environmental review (2007--2012)
-            before the Record of Decision was issued.
-      \item \textit{HART:} Mid-construction Supplemental EIS and Section~4(f)
-            evaluation required; completed September 2013.
-    \end{itemize}
-  \end{column}
-  \begin{column}{0.46\textwidth}
-    \begin{minipage}[t]{0.48\linewidth}
-      \includegraphics[width=\linewidth]{6_sources/anecdotal_evidence/Screenshot 2026-04-14 at 10.57.17 AM.png}
-    \end{minipage}\hfill
-    \begin{minipage}[t]{0.48\linewidth}
-      \includegraphics[width=\linewidth]{6_sources/anecdotal_evidence/Screenshot 2026-04-14 at 11.00.07 AM.png}
-    \end{minipage}
-  \end{column}
-\end{columns}
+\begin{minipage}[t]{0.48\textwidth}
+  \includegraphics[width=\linewidth]{6_sources/anecdotal_evidence/Screenshot 2026-04-14 at 10.57.17 AM.png}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+  \includegraphics[width=\linewidth]{6_sources/anecdotal_evidence/Screenshot 2026-04-14 at 11.00.07 AM.png}
+\end{minipage}
+
+\medskip
+\begin{itemize}
+  \item \textit{LA Purple Line:} Five-year environmental review (2007--2012)
+  before the Record of Decision was issued.
+  \item \textit{HART:} Mid-construction Supplemental EIS and Section~4(f)
+  evaluation required; completed September 2013.
+  \end{itemize}
 \end{frame}
+
 
 % ------ Slide 13 ------
 \begin{frame}{But Delays Alone Aren't Enough}
@@ -398,19 +382,13 @@ Possible sources of endogeneity in delay length:
 \begin{frame}{Station Delay: Overview}
 \label{slide:datastats}
 \begin{columns}[T]
-  \begin{column}{0.38\textwidth}
+  \begin{column}{\textwidth}
     \vspace{0.5em}
-    \begin{adjustbox}{max width=\linewidth, center}
       \input{3_output/3_tables/0_descriptive/delay_descriptive.tex}
-    \end{adjustbox}
-
     \bigskip
     \hyperlink{app:delay_by_system}{\beamerbutton{By transit system $\to$}}
   \end{column}
-  \begin{column}{0.58\textwidth}
-    \includegraphics[width=\textwidth]{3_output/2_figures/0_descriptive/delay_distribution.png}
-  \end{column}
-\end{columns}
+  \end{columns}
 \end{frame}
 
 % ------ Slide 15 ------
@@ -451,7 +429,7 @@ in $\text{Open}_{s,j}$ at each project-time.
 % ══════════════════════════════════════════════════════════════════
 
 % ------ Slide 16 ------
-\begin{frame}{Concerns I'm Addressing Head-On}
+\begin{frame}{Design challenges}
 \small
 Four anticipated challenges:
 
@@ -534,27 +512,6 @@ not state-level political economy.
 \section{Open Questions}
 % ══════════════════════════════════════════════════════════════════
 
-% ------ Slide 21 ------
-\begin{frame}{What I'm Wrestling With}
-\small
-\begin{itemize}
-  \item \textbf{Control group:} Clean controls vs.\ never-treated vs.\
-        not-yet-treated in the stacked DiD --- different choices yield
-        different estimands.
-  \item \textbf{Anticipation:} Households start responding at announcement,
-        not at $j=0$. Should the ``event'' shift to the announcement date?
-        How do I estimate the announcement effect itself?
-  \item \textbf{Delay classification:} Cleanly assigning funding / opposition /
-        environmental type to each delay episode; and whether delay type should
-        enter the BH permutation cohorts.
-  \item \textbf{Stations that move:} A handful of stations change location during
-        environmental review --- they should be excluded from the exposure measure.
-  \item \textbf{Take-up and HTE:} Proxying individual-level transit propensity
-        without individual data; car-ownership rates at the tract level
-        are a starting point.
-\end{itemize}
-\end{frame}
-
 % ------ Slide 22 ------
 \begin{frame}{Next Steps}
 \label{slide:nextsteps}
@@ -562,7 +519,6 @@ not state-level political economy.
 \textbf{Data \& measurement:}
 \begin{itemize}
   \item Complete and finalize delay dataset across all systems
-  \item Automated delay-type classification from EIS narrative text (NLP)
 \end{itemize}
 
 \bigskip
@@ -584,14 +540,25 @@ not state-level political economy.
 \end{itemize}
 \end{frame}
 
-% ------ Questions for today (new slide) ------
-\begin{frame}{Questions for Today}
-\begin{enumerate}
-  \item Is the intensive- vs.\ extensive-margin framing for delays convincing?
-  \item How should I define the control group in the stacked DiD?
-  \item Are there other sources of exogenous delay variation I'm missing?
-  \item Should take-up heterogeneity be a primary result or a robustness check?
-\end{enumerate}
+% ------ Slide 21 ------
+\begin{frame}{What I'm Wrestling With}
+\small
+\begin{itemize}
+  \item \textbf{Control group:} Clean controls vs.\ never-treated vs.\
+        not-yet-treated in the stacked DiD --- different choices yield
+        different estimands.
+  \item \textbf{Anticipation:} Households start responding at announcement,
+        not at $j=0$. Should the ``event'' shift to the announcement date?
+        How do I estimate the announcement effect itself?
+  \item \textbf{Delay classification:} Cleanly assigning funding / opposition /
+        environmental type to each delay episode; and whether delay type should
+        enter the BH permutation cohorts.
+  \item \textbf{Stations that move:} A handful of stations change location during
+        environmental review --- they should be excluded from the exposure measure.
+  \item \textbf{Take-up and HTE:} Proxying individual-level transit propensity
+        without individual data; car-ownership rates at the tract level
+        are a starting point.
+\end{itemize}
 \end{frame}
 
 % ══════════════════════════════════════════════════════════════════
