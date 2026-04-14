@@ -18,7 +18,6 @@ rjavaenv/*
 *.tif
 *.osm
 *.mapdb
-6_sources/
 *.mapdb.p
 *.sty
 *.log
