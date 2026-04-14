@@ -8,6 +8,7 @@
 1_data/3_LODES/2_crosswalks/*/
 *.html
 3_output/1_cleaned_data/3_LODES/1_preaggregated_metros/
+6_sources/ 
 .Rprofile
 .Renviron
 rjavaenv/*
