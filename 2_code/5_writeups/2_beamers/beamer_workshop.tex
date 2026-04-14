@@ -1,834 +1,676 @@
 \documentclass{beamer}
 \usepackage{kyradefaults}
 
-% Custom UChicago theme color (Maroon)
+% Custom UChicago theme color
 \definecolor{uchicagored}{RGB}{128,0,0}
-\setbeamercolor{footline}{fg=white,bg=uchicagored}
 
-\usepackage[style=authoryear,backend=biber]{biblatex}
+\usepackage[style=chicago-authordate,backend=biber]{biblatex}
 \addbibresource{references.bib}
 
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta, positioning}
+\usetikzlibrary{arrows.meta,calc}
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{subcaption}
 \usepackage{amsmath,amssymb}
+\usepackage{booktabs}
 
 % Theme setup
 \usetheme{Madrid}
+\useoutertheme{smoothbars}
 \usecolortheme[named=uchicagored]{structure}
+
+% Remove navigation symbols
+\setbeamertemplate{navigation symbols}{}
 
 % Footer
 \setbeamertemplate{footline}{
-  \leavevmode
-  \begin{beamercolorbox}[wd=\paperwidth,ht=2.75ex,dp=1.25ex,left]{footline}
-    \hspace{1em}
-    \usebeamerfont{author in head/foot}Kyra Sadovi (UChicago Harris)
+  \leavevmode%
+  \vspace{1ex}
+  \hbox to \paperwidth{%
+    \hspace{1em}%
+    \usebeamerfont{author in head/foot}Kyra Sadovi (UChicago Harris)%
     \hfill
-    \usebeamerfont{date in head/foot}\textit{All Aboard? New Rail Stations and Labor Markets}
+    \usebeamerfont{date in head/foot}\textit{All Aboard? New Rail Stations and Labor Markets}%
     \hfill
-    \usebeamerfont{date in head/foot}\insertshortdate
-    \hspace{1em}
-    \usebeamerfont{page number in head/foot}
-    \insertframenumber{} / \inserttotalframenumber
-  \end{beamercolorbox}
+    \usebeamerfont{date in head/foot}\insertshortdate\hspace{1em}%
+    \usebeamerfont{page number in head/foot}%
+    \usebeamercolor[fg]{page number in head/foot}%
+    \insertframenumber{} / \inserttotalframenumber\hspace{1em}%
+    \vspace{1em}%
+  }%
+  \vspace{0.5ex}%
 }
 
-\setbeamertemplate{navigation symbols}{}
-
-\title[New Rail Stations and Labor Markets]{All Aboard? Causal Evidence on\\Labor-Market Effects of New Rail Stations}
+% Title info
+\title[New Rail Stations \& Labor Markets]{All Aboard? Causal Evidence on Labor-Market Effects of New Rail Stations}
 \author{Kyra Sadovi}
 \institute{University of Chicago Harris School of Public Policy \\
 \href{mailto:ksadovi@uchicago.edu}{ksadovi@uchicago.edu}}
 \date{\today}
 
-\useoutertheme{smoothbars}
-
-% ============================================================
 \begin{document}
-% ============================================================
 
+% ------ Slide 1 (Title) ------
 \begin{frame}[plain]
   \titlepage
 \end{frame}
 
-\begin{frame}[plain]{Outline}
+% ------ Slide 2 (TOC) ------
+\begin{frame}{Outline}
   \tableofcontents
 \end{frame}
 
-% ============================================================
+% ══════════════════════════════════════════════════════════════════
 \section{Motivation}
-% ============================================================
-
-% ------ Slide 1 ------
-\begin{frame}{The Policy Moment}
-\small
-\textbf{American cities are in a transit boom:}
-\begin{itemize}
-    \item New rail lines opening or under construction in LA, Seattle, DC, Boston, Miami, and beyond.
-    \item Unprecedented urban congestion and surging demand to live in dense cities.
-    \item % TODO: add a striking scale stat (e.g. FTA New Starts commitments, total VMT, etc.)
-\end{itemize}
-
-\medskip
-\textbf{The political rationale for rail:} new stations expand economic opportunity for
-nearby residents---better jobs, higher incomes, stronger communities.
-
-\medskip
-\textbf{But the case is contested:}
-\begin{itemize}
-    \item Critics: benefits flow to developers and landowners, not workers.
-    \item Existing evidence focuses on land values and ridership, not individual labor outcomes
-          \parencite{mcmillen_reaction_2004}.
-    \item \textit{Does gaining access to a new rail station actually make nearby workers better off?}
-\end{itemize}
-\end{frame}
-
-% ------ Slide 2 ------
-\begin{frame}{The Obvious Mechanism---and Why It's Incomplete}
-\small
-\textbf{The standard story:} transit makes commuting more reliable.
-\begin{itemize}
-    \item Workers without cars can get to work more consistently $\Rightarrow$ lower job loss risk
-          \parencite{sanchez_connection_1999, bastiaanssen_transport_employmentfx}.
-    \item This is probably real---but it's a modest effect on its own.
-\end{itemize}
-
-\medskip
-\textbf{The puzzle:} if transit only helps you keep your current job, why would we expect
-to see income growth or job-to-job mobility? Yet the policy case for rail implicitly assumes
-larger, more dynamic effects.
-
-\medskip
-\textbf{Something else must be going on.}
-
-\medskip
-A clue: in many cities, transit lines connect neighborhoods that would otherwise be
-socially isolated from one another. The commute itself may be less important than
-\emph{who else ends up in your network} as a result of gaining access.
-\end{frame}
+% ══════════════════════════════════════════════════════════════════
 
 % ------ Slide 3 ------
-\begin{frame}{Geographic Friction and Social Network Formation}
+\begin{frame}{A Historic Moment for Transit Investment}
 \small
-\textbf{Your neighborhood determines your network.}
+The Infrastructure Investment and Jobs Act (2021) commits \$91 billion to public transit --- the largest federal investment in US transit history.
 
-\medskip
-\textcite{kim_spatial_2023}: social tie formation depends strongly on geographic distance.
+\bigskip
 \begin{itemize}
-    \item Agents decide how often to visit others in a city, facing travel costs.
-    \item Greater spatial dispersion $\Rightarrow$ fewer interactions $\Rightarrow$ lower social capital.
-    \item Equilibrium interactions fall \emph{below} the social optimum because travel is costly.
+  \item New Starts program: \$23B in capital grants to rail and BRT projects nationwide.
+  \item Dozens of new lines planned, under construction, or recently opened across the country.
 \end{itemize}
 
-\medskip
-\textbf{Key result:} at equal cost, subsidizing interactions outperforms subsidizing
-transportation---but subsidizing transportation does restore some of the social optimum.
+\bigskip
+\textbf{Yet we lack causal estimates:} Does physical access to a new rail station actually improve labor-market outcomes for nearby residents?
 
-\medskip
-\textbf{What this implies for transit:} a new rail station doesn't just reduce commute time.
-It lowers the effective cost of reaching a broader set of people---expanding the geographic
-radius within which you form and maintain social ties.
-
-\medskip
-\textit{Transit is a partial subsidy to social interaction, operating through the
-transportation cost channel.}
+\bigskip
+\textit{This paper provides that evidence.}
 \end{frame}
 
 % ------ Slide 4 ------
-\begin{frame}{Why Networks Are Labor-Market Relevant}
+\begin{frame}{The Obvious Mechanism}
 \small
-\textcite{patacchini_referral_fx}: using de-identified cellphone records from a Chinese city,
-\begin{itemize}
-    \item Information flow (call volume) correlates strongly with \textbf{worker flows} across
-          geographic areas---a pattern that persists at all levels of aggregation.
-    \item \textbf{Socioeconomic diversity} in social contacts is crucial: diversity in your
-          information sources predicts job mobility more than raw contact volume.
-    \item \textbf{Referred jobs are better}: higher wages, higher probability of going
-          full-time, shorter commutes, higher probability of entering desirable occupations.
-\end{itemize}
+A new rail station expands the reach of workers and firms simultaneously:
 
-\medskip
-\textbf{The chain:}
-\[
-\underbrace{\text{New station}}_{\text{lower travel cost}}
-\;\Rightarrow\;
-\underbrace{\text{broader social geography}}_{\text{\citeauthor{kim_spatial_2023}}}
-\;\Rightarrow\;
-\underbrace{\text{more diverse contacts}}_{\text{information flow}}
-\;\Rightarrow\;
-\underbrace{\text{better job matches}}_{\text{\citeauthor{patacchini_referral_fx}}}
-\]
+\bigskip
+\begin{enumerate}
+  \item \textbf{Job retention:} Reliable commuting makes it easier to hold existing jobs ---
+        especially for workers without cars.
+  \item \textbf{Job matching:} A larger effective job-search radius
+        $\Rightarrow$ access to higher-paying or better-matched positions.
+  \item \textbf{Networks and referrals:} Mobility expands the set of people, neighborhoods,
+        and opportunities one can reach, broadening referral networks
+        \parencite{patacchini_referral_fx}.
+\end{enumerate}
 
-\medskip
-\textbf{Implication for outcomes:} I should see job-to-job transitions and income growth,
-not just employment retention---which is exactly what I measure.
+\bigskip
+Separating these channels is hard. I start with the reduced-form question: does gaining a station increase employment and earnings for nearby residents?
 \end{frame}
 
-% ============================================================
-\section{Research Question and Contribution}
-% ============================================================
-
 % ------ Slide 5 ------
-\begin{frame}{Research Question and Outcomes}
-\textbf{Goal:} Estimate the causal effect of gaining access to a new rail station on the
-labor-market outcomes of nearby residents.
+\begin{frame}{Geographic Friction Is Heterogeneous}
+\small
+Transit access is far from uniform:
 
 \bigskip
-\textbf{Outcomes (from LODES):}
 \begin{itemize}
-    \item Worker flows: job retention and job-to-job transitions
-    \item Income
+  \item Some stations extend lines into already-connected inner cities.
+  \item Others bring \textbf{first-ever rail access} to historically transit-poor communities.
 \end{itemize}
 
 \bigskip
-\textbf{Three mechanisms I can speak to:}
-\begin{enumerate}
-    \item \textbf{Reliability:} more consistent commuting $\Rightarrow$ job retention.
-    \item \textbf{Search radius:} wider job-search area $\Rightarrow$ better matches and higher wages.
-    \item \textbf{Networks:} expanded social geography $\Rightarrow$ more referrals $\Rightarrow$
-          faster and better transitions.
-\end{enumerate}
+This matters both for identification and for interpretation:
+\begin{itemize}
+  \item A new station in a transit desert $\neq$ yet another station in Manhattan.
+  \item Baseline network density shapes how much the new station expands the commute shed.
+\end{itemize}
+
+\bigskip
+\textit{I return to this heterogeneity in the HTE discussion
+(slide~\ref{slide:nextsteps}).}
 \end{frame}
 
 % ------ Slide 6 ------
-\begin{frame}{Where This Fits in the Literature}
+\begin{frame}{Why Networks? Why Now?}
 \small
-\textbf{Market access and city structure:}
+Labor markets are networked. A tight body of evidence links:
+
+\bigskip
 \begin{itemize}
-    \item \textcite{tsivanidis_evaluating_2022}: TransMilenio (Bogotá BRT), structural model,
-          firm location and spatial equilibrium. Focused on aggregate welfare, not individual
-          worker trajectories.
-    \item \textcite{baum-snow_does_2020}: national highways and city structure. City/region
-          level, not individual outcomes, not quasi-experimental in the same sense.
-    \item % TODO: add Donaldson/Hornbeck railroads + market access if relevant
+  \item Communication networks $\to$ job flows \parencite{patacchini_referral_fx}.
+  \item Geographic dispersion $\to$ welfare losses from reduced social interaction
+        \parencite{kim_spatial_2023}.
+  \item Proximity to financial services $\to$ credit access, especially for marginalized groups
+        \parencite{Relihan2017BranchesIL}.
 \end{itemize}
 
-\medskip
-\textbf{Quasi-experimental transit work:}
+\bigskip
+Transit is, in part, a \emph{network expansion technology}. The question is whether that network expansion is large enough to register in labor-market outcomes --- and for whom.
+\end{frame}
+
+% ══════════════════════════════════════════════════════════════════
+\section{Research Question \& Contribution}
+% ══════════════════════════════════════════════════════════════════
+
+% ------ Slide 7 ------
+\begin{frame}{Research Question}
+\begin{center}
+\large
+What is the causal effect of gaining access to a new rail station \\
+on nearby residents' labor-market outcomes?
+\end{center}
+
+\bigskip\bigskip
+\textbf{Outcomes:}
 \begin{itemize}
-    \item \textcite{tyndall_airports}: airport rail lines $\uparrow$ local employment density.
-          Place-level effects, IV using airport-station distance.
-    \item \textcite{perez_urban_2022}: urban transit and spatial mismatch---closest to my setting
-          but focuses on commuting patterns rather than worker-level transitions.
+  \item Employment and earnings (LODES)
+  \item Worker flows: job retention, job-to-job transitions
 \end{itemize}
 
-\medskip
-\textbf{My contribution:}
+\bigskip
+\textbf{Key heterogeneity:}
 \begin{itemize}
-    \item \textbf{Substantive:} individual-level, residential-neighborhood channel for rail access.
-    \item \textbf{Methodological:} recentered instrument (BH) adapted for the US multi-project
-          context, combined with stacked DiD---novel in the transit literature.
+  \item By baseline transit access (transit desert vs.\ already connected)
+  \item By neighborhood income and transit take-up propensity
 \end{itemize}
 \end{frame}
 
-% ============================================================
+% ------ Slide 8 ------
+\begin{frame}{Contribution}
+\small
+\begin{enumerate}
+  \item \textbf{New dataset:} Hand-coded projected and realized opening dates for stations
+        across major US rail projects --- enabling a project-time delay measure unavailable
+        in off-the-shelf data.
+  \item \textbf{Identification:} Construction delays create quasi-random variation in
+        \emph{when} neighborhoods gain access, holding \emph{which} neighborhoods were
+        chosen constant.
+  \item \textbf{Instrument design:} Adapt \textcite{borusyak_nonrandom_2023} recentering
+        to a stacked DiD framework, purging non-random exposure from baseline geography.
+  \item \textbf{HTE:} First estimates stratified by baseline transit access --- distinguishing
+        transit-desert gains from incremental additions to already-connected networks.
+\end{enumerate}
+\end{frame}
+
+% ══════════════════════════════════════════════════════════════════
 \section{Identification Design}
-% ============================================================
+% ══════════════════════════════════════════════════════════════════
 
-\subsection{What I'm Measuring}
-
-% ------ Slide 7 ------
+% ------ Slide 9 ------
 \begin{frame}{The Basic Estimating Equation}
 \small
-\textbf{Unit of observation:} worker $i$ living near station $s$, in project-time period
-$j = t - P_s$, where $P_s$ is the planned opening date.
-
-\medskip
-\textbf{Treatment indicator:}
+\textbf{Baseline TWFE:}
 \[
-    \text{Open}_{s(i),j} = \mathbf{1}\{j \geq D_{s(i)}\}
-\]
-where $D_s = R_s - P_s$ is the realized delay. The station ``turns on'' at the project-time
-when the delay is exhausted.
-
-\medskip
-\textbf{Baseline two-way FE specification:}
-\[
-    y_{i,j} = \alpha_i + \alpha_j + \beta\,\text{Open}_{s(i),j} + \varepsilon_{i,j}
+  y_{i,j} = \alpha_i + \alpha_j
+           + \beta \cdot \text{Open}_{s(i),j} + \varepsilon_{i,j}
 \]
 \begin{itemize}
-    \item $\alpha_i$: worker fixed effects---absorb selection into transit-accessible neighborhoods.
-    \item $\alpha_j$: project-time fixed effects---absorb aggregate trends common to all projects
-          at the same stage.
-    \item $\beta$: the within-worker, within-project-time effect of the station opening.
+  \item $j = t - P_s$: project-time index (0 = projected opening for station $s$)
+  \item $\text{Open}_{s(i),j} = \mathbf{1}\!\left\{j \ge D_{s(i)}\right\}$:
+        station is open by project-time $j$
+  \item $\alpha_i$: unit FE;\quad $\alpha_j$: project-time FE
 \end{itemize}
 
 \medskip
 \textbf{Event-study extension:}
 \[
-    y_{i,j} = \alpha_i + \alpha_j + \sum_{k \neq -1} \beta_k\,\mathbf{1}\{j = D_{s(i)} + k\}
-    + \varepsilon_{i,j}
+  y_{i,j} = \alpha_i + \alpha_j
+  + \sum_{k \ne -1} \beta_k \cdot
+    \mathbf{1}\!\left\{j = D_{s(i)} + k\right\} + \varepsilon_{i,j}
 \]
-Plots $\hat\beta_k$ across relative time $k$---flat pre-trends would support parallel trends.
-\end{frame}
-
-\subsection{Challenges}
-
-% ------ Slide 8 ------
-\begin{frame}{Three Identification Challenges}
-\small
-\begin{enumerate}
-    \item \textbf{Anticipation effects}
-    \begin{itemize}
-        \item Long construction timelines mean behavior and prices adjust when a station is
-              \emph{announced}, not when it opens.
-        \item \textcite{mcmillen_reaction_2004}: house prices on the Chicago Orange Line
-              capitalized benefits up to 6 years before completion.
-        \item Standard event-study around realized opening date will be contaminated.
-    \end{itemize}
-    \medskip
-    \item \textbf{Resident sorting}
-    \begin{itemize}
-        \item Workers with stronger labor-market attachment may select into transit-accessible
-              neighborhoods.
-        \item Cross-sectional patterns confound access with composition.
-    \end{itemize}
-    \medskip
-    \item \textbf{Station location choice}
-    \begin{itemize}
-        \item Planners site stations in already-important locations: CBDs, dense residential
-              areas, airports \parencite{tyndall_airports}.
-        \item Naïve comparison of station areas vs.\ non-station areas picks up siting
-              decisions, not access effects.
-    \end{itemize}
-\end{enumerate}
-\end{frame}
-
-\subsection{Delays as Timing Variation}
-
-% ------ Slide 9 ------
-\begin{frame}{Delays as a Timing Shock}
-\small
-\textbf{Key observation:} once a station is planned and approved, \emph{when} it opens
-is shaped by construction complexity, permitting, and contractor issues---not by local
-economic conditions.
+Traces the dynamic ATT around the actual opening date.
 
 \medskip
-\textbf{My shock:} construction delays $D_s = R_s - P_s$ (realized minus planned opening date).
-
-\medskip
-\textbf{Project-time index:}
-\begin{center}
-\begin{tikzpicture}[font=\small]
-    \def\xA{0} \def\xB{3.5} \def\xC{6} \def\xD{9}
-    \draw[->, thick] (\xA,0) -- (\xD+0.3,0);
-    \foreach \x/\lab in {\xA/Announced, \xB/{$t=0$\\(Planned opening)}} {
-        \fill (\x,0) circle (2.5pt);
-        \node[above, align=center] at (\x, 0.15) {\lab};
-    }
-    \draw[thick] (\xB,0.6) -- (\xC,0.6);
-    \fill (\xC,0.6) circle (2.5pt);
-    \node[above] at (\xC,0.65) {On time};
-    \draw[thick, dashed] (\xB,-0.6) -- (\xD,-0.6);
-    \fill (\xD,-0.6) circle (2.5pt);
-    \node[below] at (\xD,-0.65) {Delayed};
-    \draw[<->, gray] (\xC, 0.3) -- (\xC,-0.3);
-    \node[right, gray, font=\footnotesize] at (\xC+0.05,0) {Compare at same $t$};
-\end{tikzpicture}
-\end{center}
-
-\medskip
-\textbf{Design:} compare tracts near stations at the \emph{same} project-time $t$, one
-open and one delayed. This addresses:
-\begin{itemize}
-    \item[$\checkmark$] \textbf{Siting:} both neighborhoods were already selected for a
-          station---I only vary timing.
-    \item[$\checkmark$] \textbf{Anticipation:} the project-time index is anchored to planned
-          opening, so pre-period behavior shows up at $t<0$ for all projects equally.
-\end{itemize}
-
-\medskip
-\textbf{\color{uchicagored}One concern:} are some types of delays more endogenous than others?
-\textit{Next slide.}
+\textit{Problem:} $D_{s(i)}$ is the delay, and delay length may be endogenous.
+The next slides explain why and how I address it.
 \end{frame}
 
 % ------ Slide 10 ------
-\begin{frame}{A Taxonomy of Delays}
+\begin{frame}{Three Identification Challenges}
 \small
-Going through the EIS records and press coverage, delays consistently fall into
-the same three buckets---across geographies, system types, and decades:
-
 \begin{enumerate}
-    \item \textbf{Funding freezes.}
-    \begin{itemize}\footnotesize
-        \item \textbf{HART:} FTA projected a 5-year delay and \$1B cost overrun;
-              bids for the first 9 stations came in \$110M over budget, forcing a
-              cancel-and-re-bid.
-              {\tiny\textit{Honolulu Star-Advertiser, 2016; KITV, 2014}}
-        \item \textbf{NYC East Side Access:} projected at \$6.3B, done by 2013---
-              ultimately \$11B+, opened 2023.
-              {\tiny\textit{New York Times, 2014}}
+  \item \textbf{Anticipation effects:}
+    \begin{itemize}
+      \item Households and firms respond at announcement, not just at opening.
+      \item House prices capitalize expected access up to 6 years early
+            \parencite{mcmillen_reaction_2004}.
     \end{itemize}
-
-    \item \textbf{Neighborhood/political opposition.}
-    \begin{itemize}\footnotesize
-        \item \textbf{LA Purple Line:} Beverly Hills Unified School District filed
-              suit to block tunneling under Beverly Hills High School---years of
-              litigation.
-        \item \textbf{MD Purple Line:} the Georgetown Branch right-of-way has been
-              contested between transit and trail users since 1983; Friends of the
-              Capital Crescent Trail later filed a NEPA lawsuit causing multi-year
-              delay post-ROD.
-              {\tiny\textit{MD Purple Line FEIS, 2013 (project history)}}
+  \item \textbf{Non-random exposure:}
+    \begin{itemize}
+      \item Areas near new stations are already denser, more central, and often wealthier.
+      \item Standard DiD absorbs station FEs but not the spatial gradient around them.
     \end{itemize}
-
-    \item \textbf{Environmental review.}
-    \begin{itemize}\footnotesize
-        \item \textbf{LA Purple Line:} 5 years of NEPA review (2007--2012) before
-              groundbreaking.
-              {\tiny\textit{LA Metro Purple Line Fact Sheet, 2013}}
-        \item \textbf{HART:} mid-construction Supplemental EIS/Section~4(f)
-              evaluation filed Sept.\ 2013, requiring an Amended Record of
-              Decision---environmental review restarted \emph{after} construction
-              had begun.
-              {\tiny\textit{HART Final Supplemental EIS/4(f), 2013}}
+  \item \textbf{Endogenous delay length:}
+    \begin{itemize}
+      \item Longer delays may be correlated with neighborhood characteristics
+            (opposition strength, wealth, fiscal stress).
+      \item If delay length predicts baseline outcomes, using $D_s$ directly
+            as variation is invalid.
     \end{itemize}
 \end{enumerate}
-
-\smallskip
-\textbf{Key observation:} on the \emph{extensive margin}---whether a project gets
-delayed at all---the distribution is strikingly uniform across systems. The
-\emph{intensive margin}---how much delay---is where endogeneity concerns are live.
 \end{frame}
 
-\subsection{Non-Random Exposure and BH Recentering}
-
 % ------ Slide 11 ------
-\begin{frame}{But Delays Alone Aren't Enough}
+\begin{frame}{Delays Provide the Timing Variation}
 \small
-\textbf{Problem:} even if delay \emph{timing} is quasi-random, \emph{exposure} to a new
-station is not.
+\textbf{Core idea:} Two neighborhoods near the same line are both at project-time $j=0$
+on the same calendar date. One station opens on schedule; the other is delayed.
+The delayed neighborhood acts as a within-project-time control.
+
+\bigskip
+\textbf{Formally:} Index time by $j = t - P_s$ so all projects share a common
+origin $j=0$. Variation in $D_s$ shifts when $\text{Open}_{s,j}$ flips from~0~to~1.
+
+\bigskip
+\textbf{Requires:} Delay length $D_s$ is ``as good as random'' conditional on
+baseline geography and project characteristics.
 
 \medskip
-Tracts near planned stations are systematically:
-\begin{itemize}
-    \item Denser and more central.
-    \item Higher-income (on average).
-    \item Already better-connected to the transit network.
-    \item \textbf{More likely to mobilize politically against a project}---wealthier, more
-          organized neighborhoods can delay openings through opposition, and those same
-          neighborhoods have different labor-market trajectories.
-\end{itemize}
-
-\medskip
-Using delays as an instrument for exposure will conflate the timing shock with these
-pre-existing spatial differences---standard IV inherits the bias.
-
-\medskip
-\textbf{Solution:} \textcite{borusyak_nonrandom_2023} recentered instrument---subtract out
-the \emph{expected} exposure implied by baseline geography, leaving only the surprise
-component driven by realized delay timing.
+\textit{But is it? I test this directly on slides
+\ref{slide:political}--\ref{slide:withinsystem}.}
 \end{frame}
 
 % ------ Slide 12 ------
-\begin{frame}{Background: Why ``Random'' Shocks Aren't Enough}
+\begin{frame}{A Taxonomy of Delays}
 \small
-\textbf{A general problem in applied work:}
-
-Many instruments are built from a formula combining an exogenous shock with
-predetermined geography:
-\[
-    z_i = f(g;\, w_i)
-\]
-where $g$ is the shock (quasi-random) and $w_i$ is the unit's baseline characteristics
-(not random).
+Nearly every project experiences delay --- the \textbf{extensive margin} is
+fairly uniform. The variation I exploit is in \textbf{delay length}
+(the intensive margin).
 
 \medskip
-\textbf{Classic example:} weather as an instrument for outdoor events.
-\begin{itemize}
-    \item Any given day's weather is random.
-    \item But cities with better average climate will \emph{always} have more outdoor events,
-          regardless of today's realization.
-    \item The instrument picks up both the random-day component \emph{and} the
-          systematic climate component.
-\end{itemize}
+Three recurring causes, with two examples each:
 
-\medskip
-\textbf{In my setting:} tracts near dense, central stations gain more access under
-\emph{any} delay realization---so the raw instrument is contaminated by baseline
-geography even if delays themselves are quasi-random.
-
-\medskip
-\citeauthor{borusyak_nonrandom_2023}: this creates OVB even when shock timing is exogenous.
+\begin{enumerate}
+  \item \textbf{Funding freezes / cost overruns}
+    \begin{itemize}
+      \item \textit{Honolulu (HART):} FTA flagged a projected \$1B overrun and 5-year
+            delay, threatening to withhold federal funding mid-construction
+            \parencite{HART_FTA_2016}.
+      \item \textit{NYC East Side Access (MTA):} Budget grew from \$6.3B to over \$11B;
+            opening slipped from 2013 to 2023 \parencite{NYT_ESA_2014}.
+    \end{itemize}
+  \item \textbf{Neighborhood / political opposition}
+    \begin{itemize}
+      \item \textit{LA Purple Line:} Beverly Hills USD sued to block tunneling under
+            Beverly Hills High School, stalling the extension for years.
+      \item \textit{MD Purple Line:} Georgetown Branch trail advocates contested
+            right-of-way since 1983; NEPA scoping began 2003, FEIS issued August 2013.
+    \end{itemize}
+  \item \textbf{Environmental review}
+    \begin{itemize}
+      \item \textit{LA Purple Line:} Five-year environmental review (2007--2012)
+            before the ROD was issued.
+      \item \textit{HART (mid-construction):} Supplemental EIS and
+            Section~4(f) evaluation required; completed September 2013.
+    \end{itemize}
+\end{enumerate}
 \end{frame}
 
 % ------ Slide 13 ------
-\begin{frame}{BH Solution: Recentering the Instrument}
+\begin{frame}{But Delays Alone Aren't Enough}
 \small
-\textbf{Idea:} subtract out the part of exposure that is \emph{predictable} from
-baseline geography. What remains is the surprise---driven purely by whether this particular
-station happened to be delayed more or less than expected.
+\textbf{Extensive margin is uniform} --- nearly every project has at least one
+delay episode, so delay \emph{status} is not selective across neighborhoods.
 
-\medskip
-\textbf{In practice:}
-\begin{enumerate}
-    \item Hold baseline geography $w$ fixed.
-    \item Permute delay realizations $B$ times to simulate counterfactual schedules $g^{(b)}$.
-    \item Compute expected exposure:
-    \[
-        \mu_{ct} = \frac{1}{B}\sum_{b=1}^{B} z_{ct}(g^{(b)};\, w)
-    \]
-    \item Recenter: $\tilde{z}_{ct} = z_{ct}(g;\,w) - \mu_{ct}$.
-\end{enumerate}
+\bigskip
+\textbf{The concern is the intensive margin:} Is delay \emph{length} correlated
+with neighborhood characteristics?
 
-\medskip
-\textbf{Interpretation:} $\tilde{z}_{ct} > 0$ means this tract got access \emph{sooner than
-its geography would have predicted}; $\tilde{z}_{ct} < 0$ means it was unexpectedly delayed.
-Identification comes entirely from these surprises---\emph{not} from which neighborhoods
-happen to be near stations.
+\bigskip
+Possible sources of endogeneity in delay length:
+\begin{itemize}
+  \item Wealthier neighborhoods may have more political and legal resources
+        to litigate or negotiate
+  \item Fiscally constrained cities may resolve funding gaps more slowly
+  \item \textbf{Political mobilization:} neighborhoods with more civic engagement
+        may resist or accelerate projects
+  \item State-level funding capacity and federal grant timelines
+\end{itemize}
 
-\medskip
-In 2SLS, $\tilde{z}_{ct}$ instruments for actual exposure while $\mu_{ct}$ is controlled for.
-\parencite{borusyak_nonrandom_2023}
+\bigskip
+$\Rightarrow$ I need to show delay length is not systematically predicted by
+neighborhood characteristics \emph{within} a transit system. I do this next.
 \end{frame}
 
 % ------ Slide 14 ------
-\begin{frame}{My Adaptation: What's Different from BH's China Application}
+\begin{frame}{Borusyak--Hull Recentering: Background}
 \small
-\textcite{borusyak_nonrandom_2023} apply recentering to China's high-speed rail network:
-permuting which HSR \emph{segments} open when, across an integrated national network.
+\textcite{borusyak_nonrandom_2023} identify a general problem in shift-share designs:
+the exposure measure $z_{ct}(g_t; w)$ inherits non-randomness from baseline geography
+$w$, even when shocks $g_t$ are random.
 
-\medskip
-\textbf{Why that doesn't translate directly to the US:}
-\begin{itemize}
-    \item No single integrated US network---each project has its own institutional history,
-          funding source, and construction management.
-    \item Simulating a counterfactual US network structure is not credible when projects
-          are locally approved, locally funded (via FTA New Starts), and locally managed.
-    \item Their application also does not address anticipation effects.
-\end{itemize}
+\bigskip
+\textbf{Solution:} Construct the \emph{recentered} instrument
+\[
+  \tilde{z}_{ct} = z_{ct}(g_t; w) - \underbrace{\mu_{ct}}_{\text{expected exposure}},
+  \qquad
+  \mu_{ct} = \frac{1}{B}\sum_{b=1}^{B} z_{ct}\!\left(g_t^{(b)}; w\right),
+\]
+where $\bigl\{g_t^{(b)}\bigr\}$ are counterfactual shock draws from the
+distribution $G(g \mid w)$.
 
-\medskip
-\textbf{My approach:}
-\begin{itemize}
-    \item Permute delays \emph{within cohorts} of similar stations (same line type
-          $\times$ baseline centrality class) rather than simulating a network.
-    \item The counterfactual question: among stations that faced similar
-          institutional environments, which ones happened to open earlier vs.\ later?
-    \item Project-time index handles anticipation explicitly.
-\end{itemize}
+\bigskip
+\textbf{Key condition:} Shocks $g_t$ are ``as good as random'' --- i.e., the realized
+delay vector is exchangeable with permuted delay vectors within cohorts of
+similar projects.
 \end{frame}
 
-% ============================================================
-\section{Data}
-% ============================================================
-
 % ------ Slide 15 ------
-\begin{frame}{Building the Delay Dataset}
+\begin{frame}{Adapting BH to This Setting}
 \small
-\textbf{Transit Costs Project:} base list of major US rail projects, last $\sim$20 years.
+\textbf{Shocks:} Station-level delays $D_s = R_s - P_s$.
+Shock vector $g = \{D_s\}_s$.
 
-\medskip
-\textbf{EPA EIS Database:} for each project I record:
-\begin{itemize}
-    \item Announcement / DEIS finalization date
-    \item Intended opening date $P_s$ (from the EIS)
-    \item Realized opening date $R_s$
-    \item Delay $D_s = R_s - P_s$
-\end{itemize}
+\bigskip
+\textbf{Exposure:} Walking-time-weighted access to open stations:
+\[
+  z_{ct}(g; w) = \sum_{s \in \mathcal{S}_c(15)}
+    \text{Open}_{s,t}(g) \cdot w_{cs},
+  \quad
+  w_{cs} =
+    \mathbf{1}[d_{cs} \!\in\! \mathcal{B}_1]
+    + \tfrac{2}{3}\mathbf{1}[d_{cs} \!\in\! \mathcal{B}_2]
+    + \tfrac{1}{3}\mathbf{1}[d_{cs} \!\in\! \mathcal{B}_3]
+\]
+with bands $\mathcal{B}_1 = [0,5]$, $\mathcal{B}_2 = (5,10]$,
+$\mathcal{B}_3 = (10,15]$ minutes walk.
 
-\medskip
-\textbf{Result:} a hand-collected dataset of % TODO: insert N stations
-US rail station openings with full project timelines.
+\bigskip
+\textbf{Counterfactuals:} Permute $\{D_s\}$ within cohorts (by line type and
+construction phase), holding planned dates $P_s$ fixed.
 
-\medskip
-\textbf{Systems currently included:}
-WMATA, MBTA, HART, LA Metro, Sound Transit, MTA (NYCT + LIRR),
-VTA/BART, SF Muni, Miami-Dade Metrorail % TODO: verify completeness
-
-\medskip
-\textbf{Key data decision:} I use the \emph{first} projected opening date from the initial
-DEIS---not later revisions---to avoid contaminating $P_s$ with information about delays
-already underway.
+\bigskip
+\textbf{Result:} $\tilde{z}_{ct}$ retains the geography-induced level of
+access $\mu_{ct}$, leaving only quasi-random delay-induced variation.
+Use in 2SLS or stacked DiD.
 \end{frame}
 
 % ------ Slide 16 ------
-\begin{frame}{Measuring Access and Outcomes}
+\begin{frame}{Putting It Together: Stacked DiD + BH}
 \small
-\begin{columns}[T]
-\begin{column}{0.48\textwidth}
-\textbf{Walking access (r5r):} \parencite{r5r}
+Embed $\tilde{z}_{ct}$ in a stacked DiD framework \parencite{wing_stacked_2024}:
+
 \begin{itemize}
-    \item Pedestrian routing on OpenStreetMap + GTFS.
-    \item Pre-period network only (keeps exposure predetermined).
-    \item Walking isochrones at 5, 10, 15 min from each tract centroid.
-    \item Result: who is within walking distance of each station.
+  \item For each planned opening year $a$, form a sub-experiment:
+    \begin{itemize}
+      \item \textit{Treated:} tracts whose nearest station is scheduled in year $a$
+      \item \textit{Controls:} tracts not yet treated in the event window
+    \end{itemize}
+  \item Stack sub-experiments; apply Wing--Freedman--Hollingsworth weights
+        $\Rightarrow$ trimmed aggregate ATT.
+  \item Event-time coefficients trace the dynamic effect
+        relative to projected opening $j = 0$.
 \end{itemize}
-\medskip
-\includegraphics[width=\textwidth]{3_output/2_figures/1_maps/1_station_geographies/WMATA.png}
-\end{column}
-\begin{column}{0.48\textwidth}
-\textbf{Worker flows (LODES):}
-\begin{itemize}
-    \item Tract-level OD employment flows.
-    \item Outcomes: worker inflows, outflows, job retention, income proxies.
-\end{itemize}
-\medskip
-\includegraphics[width=\textwidth]{3_output/dmv_map.png}
-\medskip
-\textit{\footnotesize Currently using public tract-level data. Individual-level LODES
-would allow person-level travel times and continuous CMA.}
-\end{column}
-\end{columns}
+
+\bigskip
+\textbf{Two uses of $\tilde{z}_{ct}$:}
+\begin{enumerate}
+  \item As the treatment itself: effect of an exogenous access gain
+  \item As an instrument for CMA (commuter market access),
+        recovering a continuous dose--response
+\end{enumerate}
 \end{frame}
 
-% ============================================================
-\section{Validation}
-% ============================================================
+% ══════════════════════════════════════════════════════════════════
+\section{Data}
+% ══════════════════════════════════════════════════════════════════
 
 % ------ Slide 17 ------
-\begin{frame}{Concerns I'm Addressing Head-On}
+\begin{frame}{Data}
 \small
-I've collected four objections I expect from this audience. I want to name them directly.
-
-\medskip
-\begin{enumerate}
-    \item \textbf{Neighborhood endogeneity:} communities that oppose or delay projects may
-          differ systematically in their labor-market trajectories---endogeneity through
-          political mobilization, not just fiscal distress.
-    \medskip
-    \item \textbf{City/state wealth:} richer cities have better fiscal capacity, shorter
-          delays, \emph{and} stronger labor markets. Cross-city comparisons without
-          system FEs will pick this up.
-    \medskip
-    \item \textbf{Delay types:} political/opposition delays may be endogenous; engineering
-          and contractor delays are more plausibly exogenous. Lumping them together
-          could contaminate the instrument.
-    \medskip
-    \item \textbf{Heterogeneous take-up:} not everyone near a new station uses it.
-          Low-income residents use transit more; car culture varies by region
-          (South vs.\ North). Treatment effects are averages for nearby
-          residents---many of whom may not ride.
-\end{enumerate}
-
-\medskip
-\textit{Next three slides address (1)--(3) empirically. I flag (4) as a
-heterogeneous treatment effects question.}
+\begin{description}[labelwidth=3.2cm,leftmargin=!]
+  \item[Station dataset]
+    Transit Costs Project base list + hand-coded opening / projected dates
+    % TODO: insert N stations
+    across BART, CTA, LA~Metro, MARC, MBTA, MARTA, MTA~NYC, WMATA, and others
+  \item[LODES]
+    Census-tract origin--destination worker flows, 2010--2019
+  \item[ACS]
+    Tract-level demographics, income, and labor-market characteristics
+    (2022 5-year)
+  \item[Walking times]
+    \texttt{r5r} package: pedestrian-network isochrones from
+    OpenStreetMap + GTFS, pre-period only \parencite{r5r}
+  \item[EIS records]
+    EPA Environmental Impact Statement filings: announcement, DEIS, FEIS,
+    and ROD dates
+\end{description}
 \end{frame}
 
 % ------ Slide 18 ------
-\begin{frame}{Delay Length Is Not Politically Structured}
-\begin{columns}[T]
-\begin{column}{0.52\textwidth}
-% TODO: save figure and insert path, e.g.:
-% \includegraphics[width=\textwidth]{3_output/2_figures/delays/mean_delay_by_state.png}
-\fbox{\parbox{\textwidth}{\centering\vspace{3.2cm}
-\textit{[Figure: Mean delay by state, 95\% CI]}\\
-\vspace{3.2cm}}}
-\end{column}
-\begin{column}{0.45\textwidth}
+\begin{frame}{Constructing the Project-Time Index}
 \small
-\textbf{If delays reflect political environment,} they should cluster by political
-similarity---not scatter randomly.
+All analyses are indexed by $j = t - P_s$ (months from projected opening):
 
-\medskip
-But they don't:
-\begin{itemize}
-    \item MA and FL have nearly identical delay lengths---despite being at opposite ends of
-          the political spectrum, with very different fiscal capacity, union
-          strength, and regulatory cultures.
-    \item MA, CA, NY, and VA are politically and fiscally similar, yet span
-          nearly the full range of observed delays.
-\end{itemize}
+\bigskip
+\def\xmax{8}
+\def\xmin{0}
+\pgfmathsetmacro{\xmid}{(\xmin + \xmax)/2}
+\begin{tikzpicture}
+  % Top arrow: delayed station
+  \draw[dashed, ->, thick] (\xmin,1) -- (\xmax,1);
+  \node at (\xmin,1) {\textbullet};
+  \node at (\xmid,1) {\textbullet};
+  \node[above] at (\xmin,1) {\footnotesize Announced};
+  \node[above] at (\xmid,1) {\footnotesize Projected open ($j=0$)};
+  \node[right] at (\xmax,1) {\footnotesize $\text{Open}=0$ \textit{(delayed)}};
+  % Bottom arrow: on-time station
+  \draw[dashed, thick] (\xmin,0) -- (\xmid,0);
+  \draw[->, thick, uchicagored] (\xmid,0) -- (\xmax,0);
+  \node at (\xmin,0) {\textbullet};
+  \node at (\xmid,0) {\textbullet};
+  \node[below] at (\xmin,0) {\footnotesize $j < 0$};
+  \node[below] at (\xmid,0) {\footnotesize $j=0$};
+  \node[right] at (\xmax,0) {\footnotesize $\text{Open}=1$ \textit{(on-time)}};
+\end{tikzpicture}
 
-\medskip
-The cross-state pattern is consistent with \emph{project-specific} factors
-driving delay length---not systematic differences in political or economic
-environment.
-\end{column}
-\end{columns}
+\bigskip
+At each $j$, compare tracts near \textcolor{uchicagored}{on-time} stations to
+those near still-delayed stations.
+Delays generate as-good-as-random variation in $\text{Open}_{s,j}$ at each
+project-time.
 \end{frame}
 
+% ══════════════════════════════════════════════════════════════════
+\section{Validation}
+% ══════════════════════════════════════════════════════════════════
+
 % ------ Slide 19 ------
-\begin{frame}{Test 2: Delay vs.\ Neighborhood Median Income}
-\begin{center}
-% TODO: insert figure path
-% \includegraphics[width=0.85\textwidth]{PATH/TO/delay_vs_income_scatter.pdf}
-\fbox{\parbox{0.85\textwidth}{\centering\vspace{3cm}
-\textit{[Figure: Delay (days) vs.\ median household income by tract,}\\
-\textit{colored by transit system, OLS line overlaid]}\\
-\vspace{3cm}}}
-\end{center}
+\begin{frame}{Concerns I'm Addressing Head-On}
 \small
-The regression line is essentially flat. System membership explains most of the
-cross-sectional variation in delay---not neighborhood income.
+Four anticipated challenges:
+
+\begin{enumerate}
+  \item \textbf{Neighborhood endogeneity:} Communities that oppose transit may differ
+        systematically in socioeconomic outcomes --- i.e., the type of neighborhood
+        that gets transit (or gets it sooner) may not be random.
+  \item \textbf{City/state wealth heterogeneity:} Richer cities resolve delays faster;
+        cross-city comparisons confound fiscal capacity with treatment timing.
+  \item \textbf{Are delays truly exogenous?} Different delay types (political, funding,
+        environmental) may be non-randomly distributed across neighborhoods.
+  \item \textbf{Heterogeneous take-up:} Car-dependent cities (South) vs.\
+        transit-oriented cities (Northeast); low-income vs.\ high-income users ---
+        treatment effects may not generalize.
+\end{enumerate}
+
+\bigskip
+\textit{Next three slides address concerns 1--3 directly.}
 \end{frame}
 
 % ------ Slide 20 ------
-\begin{frame}{Test 3: Within-System Predictors of Delay}
-\begin{center}
-% TODO: insert figure path
-% \includegraphics[width=0.85\textwidth]{PATH/TO/within_system_predictors.pdf}
-\fbox{\parbox{0.85\textwidth}{\centering\vspace{3cm}
-\textit{[Figure: Coefficient plot---effect of pre-period neighborhood characteristics}\\
-\textit{on delay (days per SD), system FEs absorbed via demeaning]}\\
-\vspace{3cm}}}
-\end{center}
+\begin{frame}{Delay Length Is Not Politically Structured}
+\label{slide:political}
 \small
-After absorbing system fixed effects, \textbf{no labor-market characteristic predicts
-delay length}. All 95\% CIs cross zero.
+\begin{columns}[T]
+  \begin{column}{0.50\textwidth}
+    \centering
+    % TODO: update path once figure regenerated from delay_robustness.R
+    \includegraphics[width=\textwidth]{3_output/2_figures/3_delay_robustness/mean_delay_by_state.png}
+  \end{column}
+  \begin{column}{0.46\textwidth}
+    \textbf{Political heterogeneity argument:}
+    \begin{itemize}
+      \item MA and FL have similar delay distributions despite being politically
+            polar opposites.
+      \item MA, CA, NY, and VA are politically similar yet span the \emph{full range}
+            of delay lengths.
+      \item HI has the longest mean delay (HART) for project-specific reasons,
+            not political ones.
+    \end{itemize}
 
-\medskip
-Conditional on being in the same transit system, neighborhoods that waited longer
-look the same as neighborhoods that opened on time.
-
-\medskip
-\textit{Wide CIs reflect limited station-level N---growing as I complete the dataset.}
+    \bigskip
+    $\Rightarrow$ Delay length reflects project characteristics,
+    not state-level political economy.
+  \end{column}
+\end{columns}
 \end{frame}
 
-% ============================================================
-\section{Empirical Specification}
-% ============================================================
-
 % ------ Slide 21 ------
-\begin{frame}{Baseline 2SLS Specification}
+\begin{frame}{Test 2: Neighborhood Income Does Not Predict Delay}
+\label{slide:income}
 \small
-Let $x_{ct}$ be exposure (binary-band instrument or CMA) and $y_{ct}$ an outcome
-(worker outflows, job-to-job transitions, income):
-
-\medskip
-\textbf{First stage:}
+\textbf{Specification:} OLS with state + system fixed effects (HC3 robust SEs)
 \[
-x_{ct} = \pi\,\tilde{z}^{\text{bin}}_{ct} + \alpha\,\mu_{ct} + \Gamma' V_c + u_{ct}
+  \text{Delay}_s = \alpha_{\text{state}} + \alpha_{\text{system}}
+  + \beta \cdot \widetilde{\text{Income}}_c + \varepsilon_s
 \]
 
-\textbf{Second stage:}
-\[
-y_{ct} = \beta\,\hat{x}_{ct} + \alpha\,\mu_{ct} + \Gamma' V_c + e_{ct}
-\]
+\begin{center}
+  % TODO: update path once figure regenerated from delay_robustness.R
+  \includegraphics[width=0.62\textwidth]{3_output/2_figures/3_delay_robustness/delay_vs_income.png}
+\end{center}
 
-where $V_c$ includes tract and time fixed effects; $\mu_{ct}$ is controlled for
-(not excluded) to isolate the surprise component \parencite{borusyak_nonrandom_2023}.
-
-\medskip
-\textbf{Exposure measure:}
-\[
-z^{\text{bin}}_{ct} = \sum_{s \in \mathcal{S}_c} O_{st}(g_t)\!\left[
-\mathbf{1}\{d^{\text{walk}}_{cs} \le 5\}
-+ \tfrac{2}{3}\mathbf{1}\{5 < d^{\text{walk}}_{cs} \le 10\}
-+ \tfrac{1}{3}\mathbf{1}\{10 < d^{\text{walk}}_{cs} \le 15\}
-\right]
-\]
-Weights encode decreasing influence with walk time; I test robustness to single cutoffs
-and to a continuous CMA measure \parencite{eaton_technology_2002, donaldson_railroads_2016}.
+\vspace{-2pt}
+Standardized tract median household income does not significantly predict delay
+length conditional on state and system FEs.
+Coefficient near zero with a wide confidence interval.
 \end{frame}
 
 % ------ Slide 22 ------
-\begin{frame}{My Contribution: Stacked DiD + Recentered Instrument}
+\begin{frame}{Test 3: Labor Market Characteristics Don't Predict Delay Within System}
+\label{slide:withinsystem}
 \small
-2SLS estimates a static average but hides: (i) dynamic effects over event time,
-(ii) which cohorts drive the estimate.
+\textbf{Specification:} \texttt{feols} with system fixed effects (HC3 SEs);
+joint Wald test across all labor-market predictors.
 
-\medskip
-\textbf{Framework} \parencite{wing_stacked_2024}:
-\begin{itemize}
-    \item Define adoption time $A_c$ = realized station opening for tract $c$'s nearest station.
-    \item Event time $e = t - A_c$; window $e \in [\kappa_{\text{pre}}, \kappa_{\text{post}}]$.
-    \item For each adoption year $a$: sub-experiment with treated tracts ($A_c = a$)
-          vs.\ not-yet-treated controls.
-    \item Stack sub-experiments; apply WFH corrective weights to recover trimmed ATT.
-\end{itemize}
+\begin{center}
+  % TODO: update path once figure regenerated from delay_robustness.R
+  \includegraphics[width=0.62\textwidth]{3_output/2_figures/3_delay_robustness/within_system_coef_plot.png}
+\end{center}
 
-\medskip
-\textbf{Two options for $\tilde{z}_{ct}$:}
-\begin{enumerate}
-    \item Treat $\tilde{z}_{ct}$ as the treatment directly---event-time coefficients
-          capture causal effects of an exogenous access increase.
-    \item Stacked IV: instrument $x_{ct}$ (CMA or band exposure) with $\tilde{z}_{ct}$
-          within the stacked panel.
-\end{enumerate}
-
-\medskip
-\textbf{Why this is new:} combining BH recentering with stacked DiD has not been done
-in the transit literature and provides a clean, dynamic ATT with a well-defined
-comparison group.
+\vspace{-2pt}
+Median income, LFPR, unemployment rate, employment rate, bachelor's share,
+and poverty rate are jointly insignificant within transit systems.
+Joint Wald $p$-value: [insert after running script].
 \end{frame}
 
-% ============================================================
-\section{Open Questions}
-% ============================================================
+% ══════════════════════════════════════════════════════════════════
+\section{Empirical Specification}
+% ══════════════════════════════════════════════════════════════════
 
 % ------ Slide 23 ------
-\begin{frame}{What I'm Wrestling With}
+\begin{frame}{Main Specification}
 \small
-\textbf{1. City-level confounding without city fixed effects}
+\textbf{Reduced form:}
+\[
+  y_{c,j} = \alpha_c + \alpha_j
+  + \beta\,\tilde{z}_{c,j} + \Gamma' V_c + \varepsilon_{c,j}
+\]
 \begin{itemize}
-    \item Delay variation is large across systems (HART vs.\ WMATA vs.\ Sound Transit).
-          This reflects institutional, regulatory, fiscal, and political differences---not random.
-    \item Not enough station-level observations for system FEs to fully absorb these.
-    \item Current approach: within-system validation (Slide 20) + permute only within cohorts.
-    \item \textit{Is within-system validation convincing on its own, or do I need to
-          restrict to multi-project systems?}
+  \item $y_{c,j}$: labor-market outcome in tract $c$ at project-time $j$
+  \item $\tilde{z}_{c,j}$: recentered walking-time-weighted access to open stations
+  \item $\alpha_c$, $\alpha_j$: tract and project-time fixed effects
+  \item $V_c$: baseline tract controls (income, population, employment rate)
 \end{itemize}
 
-\medskip
-\textbf{2. Delay type classification}
-\begin{itemize}
-    \item I need to categorize delays from EIS records: engineering/contractor vs.\
-          funding/fiscal vs.\ political/community opposition.
-    \item \textit{How to operationalize this from narrative EIS text---manual coding,
-          text analysis, or external sources?}
-\end{itemize}
+\bigskip
+\textbf{2SLS:} Instrument continuous CMA with $\tilde{z}_{c,j}$;
+second stage recovers dose--response.
 
-\medskip
-\textbf{3. Heterogeneous take-up and treatment effect heterogeneity}
+\bigskip
+\textbf{HTE:} Interact $\tilde{z}_{c,j}$ with:
 \begin{itemize}
-    \item My ITT estimates cover all residents near a new station---including those
-          who don't ride. Low-income $\uparrow$ ridership; car-culture regions
-          $\downarrow$ ridership---both an interpretation and an HTE issue.
-    \item A new station in a transit desert is a qualitatively different treatment
-          from an additional station in a dense, well-served network.
-    \item \textbf{Plan:} stratify by pre-period transit network density and
-          pedestrian network density. \textit{Should I also try to bound
-          the LATE using ridership data?}
+  \item Baseline transit-network density (transit-desert indicator)
+  \item Pedestrian network density
+  \item Neighborhood income quintile
 \end{itemize}
 \end{frame}
 
 % ------ Slide 24 ------
-\begin{frame}{Next Steps and What I Want From You}
+\begin{frame}{Event-Study Specification}
 \small
-\textbf{Immediate:}
+\textbf{Dynamic ATT:}
+\[
+  y_{c,j} = \alpha_c + \alpha_j
+  + \sum_{k \ne -1} \beta_k\,\tilde{z}_{c,\,j=k}
+  + \Gamma' V_c + \varepsilon_{c,j}
+\]
 \begin{itemize}
-    \item Fix Miami-Dade delay figure and re-run validation.
-    \item Redo the by-system delay disaggregation (currently by state).
-    \item Complete the delay dataset for remaining systems.
-    % TODO: add other immediate data steps
+  \item $k$: event time relative to projected opening ($k=-1$ excluded)
+  \item Pre-trend coefficients ($k < 0$) test for anticipation effects
+  \item Post-opening coefficients ($k \ge 0$) trace the dynamic labor-market response
 \end{itemize}
 
-\medskip
-\textbf{Medium term:}
+\bigskip
+Embed in stacked DiD \parencite{wing_stacked_2024} to recover a trimmed
+aggregate $\text{ATT}(a, a+k)$ across opening cohorts.
+\end{frame}
+
+% ══════════════════════════════════════════════════════════════════
+\section{Open Questions}
+% ══════════════════════════════════════════════════════════════════
+
+% ------ Slide 25 ------
+\begin{frame}{What I'm Wrestling With}
+\small
 \begin{itemize}
-    \item Apply for individual-level LODES access (unlocks person-level travel times
-          and continuous CMA).
-    \item Run first-stage regressions once dataset is complete.
-    \item Implement the stacked DiD + recentered instrument specification.
-    \item \textbf{Heterogeneous treatment effects by baseline transit access:}
-          a new station in a transit desert is a fundamentally different treatment
-          from a new station in Manhattan. Stratify by (i) pre-period transit network
-          density and (ii) street/pedestrian network density---both affect who can
-          physically reach the station and therefore the realistic take-up rate.
-          Pairs naturally with the ridership-based LATE bounding question above.
+  \item \textbf{Control group:} Clean controls vs.\ never-treated vs.\
+        not-yet-treated in the stacked DiD --- different choices yield
+        different estimands.
+  \item \textbf{Anticipation:} Households start responding at announcement,
+        not at $j=0$. Should the ``event'' shift to the announcement date?
+        How do I estimate the announcement effect itself?
+  \item \textbf{Delay classification:} Cleanly assigning funding / opposition /
+        environmental type to each delay episode; whether delay type should
+        enter the BH permutation cohorts.
+  \item \textbf{Stations that move:} A handful of stations change location during
+        environmental review --- they should be excluded from the exposure measure.
+  \item \textbf{Take-up and HTE:} Proxying individual-level transit propensity
+        without individual data; car-ownership rates at the tract level
+        are a starting point.
+\end{itemize}
+\end{frame}
+
+% ------ Slide 26 ------
+\begin{frame}{Next Steps}
+\label{slide:nextsteps}
+\small
+\textbf{Data \& measurement:}
+\begin{itemize}
+  \item Complete delay dataset for remaining systems
+  \item Automated delay-type classification from EIS narrative text (NLP)
+  \item Recentered instrument $\tilde{z}_{ct}$ for all tract--station pairs
 \end{itemize}
 
-\medskip
-\textbf{I want feedback on:}
+\bigskip
+\textbf{Estimation:}
+\begin{itemize}
+  \item Baseline TWFE with recentered instrument
+  \item Stacked DiD event study with Wing--Freedman--Hollingsworth weights
+  \item HTE stratified by: (i) baseline transit access
+        (transit-desert vs.\ already-connected neighborhoods),
+        (ii) pedestrian network density, (iii) neighborhood income quintile
+\end{itemize}
+
+\bigskip
+\textbf{Questions for today:}
 \begin{enumerate}
-    \item \textbf{City FEs:} how do you handle cross-city confounding with limited N?
-          Restrict to multi-project systems? Synthetic control by system?
-    \item \textbf{Delay classification:} best approach to categorize delay type from
-          narrative EIS text---manual coding, text analysis, or external sources?
-    \item \textbf{Take-up:} should I try to bound the LATE using ridership data,
-          or is ITT the right estimand for a policy question about rail investment?
-    \item \textbf{Mechanisms:} any suggestions for separating the reliability,
-          search-radius, and network channels empirically?
+  \item Is the intensive- vs.\ extensive-margin framing for delays convincing?
+  \item How should I define the control group in the stacked DiD?
+  \item Are there other sources of exogenous delay variation I'm missing?
+  \item Should take-up heterogeneity be a primary result or a robustness check?
 \end{enumerate}
 \end{frame}
 
-% References
+% ══════════════════════════════════════════════════════════════════
 \begin{frame}[noframenumbering,plain,allowframebreaks]{References}
-    \printbibliography[heading=none]
+  \printbibliography[heading=none]
 \end{frame}
 
 \end{document}
