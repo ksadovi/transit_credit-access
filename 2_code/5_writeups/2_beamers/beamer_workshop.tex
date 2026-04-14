@@ -78,17 +78,18 @@ transit --- the largest federal investment in US transit history.
 \end{itemize}
 
 \bigskip
-\textbf{Yet we lack causal estimates:} Does physical access to a new rail station
-actually improve labor-market outcomes for nearby residents?
+Urban congestion is rising and demand for accessible cities is growing ---
+yet it is unclear whether transit investment actually delivers for workers.
 
 \bigskip
-\textit{This paper provides that evidence.}
+\textbf{Yet we lack causal estimates:} Does physical access to a new rail station
+actually improve labor-market outcomes for nearby residents?
 \end{frame}
 
 % ------ Slide 4 ------
 \begin{frame}{The Obvious Mechanism}
 \small
-A new rail station expands the reach of workers and firms simultaneously:
+A new rail station expands the reach of workers in three distinct but interconnected ways:
 
 \bigskip
 \begin{enumerate}
@@ -99,11 +100,12 @@ A new rail station expands the reach of workers and firms simultaneously:
   \item \textbf{Networks and referrals:} Mobility expands the set of people, neighborhoods,
         and opportunities one can reach, broadening referral networks
         \parencite{patacchini_referral_fx}.
+        % TODO: add Patacchini referral-networks citation key once confirmed
 \end{enumerate}
 
 \bigskip
-Separating these channels is hard. I start with the reduced-form question: does
-gaining a station increase employment and earnings for nearby residents?
+My focus: the reduced-form question --- does gaining a station increase
+employment and earnings for nearby residents?
 \end{frame}
 
 % ------ Slide 5 ------
@@ -114,7 +116,7 @@ Transit access is far from uniform:
 \bigskip
 \begin{itemize}
   \item Some stations extend lines into already-connected inner cities.
-  \item Others bring \textbf{first-ever rail access} to historically transit-poor communities.
+  \item Others bring first-ever rail access to historically transit-poor communities.
 \end{itemize}
 
 \bigskip
@@ -132,7 +134,7 @@ This matters both for identification and for interpretation:
 % ------ Slide 6 ------
 \begin{frame}{Why Networks? Why Now?}
 \small
-Labor markets are networked. A tight body of evidence links:
+Labor markets are networked. Existing literature links:
 
 \bigskip
 \begin{itemize}
@@ -167,12 +169,6 @@ on nearby residents' labor-market outcomes?
   \item Worker flows: job retention, job-to-job transitions
 \end{itemize}
 
-\bigskip
-\textbf{Key heterogeneity:}
-\begin{itemize}
-  \item By baseline transit access (transit desert vs.\ already connected)
-  \item By neighborhood income and transit take-up propensity
-\end{itemize}
 \end{frame}
 
 % ------ Slide 8 ------
@@ -188,17 +184,44 @@ on nearby residents' labor-market outcomes?
   \item \textbf{Instrument design (in progress):} Adapt \textcite{borusyak_nonrandom_2023}
         recentering to a stacked DiD framework, purging non-random exposure from baseline
         geography.
-  \item \textbf{HTE:} First estimates stratified by baseline transit access ---
-        distinguishing transit-desert gains from incremental additions to
-        already-connected networks.
 \end{enumerate}
+
+\medskip
+{\small\textit{Related: \textcite{tyndall_airports} (airport rail as instrument);
+Baum-Snow and Kahn (transit network expansion); Tsivranidis (Athens metro).}}
 \end{frame}
 
 % ══════════════════════════════════════════════════════════════════
 \section{Identification Design}
 % ══════════════════════════════════════════════════════════════════
 
-% ------ Slide 9 ------
+% ------ Slide 9 (Project-time index) ------
+\begin{frame}{The Project-Time Index}
+\small
+I organize all variation around a \textbf{project-time index}:
+\[
+  j = t - P_s
+\]
+where $t$ is the calendar year and $P_s$ is the projected opening year for station $s$.
+
+\bigskip
+\begin{itemize}
+  \item $j = 0$: the projected opening date --- all projects share this common origin.
+  \item $j < 0$: pre-opening period (announced but not yet open).
+  \item $j > 0$: post-projected-opening (station either open or delayed).
+\end{itemize}
+
+\bigskip
+Indexing by $j$ rather than calendar time lets me compare neighborhoods
+\emph{within} project time --- holding constant how far along each project is ---
+regardless of when construction started.
+
+\bigskip
+A station open at $j = 0$ opened on schedule. One that opens at $j = D_s > 0$
+was delayed by $D_s$ periods.
+\end{frame}
+
+% ------ Slide 10 ------
 \begin{frame}{The Basic Estimating Equation}
 \small
 \textbf{Baseline TWFE:}
@@ -210,7 +233,7 @@ on nearby residents' labor-market outcomes?
   \item $j = t - P_s$: project-time index (0 = projected opening for station $s$)
   \item $\text{Open}_{s(i),j} = \mathbf{1}\!\left\{j \ge D_{s(i)}\right\}$:
         station is open by project-time $j$
-  \item $\alpha_i$: unit FE;\quad $\alpha_j$: project-time FE
+  \item $\alpha_i$: census tract FE;\quad $\alpha_j$: project-time FE
 \end{itemize}
 
 \medskip
@@ -233,21 +256,18 @@ The next slides explain why and how I address it.
 \begin{enumerate}
   \item \textbf{Anticipation effects:}
     \begin{itemize}
-      \item Households and firms respond at announcement, not just at opening.
+      \item Households and workers respond at announcement, not just at opening.
       \item House prices capitalize expected access up to 6 years early
             \parencite{mcmillen_reaction_2004}.
     \end{itemize}
   \item \textbf{Non-random exposure:}
     \begin{itemize}
       \item Areas near new stations are already denser, more central, and often wealthier.
-      \item Standard DiD absorbs station FEs but not the spatial gradient around them.
     \end{itemize}
   \item \textbf{Endogenous delay length:}
     \begin{itemize}
       \item Longer delays may be correlated with neighborhood characteristics
             (opposition strength, wealth, fiscal stress).
-      \item If delay length predicts baseline outcomes, using $D_s$ directly
-            as variation is invalid.
     \end{itemize}
 \end{enumerate}
 \end{frame}
@@ -265,7 +285,7 @@ origin $j=0$. Variation in $D_s$ shifts when $\text{Open}_{s,j}$ flips from 0 to
 
 \bigskip
 \textbf{Requires:} Delay length $D_s$ is ``as good as random'' conditional on
-baseline geography and project characteristics.
+baseline geography and neighborhood characteristics.
 
 \medskip
 \textit{But is it? I test this directly on slides
@@ -315,8 +335,8 @@ fairly uniform. The variation I exploit is in \textbf{delay length}
 delay episode, so delay \emph{status} is not selective across neighborhoods.
 
 \bigskip
-\textbf{The concern is the intensive margin:} Is delay \emph{length} correlated
-with neighborhood characteristics?
+\textbf{The concern is the intensive margin:} Is delay \emph{length} (or type)
+correlated with neighborhood characteristics?
 
 \bigskip
 Possible sources of endogeneity in delay length:
@@ -329,9 +349,6 @@ Possible sources of endogeneity in delay length:
   \item State-level funding capacity and federal grant timelines
 \end{itemize}
 
-\bigskip
-$\Rightarrow$ I need to show delay length is not systematically predicted by
-neighborhood characteristics. I do this next.
 \end{frame}
 
 % ══════════════════════════════════════════════════════════════════
@@ -429,8 +446,8 @@ Four anticipated challenges:
         polar opposites.
   \item MA, CA, NY, and VA are politically similar yet span the \emph{full range}
         of delay lengths.
-  \item HI's outlier status reflects HART's project-specific funding crisis,
-        not politics.
+  \item HI's outlier status reflects HART's project-specific funding crisis ---
+        a delay type also experienced by Miami.
 \end{itemize}
 
 \bigskip
@@ -471,36 +488,39 @@ conditional on state and system FEs.\; Within-R$^2 \approx 0.002$.
 \includegraphics[width=0.85\textwidth]{3_output/2_figures/3_delay_robustness/delay_vs_income.png}
 \end{frame}
 
-% ------ Slide 21 (Within-system: argument) ------
-\begin{frame}{Test 3: Labor Market Characteristics Don't Predict Delay (Within System)}
+% ------ Slide 21 (Within-system: merged figure + note) ------
+\begin{frame}{Test 3: Labor Market Chars.\ Don't Predict Delay (Within System)}
 \label{slide:withinsystem}
 \small
-\textbf{Specification:} \texttt{feols} with system fixed effects (HC1 SEs)
+\begin{columns}[T]
+  \begin{column}{0.55\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{3_output/2_figures/3_delay_robustness/within_system_coef_plot.png}
+  \end{column}
+  \begin{column}{0.41\textwidth}
+    \vspace{1.5em}
+    \texttt{feols} with system FEs (HC1 SEs).
 
-\bigskip
-Six labor-market predictors --- income, LFP rate, unemployment, employment rate,
-bachelor's share, and poverty rate --- are jointly insignificant within systems.
-Within-R$^2 = 0.056$.
+    \medskip
+    Six labor-market predictors --- income, LFP rate, unemployment, employment rate,
+    bachelor's share, and poverty rate --- are jointly insignificant within systems.
+    Within-R$^2 = 0.056$.
 
-\bigskip
-\hyperlink{app:within_table}{\beamerbutton{Full regression table $\to$}}
-\end{frame}
-
-% ------ Slide 22 (Within-system: figure) ------
-\begin{frame}{Labor Market Chars.\ Don't Predict Delay (Within System)}
-\centering
-\includegraphics[width=0.85\textwidth]{3_output/2_figures/3_delay_robustness/within_system_coef_plot.png}
+    \bigskip
+    \hyperlink{app:within_table}{\beamerbutton{Full regression table $\to$}}
+  \end{column}
+\end{columns}
 \end{frame}
 
 % ------ Slide 23 (Cross-system: argument) ------
 \begin{frame}{Test 4: No Cross-System Pattern Either}
 \label{slide:crosssystem}
 \small
-\textbf{Specification:} State FEs only --- system-level co-movement between
-neighborhood characteristics and delay length is now visible.
+No fixed effects --- state FEs dropped due to too few observations per state;
+system FEs dropped so cross-system co-movement is fully visible.
 
 \bigskip
-Estimates move but remain insignificant when system FEs are removed.
+Estimates shift but remain insignificant with all FEs removed.
 The cross-system pattern is no more organized than the within-system one.
 
 \bigskip
@@ -563,10 +583,12 @@ The cross-system pattern is no more organized than the within-system one.
 \begin{itemize}
   \item Stratify by baseline transit access (transit-desert vs.\ connected),
         pedestrian network density, and neighborhood income
+  \item By neighborhood income and transit take-up propensity
 \end{itemize}
+\end{frame}
 
-\bigskip
-\textbf{Questions for today:}
+% ------ Questions for today (new slide) ------
+\begin{frame}{Questions for Today}
 \begin{enumerate}
   \item Is the intensive- vs.\ extensive-margin framing for delays convincing?
   \item How should I define the control group in the stacked DiD?
