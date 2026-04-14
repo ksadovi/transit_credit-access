@@ -35,6 +35,114 @@ df_state <- st_join(
 ) %>%
   mutate(delay_days = as.numeric(delay, units = "days"))
 
+# ── 1b. Descriptive summary table + delay histogram ──────────────────────────
+library(knitr)
+library(kableExtra)
+
+desc_tab_dir <- file.path("3_output", "3_tables", "0_descriptive")
+desc_fig_dir <- file.path("3_output", "2_figures", "0_descriptive")
+dir.create(desc_tab_dir, showWarnings = FALSE, recursive = TRUE)
+dir.create(desc_fig_dir, showWarnings = FALSE, recursive = TRUE)
+
+df_desc <- df_state %>% filter(!is.na(delay_days))
+
+n_sta <- nrow(df_desc)
+n_sys <- n_distinct(df_desc$system)
+
+sum_tbl <- tibble::tribble(
+  ~Statistic,                            ~Value,
+  "Stations",                            formatC(n_sta, format = "d", big.mark = ","),
+  "Transit systems",                     as.character(n_sys),
+  "Avg.\\ stations per system",          sprintf("%.1f", n_sta / n_sys),
+  "Stations with any delay (\\%)",       sprintf("%.1f", mean(df_desc$delay_days > 0) * 100),
+  "Mean delay (days)",                   sprintf("%.0f", mean(df_desc$delay_days)),
+  "Median delay (days)",                 sprintf("%.0f", median(df_desc$delay_days)),
+  "SD of delay (days)",                  sprintf("%.0f", sd(df_desc$delay_days)),
+  "Min / max delay (days)",              sprintf(
+                                           "%d / %d",
+                                           as.integer(min(df_desc$delay_days)),
+                                           as.integer(max(df_desc$delay_days))
+                                         )
+)
+
+kable(
+  sum_tbl,
+  format    = "latex",
+  booktabs  = TRUE,
+  escape    = FALSE,
+  col.names = c("", ""),
+  linesep   = ""
+) %>%
+  kable_styling(
+    latex_options = c("hold_position"),
+    font_size     = 10,
+    full_width    = FALSE
+  ) %>%
+  save_kable(file.path(desc_tab_dir, "delay_descriptive.tex"))
+
+# Per-system breakdown (for appendix)
+sys_sum <- df_desc %>%
+  group_by(system) %>%
+  summarise(
+    N              = n(),
+    `Mean (days)`  = round(mean(delay_days)),
+    `Median (days)`= round(median(delay_days)),
+    `SD (days)`    = round(sd(delay_days)),
+    `Max (days)`   = round(max(delay_days)),
+    .groups = "drop"
+  ) %>%
+  arrange(desc(`Mean (days)`))
+
+kable(
+  sys_sum,
+  format   = "latex",
+  booktabs = TRUE,
+  linesep  = "",
+  caption  = "Delay statistics by transit system",
+  label    = "tab:delay_by_system"
+) %>%
+  kable_styling(
+    latex_options = c("hold_position", "scale_down"),
+    font_size     = 9
+  ) %>%
+  save_kable(file.path(desc_tab_dir, "delay_by_system.tex"))
+
+# Delay distribution histogram (x-axis in years for readability)
+df_desc <- df_desc %>% mutate(delay_yrs = delay_days / 365.25)
+
+p_hist <- ggplot(df_desc, aes(x = delay_yrs)) +
+  geom_histogram(
+    binwidth = 0.5, boundary = 0,
+    fill = "#8b0000", color = "white", alpha = 0.85
+  ) +
+  geom_vline(
+    xintercept = mean(df_desc$delay_yrs),
+    linetype = "dashed", color = "grey30", linewidth = 0.7
+  ) +
+  annotate(
+    "text",
+    x = mean(df_desc$delay_yrs) + 0.15, y = Inf,
+    vjust = 1.5, hjust = 0,
+    label = sprintf("Mean = %.1f yrs", mean(df_desc$delay_yrs)),
+    size = 3, color = "grey30"
+  ) +
+  scale_x_continuous(
+    breaks = seq(0, ceiling(max(df_desc$delay_yrs)), by = 1),
+    labels = function(x) paste0(x, " yr")
+  ) +
+  labs(
+    title = "Distribution of station opening delays",
+    x     = "Delay (years past projected opening)",
+    y     = "Number of stations"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(panel.grid.minor = element_blank())
+
+ggsave(
+  file.path(desc_fig_dir, "delay_distribution.png"),
+  p_hist, width = 7, height = 4, dpi = 300
+)
+
 # ── 2. Join Census tract median household income ──────────────────────────────
 target_states <- unique(df_state$state_abbr)
 target_states <- target_states[!is.na(target_states)]
@@ -315,3 +423,6 @@ p_coef_cs <- ggplot(coef_combined,
 
 ggsave(file.path(out_dir, "cross_vs_within_system_coef_plot.png"),
        p_coef_cs, width = 8, height = 5.5, dpi = 300)
+
+# quick delay visuals 
+summary(df_full$delay_days)
