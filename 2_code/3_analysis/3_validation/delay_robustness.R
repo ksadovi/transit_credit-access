@@ -64,7 +64,8 @@ m1 <- feols(delay_days ~ income_scaled  | state + system, data = df_full, vcov =
 
 cat("=== Income → delay, within state + system (HC3 SEs) ===\n")
 etable(m0, m1, vcov = "hetero",
-       dict    = c(income_scaled = "Median income (SD)"),
+       dict    = c(income_scaled = "Median income (SD)", 
+                   delay_dats = "Delay (days)"),
        title   = "Delay (days) regressed on neighborhood income",
        headers = c("No covariates", "Income"),
        file    = file.path(tab_dir, "delay_income_state_system_fe.tex"))
@@ -204,7 +205,8 @@ etable(
     unemp_rate_z     = "Unemployment rate",
     emp_rate_z       = "Employment rate",
     ba_share_z       = "Bachelor's share",
-    poverty_rate_z   = "Poverty rate"
+    poverty_rate_z   = "Poverty rate", 
+    delay_dats = "Delay (days)"
   ),
   title   = "Delay (days) on within-system labor market characteristics",
   headers = c("Null", "Full"),
@@ -264,7 +266,8 @@ etable(
     unemp_rate_z     = "Unemployment rate",
     emp_rate_z       = "Employment rate",
     ba_share_z       = "Bachelor's share",
-    poverty_rate_z   = "Poverty rate"
+    poverty_rate_z   = "Poverty rate", 
+    delay_dats = "Delay (days)"
   ),
   title   = "Delay (days) on cross-system labor market characteristics",
   headers = c("Null", "Full"),
