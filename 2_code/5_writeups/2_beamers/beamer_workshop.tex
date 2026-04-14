@@ -197,21 +197,29 @@ on nearby residents' labor-market outcomes?
 \small
 \textbf{Baseline TWFE:}
 \[
-  y_{i,j} =\alpha_j + \beta \cdot \text{Open}_{s(i),j} + \varepsilon_{i,j}
+  y_{i,j} = \alpha_j + \beta \cdot \text{Open}_{s(i),j} + \varepsilon_{i,j}
 \]
 \begin{itemize}
-  \item $i$: Catchment region of a given station
-  \item $j = t - P_s$: project-time index (0 = projected opening for station $s$)
+  \item $i$: Catchment region of a given station;\quad
+        $j = t - P_s$: project-time index
   \item $\text{Open}_{s(i),j} = \mathbf{1}\!\left\{j \ge D_{s(i)}\right\}$:
-        station is open by project-time $j$
+        station is open at project-time $j$
+  \item $\alpha_j$: project-time FE --- compares catchments at the same
+        stage of their project timeline; no catchment FE by design
 \end{itemize}
 
 \medskip
 \textbf{Event-study extension:}
 \[
-  y_{i,j} = \alpha_j +\sum_{k \ne -1} \beta_k \cdot
-     \mathbf{1}\!\left\{j \geq D_{s(i)} + k\right\} + \varepsilon_{i,j}
+  y_{i,j} = \alpha_j
+  + \sum_{k \ne -1} \beta_k \cdot
+    \mathbf{1}\!\left\{j - D_{s(i)} = k\right\} + \varepsilon_{i,j}
 \]
+\begin{itemize}
+  \item $k = j - D_{s(i)}$: years relative to actual opening ($k{=}0$ = opening year)
+  \item $\beta_k$ for $k < 0$: pre-trends test (key validity check given no unit FE)
+  \item $\beta_k$ for $k \ge 0$: dynamic ATT
+\end{itemize}
 
 \medskip
 \textit{Problem:} $D_{s(i)}$ is the delay --- delay length may be endogenous.
