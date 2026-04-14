@@ -323,23 +323,6 @@ m_ws_null <- feols(fml_null, data = df_lm, vcov = "hetero")
 m_ws_full <- feols(fml_full, data = df_lm, vcov = "hetero")
 
 cat("=== Within-system: labor market → delay (system FE, HC3 SEs) ===\n")
-etable(
-  m_ws_null, m_ws_full,
-  dict = c(
-    median_incomeE_z = "Median income",
-    lfpr_z           = "LFP rate",
-    unemp_rate_z     = "Unemployment rate",
-    emp_rate_z       = "Employment rate",
-    ba_share_z       = "Bachelor's share",
-    poverty_rate_z   = "Poverty rate", 
-    delay_days = "Delay (days)"
-  ),
-  title   = "Delay (days) on within-system labor market characteristics",
-  headers = c("Null", "Full"),
-  file    = file.path(tab_dir, "delay_labormarket_within_system.tex"),
-  replace = T
-)
-wrap_for_beamer(file.path(tab_dir, "delay_labormarket_within_system.tex"))
 
 # Joint Wald test: all labor market coefficients simultaneously zero
 cat("\n=== Joint Wald test: labor market vars jointly zero? ===\n")
@@ -385,24 +368,24 @@ fml_cs_full <- as.formula(paste("delay_days ~", paste(covar_z, collapse = " + ")
 m_cs_null <- feols(fml_cs_null, data = df_lm, vcov = "hetero")
 m_cs_full <- feols(fml_cs_full, data = df_lm, vcov = "hetero")
 
-cat("=== Cross-system: labor market → delay (no FEs, HC1 SEs) ===\n")
+cat("=== Combined labor market → delay table ===\n")
 etable(
-  m_cs_null, m_cs_full,
+  m_ws_null, m_ws_full, m_cs_null, m_cs_full,
   dict = c(
     median_incomeE_z = "Median income",
     lfpr_z           = "LFP rate",
     unemp_rate_z     = "Unemployment rate",
     emp_rate_z       = "Employment rate",
     ba_share_z       = "Bachelor's share",
-    poverty_rate_z   = "Poverty rate", 
-    delay_days = "Delay (days)"
+    poverty_rate_z   = "Poverty rate",
+    delay_days       = "Delay (days)"
   ),
-  title   = "Delay (days) on cross-system labor market characteristics",
-  headers = c("Null", "Full"),
-  file    = file.path(tab_dir, "delay_labormarket_cross_system.tex"),
-  replace = T
+  title   = "Delay (days) on labor market characteristics",
+  headers = c("Within: Null", "Within: Full", "Cross: Null", "Cross: Full"),
+  file    = file.path(tab_dir, "delay_labormarket_combined.tex"),
+  replace = TRUE
 )
-wrap_for_beamer(file.path(tab_dir, "delay_labormarket_cross_system.tex"))
+wrap_for_beamer(file.path(tab_dir, "delay_labormarket_combined.tex"))
 
 cat("\n=== Joint Wald test (cross-system): labor market vars jointly zero? ===\n")
 wald(m_cs_full, covar_z)
