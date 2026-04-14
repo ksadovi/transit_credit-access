@@ -68,7 +68,8 @@ etable(m0, m1, vcov = "hetero",
                    delay_days = "Delay (days)"),
        title   = "Delay (days) regressed on neighborhood income",
        headers = c("No covariates", "Income"),
-       file    = file.path(tab_dir, "delay_income_state_system_fe.tex"))
+       file    = file.path(tab_dir, "delay_income_state_system_fe.tex"),
+       replace = T)
 
 # ── 4. Plot: delay vs. income, colored by system ──────────────────────────────
 p_income <- ggplot(df_full, aes(x = median_income / 1000, y = delay_days, color = system)) +
@@ -210,7 +211,8 @@ etable(
   ),
   title   = "Delay (days) on within-system labor market characteristics",
   headers = c("Null", "Full"),
-  file    = file.path(tab_dir, "delay_labormarket_within_system.tex")
+  file    = file.path(tab_dir, "delay_labormarket_within_system.tex"),
+  replace = T
 )
 
 # Joint Wald test: all labor market coefficients simultaneously zero
@@ -271,7 +273,8 @@ etable(
   ),
   title   = "Delay (days) on cross-system labor market characteristics",
   headers = c("Null", "Full"),
-  file    = file.path(tab_dir, "delay_labormarket_cross_system.tex")
+  file    = file.path(tab_dir, "delay_labormarket_cross_system.tex"),
+  replace = T
 )
 
 cat("\n=== Joint Wald test (cross-system): labor market vars jointly zero? ===\n")
