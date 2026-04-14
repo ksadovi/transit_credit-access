@@ -46,7 +46,7 @@ wrap_for_beamer <- function(filepath) {
   lines <- readLines(filepath, warn = FALSE)
   begin_tab <- grep("\\\\begin\\{tabular", lines)[1]
   end_tab   <- tail(grep("\\\\end\\{tabular", lines), 1)
-  lines[begin_tab] <- paste0("\\resizebox{!}{0.75\\textheight}{%\n", lines[begin_tab])
+  lines[begin_tab] <- paste0("\\resizebox{!}{0.5\\textheight}{%\n", lines[begin_tab])
   lines[end_tab]   <- paste0(lines[end_tab], "%\n}")
   writeLines(lines, filepath)
 }
@@ -370,7 +370,7 @@ m_cs_full <- feols(fml_cs_full, data = df_lm, vcov = "hetero")
 
 cat("=== Combined labor market → delay table ===\n")
 etable(
-  m_ws_null, m_ws_full, m_cs_null, m_cs_full,
+  m_ws_full, m_cs_null, m_cs_full,
   dict = c(
     median_incomeE_z = "Median income",
     lfpr_z           = "LFP rate",
@@ -381,7 +381,6 @@ etable(
     delay_days       = "Delay (days)"
   ),
   title   = "Delay (days) on labor market characteristics",
-  headers = c("Within: Null", "Within: Full", "Cross: Null", "Cross: Full"),
   file    = file.path(tab_dir, "delay_labormarket_combined.tex"),
   replace = TRUE
 )
