@@ -196,26 +196,24 @@ on nearby residents' labor-market outcomes?
 \begin{frame}{The Basic Estimating Equation}
 \small
 \textbf{Baseline TWFE:}
-\[
-  y_{i,j} =\alpha_j + \beta \cdot \text{Open}_{s(i),j} + \varepsilon_{i,j}
-\]
+$$y_{i,j} = \alpha_j + \beta \cdot \text{Open}_{s(i),j} + \varepsilon_{i,j}$$
 \begin{itemize}
-  \item $i$: Catchment region of a given station
-  \item $j = t - P_s$: project-time index (0 = projected opening for station $s$)
+  \item $i$: Catchment region of a given station;\quad
+        $j = t - P_s$: project-time index
   \item $\text{Open}_{s(i),j} = \mathbf{1}\!\left\{j \ge D_{s(i)}\right\}$:
-        station is open by project-time $j$
+        station is open at project-time $j$
+  \item $\alpha_j$: project-time FE --- compares catchments at the same
+        stage of their project timeline
 \end{itemize}
-
-\medskip
 \textbf{Event-study extension:}
-\[
-  y_{i,j} = \alpha_j +\sum_{k \ne -1} \beta_k \cdot
-     \mathbf{1}\!\left\{j \geq D_{s(i)} + k\right\} + \varepsilon_{i,j}
-\]
-
-\medskip
-\textit{Problem:} $D_{s(i)}$ is the delay --- delay length may be endogenous.
-The next slides explain why and how I address it.
+$$y_{i,j} = \alpha_j
+  + \sum_{k \ne -1} \beta_k \cdot
+    \mathbf{1}\!\left\{j - D_{s(i)} = k\right\} + \varepsilon_{i,j}$$
+\begin{itemize}
+  \item $k = j - D_{s(i)}$: years relative to actual opening ($k{=}0$ = opening year)
+  \item $\beta_k$ for $k < 0$: pre-trends test 
+  \item $\beta_k$ for $k \ge 0$: dynamic ATT
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Catchment Region Visual}
@@ -574,9 +572,7 @@ not state-level political economy.
 \begin{frame}[noframenumbering]{Appendix: Delays by Transit System}
 \hypertarget{app:system_plot}{}
 \centering
-\includegraphics[width=0.85\textwidth]{3_output/2_figures/3_delay_robustness/mean_delay_by_system.png}
-
-\bigskip
+\includegraphics[width=0.8\textwidth]{3_output/2_figures/3_delay_robustness/mean_delay_by_system.png}
 \hyperlink{slide:political}{\beamerbutton{$\leftarrow$ Back}}
 \end{frame}
 
@@ -584,11 +580,7 @@ not state-level political economy.
 \begin{frame}[noframenumbering]{Appendix: Income Regression Table}
 \hypertarget{app:income_table}{}
 \centering
-\begin{adjustbox}{max width=\linewidth, max totalheight=0.82\textheight, center}
-  \input{3_output/3_tables/3_delay_robustness/delay_income_state_system_fe.tex}
-\end{adjustbox}
-
-\bigskip
+\input{3_output/3_tables/3_delay_robustness/delay_income_state_system_fe.tex}
 \hyperlink{slide:income}{\beamerbutton{$\leftarrow$ Back}}
 \end{frame}
 
@@ -596,9 +588,7 @@ not state-level political economy.
 \begin{frame}[noframenumbering]{Appendix: Within-System Regression Table}
 \hypertarget{app:within_table}{}
 \centering
-\begin{adjustbox}{max width=\linewidth, max totalheight=0.82\textheight, center}
-  \input{3_output/3_tables/3_delay_robustness/delay_labormarket_within_system.tex}
-\end{adjustbox}
+\input{3_output/3_tables/3_delay_robustness/delay_labormarket_within_system.tex}
 
 \bigskip
 \hyperlink{slide:withinsystem}{\beamerbutton{$\leftarrow$ Back}}
@@ -608,11 +598,7 @@ not state-level political economy.
 \begin{frame}[noframenumbering]{Appendix: Cross-System Regression Table}
 \hypertarget{app:cross_table}{}
 \centering
-\begin{adjustbox}{max width=\linewidth, max totalheight=0.82\textheight, center}
-  \input{3_output/3_tables/3_delay_robustness/delay_labormarket_cross_system.tex}
-\end{adjustbox}
-
-\bigskip
+\input{3_output/3_tables/3_delay_robustness/delay_labormarket_cross_system.tex}
 \hyperlink{slide:crosssystem}{\beamerbutton{$\leftarrow$ Back}}
 \end{frame}
 
@@ -620,10 +606,7 @@ not state-level political economy.
 \begin{frame}[noframenumbering]{Appendix: Delay by Transit System (Table)}
 \hypertarget{app:delay_by_system}{}
 \centering
-\begin{adjustbox}{max width=\linewidth, max totalheight=0.82\textheight, center}
-  \input{3_output/3_tables/0_descriptive/delay_by_system.tex}
-\end{adjustbox}
-
+\input{3_output/3_tables/0_descriptive/delay_by_system.tex}
 \bigskip
 \hyperlink{slide:datastats}{\beamerbutton{$\leftarrow$ Back}}
 \end{frame}
