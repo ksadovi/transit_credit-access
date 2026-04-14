@@ -283,8 +283,17 @@ baseline geography and neighborhood characteristics.
     \end{itemize}
   \end{column}
   \begin{column}{0.46\textwidth}
+<<<<<<< HEAD
     \includegraphics[width=\textwidth]{6_sources/anecdotal_evidence/Screenshot 2026-04-14 at 10.48.01 AM.png}\\[4pt]
     \includegraphics[width=\textwidth]{6_sources/anecdotal_evidence/Screenshot 2026-04-14 at 10.49.01 AM.png}
+=======
+    \begin{minipage}[t]{0.48\linewidth}
+      \includegraphics[width=\linewidth]{anecdotal/funding_nyt_expensive_mile.png}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\linewidth}
+      \includegraphics[width=\linewidth]{anecdotal/funding_hart_oversight.png}
+    \end{minipage}
+>>>>>>> b1c16c2 (Adding summary stats)
   \end{column}
 \end{columns}
 \end{frame}
@@ -305,8 +314,17 @@ baseline geography and neighborhood characteristics.
     \end{itemize}
   \end{column}
   \begin{column}{0.46\textwidth}
+<<<<<<< HEAD
     \includegraphics[width=\textwidth]{6_sources/anecdotal_evidence/Screenshot 2026-04-14 at 10.51.12 AM.png}\\[4pt]
     \includegraphics[width=\textwidth]{6_sources/anecdotal_evidence/Screenshot 2026-04-14 at 10.53.26 AM.png}
+=======
+    \begin{minipage}[t]{0.48\linewidth}
+      \includegraphics[width=\linewidth]{anecdotal/opposition_beverly_hills.png}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\linewidth}
+      \includegraphics[width=\linewidth]{anecdotal/opposition_georgetown_trail.png}
+    \end{minipage}
+>>>>>>> b1c16c2 (Adding summary stats)
   \end{column}
 \end{columns}
 \end{frame}
@@ -327,8 +345,17 @@ baseline geography and neighborhood characteristics.
     \end{itemize}
   \end{column}
   \begin{column}{0.46\textwidth}
+<<<<<<< HEAD
     \includegraphics[width=\textwidth]{6_sources/anecdotal_evidence/Screenshot 2026-04-14 at 10.57.17 AM.png}\\[4pt]
     \includegraphics[width=\textwidth]{6_sources/anecdotal_evidence/Screenshot 2026-04-14 at 11.00.07 AM.png}
+=======
+    \begin{minipage}[t]{0.48\linewidth}
+      \includegraphics[width=\linewidth]{anecdotal/env_nepa_delays.png}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\linewidth}
+      \includegraphics[width=\linewidth]{anecdotal/env_curbed_sfv_tweet.png}
+    \end{minipage}
+>>>>>>> b1c16c2 (Adding summary stats)
   \end{column}
 \end{columns}
 \end{frame}
@@ -380,6 +407,25 @@ Possible sources of endogeneity in delay length:
     EPA Environmental Impact Statement filings: announcement, DEIS, FEIS,
     and ROD dates
 \end{description}
+\end{frame}
+
+% ------ Slide 14b: Summary stats ------
+\begin{frame}{Station Delay: Overview}
+\label{slide:datastats}
+\begin{columns}[T]
+  \begin{column}{0.38\textwidth}
+    \vspace{0.5em}
+    \begin{adjustbox}{max width=\linewidth, center}
+      \input{3_output/3_tables/0_descriptive/delay_descriptive.tex}
+    \end{adjustbox}
+
+    \bigskip
+    \hyperlink{app:delay_by_system}{\beamerbutton{By transit system $\to$}}
+  \end{column}
+  \begin{column}{0.58\textwidth}
+    \includegraphics[width=\textwidth]{3_output/2_figures/0_descriptive/delay_distribution.png}
+  \end{column}
+\end{columns}
 \end{frame}
 
 % ------ Slide 15 ------
@@ -616,6 +662,18 @@ not state-level political economy.
 
 \bigskip
 \hyperlink{slide:crosssystem}{\beamerbutton{$\leftarrow$ Back}}
+\end{frame}
+
+% ------ Appendix E: Delay by transit system ------
+\begin{frame}[noframenumbering]{Appendix: Delay by Transit System (Table)}
+\hypertarget{app:delay_by_system}{}
+\centering
+\begin{adjustbox}{max width=\linewidth, max totalheight=0.82\textheight, center}
+  \input{3_output/3_tables/0_descriptive/delay_by_system.tex}
+\end{adjustbox}
+
+\bigskip
+\hyperlink{slide:datastats}{\beamerbutton{$\leftarrow$ Back}}
 \end{frame}
 
 \end{document}
