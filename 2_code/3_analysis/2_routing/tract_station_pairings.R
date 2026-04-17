@@ -189,16 +189,16 @@ tract_station_pairings = function(transit_system, overwrite_all = F){
     if(vintage == 2020){
       iso_poly_v$tracts <- lapply(iso_poly_v[[iso_geom_col]], function(p) {
         metro_tracts_v$GEOID[st_intersects(p, metro_tracts_v$geometry)[[1]]]
-        })
-      iso_poly_v$state = lapply(iso_poly_v[[iso_geom_col]], function(p) {
-        metro_tracts_v$STATEFP[st_intersects(p, metro_tracts_v$geometry)[[1]]]
       })
-      } else if(vintage == 2010){
+      iso_poly_v$state = lapply(iso_poly_v[[iso_geom_col]], function(p) {
+        unique(metro_tracts_v$STATEFP[st_intersects(p, metro_tracts_v$geometry)[[1]]])
+      })
+    } else if(vintage == 2010){
       iso_poly_v$tracts <- lapply(iso_poly_v[[iso_geom_col]], function(p) {
         metro_tracts_v$GEO_ID[st_intersects(p, metro_tracts_v$geometry)[[1]]]
-        })
+      })
       iso_poly_v$state = lapply(iso_poly_v[[iso_geom_col]], function(p) {
-        metro_tracts_v$STATEFP[st_intersects(p, metro_tracts_v$geometry)[[1]]]
+        unique(metro_tracts_v$STATEFP[st_intersects(p, metro_tracts_v$geometry)[[1]]])
       })
     } else{
       iso_poly_v$tracts <- lapply(iso_poly_v[[iso_geom_col]], function(p) {
@@ -209,7 +209,7 @@ tract_station_pairings = function(transit_system, overwrite_all = F){
       iso_poly_v$state = lapply(iso_poly_v[[iso_geom_col]], function(p) {
         metro_tracts_v$STATEFP00[st_intersects(p, metro_tracts_v$geometry)[[1]]]
       })
-      }
+    }
     
     write_rds(iso_poly_v, file = paste0("3_output/1_cleaned_data/2_station_geographies/",
                                         transit_system, "_", vintage, "_tract_station_pairings.rds"))
