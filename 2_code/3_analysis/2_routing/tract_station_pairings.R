@@ -186,9 +186,21 @@ tract_station_pairings = function(transit_system, overwrite_all = F){
     
     # Tag each isochrone polygon with the tract GEOIDs it overlaps (this vintage)
     iso_poly_v = iso_poly
-    iso_poly_v$tracts <- lapply(iso_poly_v[[iso_geom_col]], function(p) {
-      metro_tracts_v$GEOID[st_intersects(p, metro_tracts_v$geometry)[[1]]]
-    })
+    if(vintage == 2020){
+      iso_poly_v$tracts <- lapply(iso_poly_v[[iso_geom_col]], function(p) {
+        metro_tracts_v$GEOID[st_intersects(p, metro_tracts_v$geometry)[[1]]]
+        })
+      } else if(vintage == 2010){
+      iso_poly_v$tracts <- lapply(iso_poly_v[[iso_geom_col]], function(p) {
+        metro_tracts_v$GEO_ID[st_intersects(p, metro_tracts_v$geometry)[[1]]]
+        })
+    } else{
+      iso_poly_v$tracts <- lapply(iso_poly_v[[iso_geom_col]], function(p) {
+        metro_tracts_v = metro_tracts_v %>% 
+          mutate(GEO_ID = paste0(STATE, COUNTY, TRACT))
+        metro_tracts_v$GEO_ID[st_intersects(p, metro_tracts_v$geometry)[[1]]]
+      })
+      }
     
     write_rds(iso_poly_v, file = paste0("3_output/1_cleaned_data/2_station_geographies/",
                                         transit_system, "_", vintage, "_tract_station_pairings.rds"))
