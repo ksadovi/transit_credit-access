@@ -178,7 +178,10 @@ tract_station_pairings = function(transit_system, overwrite_all = F){
       tracts(.x, year = vintage, cb = cb_flag)
     }, geometry = T) %>%
       st_transform(4326) %>%
-      st_make_valid()
+      st_make_valid() %>%
+      # Some Census vintages (e.g. 2010 GEO_ID) include a "1400000US" prefix —
+      # strip it wherever it appears so tract IDs are consistently bare GEOIDs.
+      mutate(across(where(is.character), ~str_remove(.x, "^1400000US")))
     
     # Clip to the metro area and remove water bodies for this vintage's boundaries
     affected_tracts_v <- metro_tracts_v[st_intersects(metro_tracts_v, affected_sfc, sparse = FALSE)[, 1], ] %>%
