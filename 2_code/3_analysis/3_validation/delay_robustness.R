@@ -1,12 +1,5 @@
-library(sf)
-library(tigris)
-library(tidycensus)
-library(fixest)
-library(dplyr)
-library(purrr)
-library(ggplot2)
-library(broom)
-
+source("2_code/1_utilities/packages+defaults.R")
+source("2_code/2_cleaning/1_clean_station_geographies/update_stations.R")
 options(tigris_use_cache = TRUE)
 
 # Output directories ───────────────────────────────────────────────────────────
