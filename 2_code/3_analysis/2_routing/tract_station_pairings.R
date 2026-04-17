@@ -1,8 +1,12 @@
-# Name: 
-# Purpose: 
-# Last updated: 
+# Name: tract_station_pairings.R
+# Purpose: For a given transit system, identify the region it falls in with a 
+# square box. Pull the street network for that box. Overlay Census tracts from 
+# all three vintages (2000, 2010, 2020) and save them as three distinct CSVs. 
+# Calculate and write isochrones to identify tracts that corrolate to stations. 
+# Last updated: Apr 17, 2026
 # Preliminaries  --------
 source("2_code/1_utilities/packages+defaults.R")
+source("2_code/2_cleaning/1_clean_station_geographies/update_stations.R")
 
 tract_station_pairings = function(transit_system, overwrite_all = F){
   # Register an on.exit handler so the r5r Java core is *always* stopped, even
@@ -41,18 +45,10 @@ tract_station_pairings = function(transit_system, overwrite_all = F){
   
   sf_use_s2(T)
   
-  # Grab tracts by state; validate immediately so s2 doesn't reject degenerate
-  # coastal geometries (duplicate vertices, etc.) during st_intersects below.
-  metro_tracts <- map_dfr(unique(station_poly$state), ~{
-    tracts(.x, cb = TRUE)
-  }, geometry = T) %>%
-    st_transform(4326) %>%
-    st_make_valid()
-  
+  # Compute the affected bounding area once — used for the OSM clip below and
+  # re-used inside the per-vintage tract loop to filter tracts to the metro area.
   affected_area = st_bbox(station_poly$geometry)
   affected_sfc  = (affected_area + c(-0.05, -0.05, 0.05, 0.05)) %>% st_as_sfc() %>% st_transform(4326)
-  affected_tracts <- metro_tracts[st_intersects(metro_tracts, affected_sfc, sparse = FALSE)[, 1], ] %>% 
-    erase_water()
   
   # Verify all OSM CLI tools are available before doing any work
   osmosis_path   = Sys.which("osmosis")[[1]]
@@ -164,46 +160,63 @@ tract_station_pairings = function(transit_system, overwrite_all = F){
   r5r_core = NULL
   
   iso_geom_col = attr(iso_poly, "sf_column")
-  iso_poly$tracts <- lapply(iso_poly[[iso_geom_col]], function(p) {
-    metro_tracts$GEOID[st_intersects(p, metro_tracts$geometry)[[1]]]
-  })
   
-  merge = affected_tracts %>% st_drop_geometry() %>%
-    left_join(
-      iso_poly %>%
-        unnest(tracts) %>%
-        pivot_wider(names_from = isochrone,
-                    values_from = id,
-                    names_prefix = "within_",
-                    values_fill = NA) %>% group_by(tracts) %>%
-        mutate(GEOID = tracts) %>% subset(select = -c(tracts)) %>% st_drop_geometry()
-    ) %>%
-    left_join(metro_tracts)
-  
-  write_rds(merge, file = paste0("3_output/1_cleaned_data/2_station_geographies/", transit_system,
-                                 "_tract_station_pairings.rds"))
-  # plot
-  plot =
-    ggplot() +
-    geom_sf(data = affected_tracts, color = "black") +
-    geom_sf(data = iso_poly, aes(fill = as.factor(isochrone)), color = "black") +
-    geom_sf(data = stations, aes(color = "Station Location"), show.legend = TRUE) +
-    scale_color_manual(values = c("Station Location" = "purple")) +
-    theme_void() + 
-    guides(
-      fill = guide_legend(title = "Station Travel Time Isochrones", nrow = 1),
-      color = guide_legend(title = "", override.aes = list(size = 4))
-    ) +
-    theme(
-      legend.position = "bottom",
-      legend.box = "horizontal",
-      legend.key.size = unit(0.5, "lines"),
-      legend.text = element_text(size = 8)
-    ) +
-    labs(title = "Census Tracts' Proximities to Closest Transit Station", subtitle = paste0("Transit System: ", transit_system, ", open stations."))
-  
-  graph_path = paste0("3_output/2_figures/1_maps/1_station_geographies/", transit_system, ".pdf")
-  dir.create(dirname(graph_path), recursive = TRUE, showWarnings = FALSE)
-  ggsave(filename = graph_path, plot)
-  system(sprintf('pdfcrop "%s" "%s"', graph_path, graph_path))
+  # --- Loop over Census vintages -------------------------------------------
+  # The street network (and therefore isochrones) is vintage-agnostic: we built
+  # it once above from a contemporary OSM extract. All that changes per vintage
+  # is which set of tract boundaries we use to label the isochrone polygons.
+  #
+  # tigris note: cb = TRUE (cartographic boundary files) is reliable for 2010
+  # and 2020. For 2000, cb support is inconsistent across states in tigris, so
+  # we fall back to the full TIGER/Line files (cb = FALSE).
+  for (vintage in c(2000, 2010, 2020)) {
+    message("  Processing Census vintage: ", vintage)
+    
+    cb_flag = vintage >= 2010
+    
+    metro_tracts_v <- map_dfr(unique(station_poly$state), ~{
+      tracts(.x, year = vintage, cb = cb_flag)
+    }, geometry = T) %>%
+      st_transform(4326) %>%
+      st_make_valid()
+    
+    # Clip to the metro area and remove water bodies for this vintage's boundaries
+    affected_tracts_v <- metro_tracts_v[st_intersects(metro_tracts_v, affected_sfc, sparse = FALSE)[, 1], ] %>%
+      erase_water()
+    
+    # Tag each isochrone polygon with the tract GEOIDs it overlaps (this vintage)
+    iso_poly_v = iso_poly
+    iso_poly_v$tracts <- lapply(iso_poly_v[[iso_geom_col]], function(p) {
+      metro_tracts_v$GEOID[st_intersects(p, metro_tracts_v$geometry)[[1]]]
+    })
+    
+    write_rds(iso_poly_v, file = paste0("3_output/1_cleaned_data/2_station_geographies/",
+                                        transit_system, "_", vintage, "_tract_station_pairings.rds"))
+    
+    # Map for this vintage
+    plot_v =
+      ggplot() +
+      geom_sf(data = affected_tracts_v, color = "black") +
+      geom_sf(data = iso_poly_v, aes(fill = as.factor(isochrone)), color = "black") +
+      geom_sf(data = stations, aes(color = "Station Location"), show.legend = TRUE) +
+      scale_color_manual(values = c("Station Location" = "purple")) +
+      theme_void() +
+      guides(
+        fill = guide_legend(title = "Station Travel Time Isochrones", nrow = 1),
+        color = guide_legend(title = "", override.aes = list(size = 4))
+      ) +
+      theme(
+        legend.position = "bottom",
+        legend.box = "horizontal",
+        legend.key.size = unit(0.5, "lines"),
+        legend.text = element_text(size = 8)
+      ) +
+      labs(title = "Census Tracts' Proximities to Closest Transit Station",
+           subtitle = paste0("Transit System: ", transit_system, ", open stations. Census vintage: ", vintage, "."))
+    
+    graph_path = paste0("3_output/2_figures/1_maps/1_station_geographies/", transit_system, "_", vintage, ".pdf")
+    dir.create(dirname(graph_path), recursive = TRUE, showWarnings = FALSE)
+    ggsave(filename = graph_path, plot_v)
+    system(sprintf('pdfcrop "%s" "%s"', graph_path, graph_path))
+  }
 }
