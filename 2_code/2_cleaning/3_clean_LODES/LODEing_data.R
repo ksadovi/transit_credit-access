@@ -25,7 +25,6 @@ lodes_states_needed <- function(pairings_dir = "3_output/1_cleaned_data/2_statio
     sort()
 }
 
-
 # Downloads raw LODES files and immediately filters to affected tracts,
 # saving a small filtered .rds per state x year. Skips if filtered file
 # already exists. Run this first — it can take a while for large states.
