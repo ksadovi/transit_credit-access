@@ -46,7 +46,7 @@ wrap_for_beamer <- function(filepath) {
   lines <- readLines(filepath, warn = FALSE)
   begin_tab <- grep("\\\\begin\\{tabular", lines)[1]
   end_tab   <- tail(grep("\\\\end\\{tabular", lines), 1)
-  lines[begin_tab] <- paste0("\\resizebox{!}{0.5\\textheight}{%\n", lines[begin_tab])
+  lines[begin_tab] <- paste0("\\resizebox{!}{0.35\\textheight}{%\n", lines[begin_tab])
   lines[end_tab]   <- paste0(lines[end_tab], "%\n}")
   writeLines(lines, filepath)
 }
