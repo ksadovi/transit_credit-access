@@ -1,7 +1,7 @@
 # Derives the states needed from completed tract_station_pairings files.
 lodes_states_needed <- function(pairings_dir = "3_output/1_cleaned_data/2_station_geographies") {
   pairing_files <- list.files(pairings_dir,
-                              pattern    = "_tract_station_pairings\\.rds$",
+                              pattern    = "2020_tract_station_pairings\\.rds$",
                               recursive  = TRUE,
                               full.names = TRUE)
   if (length(pairing_files) == 0)
@@ -15,8 +15,9 @@ lodes_states_needed <- function(pairings_dir = "3_output/1_cleaned_data/2_statio
   map_dfr(pairing_files, ~{
     read_rds(.x) %>%
       st_drop_geometry() %>%
-      dplyr::select(GEOID, STATEFP) %>%
-      mutate(state_code = str_pad(STATEFP, 2, pad = "0"))
+      dplyr::select(tracts, state) %>%
+      unnest(state) %>%
+      mutate(state_code = str_pad(state, 2, pad = "0"))
   }) %>%
     left_join(fips_lookup, by = "state_code") %>%
     pull(state_abb) %>%
