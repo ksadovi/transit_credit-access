@@ -34,7 +34,8 @@ download_lodes <- function(version      = "LODES8",
                            years        = 2002:2023,
                            cache_dir    = "1_data/3_LODES/1_raw_files",
                            filtered_dir = "1_data/3_LODES/2_filtered",
-                           pairings_dir = "3_output/1_cleaned_data/2_station_geographies") {
+                           pairings_dir = "3_output/1_cleaned_data/2_station_geographies",
+                           overwrite    = FALSE) {
   
   states_needed <- lodes_states_needed(pairings_dir)
   message("States to process: ", paste(states_needed, collapse = ", "))
@@ -54,7 +55,7 @@ download_lodes <- function(version      = "LODES8",
     for (yr in years) {
       filtered_file <- file.path(filtered_dir, st, paste0(st, "_", yr, "_filtered.rds"))
       
-      if (file.exists(filtered_file)) {
+      if (file.exists(filtered_file) && !overwrite) {
         message("  ", yr, " already filtered — skipping.")
         next
       }
@@ -131,13 +132,41 @@ aggregate_lodes <- function(overwrite    = FALSE,
   if (length(pairing_files) == 0)
     stop("No tract_station_pairings files found.")
   
-  pairings <- map_dfr(pairing_files, ~{
+  # Invert pairings: from station-centric (one row per station x isochrone,
+  # tracts as a list) to tract-centric (one row per tract, one column per
+  # isochrone containing the list of stations that reach it).
+  # Grouping directly by (tracts, census_vintage, state) and building each
+  # isochrone column inline means multi-system tracts (e.g. LIRR + MTA both
+  # covering Manhattan) naturally get their stations appended into one list
+  # rather than creating duplicate rows.
+  fips_lookup <- tigris::fips_codes %>%
+    dplyr::select(state = state, state_code) %>%
+    distinct() %>%
+    mutate(state_code = str_pad(state_code, 2, pad = "0"))
+  
+  pairings_inverted <- map_dfr(pairing_files, ~{
+    vintage <- as.integer(str_extract(basename(.x), "2000|2010|2020"))
+    system  <- str_remove(basename(.x), "_(?:2000|2010|2020)_tract_station_pairings\\.rds$")
     read_rds(.x) %>%
       st_drop_geometry() %>%
-      dplyr::select(GEOID, starts_with("within_"))
-  })
+      dplyr::select(id, isochrone, tracts) %>%
+      mutate(census_vintage = vintage,
+             transit_system = system)
+  }) %>%
+    unnest(tracts) %>%
+    mutate(tracts     = str_remove(tracts, "^1400000US"),
+           state_code = str_sub(tracts, 1, 2)) %>%
+    left_join(fips_lookup, by = "state_code") %>%
+    group_by(tracts, census_vintage, state) %>%
+    summarise(
+      within_5       = list(unique(id[isochrone == 5])),
+      within_15      = list(unique(id[isochrone == 15])),
+      within_30      = list(unique(id[isochrone == 30])),
+      transit_system = list(unique(transit_system)),
+      .groups = "drop"
+    )
   
-  affected_geoids <- unique(pairings$GEOID)
+  affected_geoids <- unique(pairings_inverted$tracts)
   
   # Bind all filtered files --------------------------------------------------
   filtered_files <- list.files(filtered_dir, pattern = "_filtered\\.rds$",
@@ -148,25 +177,30 @@ aggregate_lodes <- function(overwrite    = FALSE,
   message("Reading ", length(filtered_files), " filtered files...")
   raw_lodes <- map_dfr(filtered_files, read_rds)
   
-  # Aggregate to (GEOID, year) inflows and outflows --------------------------
+  # Aggregate to (tract, year) inflows and outflows --------------------------
   inflows <- raw_lodes %>%
     filter(w_tract %in% affected_geoids, h_tract != w_tract) %>%
-    group_by(GEOID = w_tract, census_year) %>%
+    group_by(tract = w_tract, census_year) %>%
     summarise(inflows = sum(S000, na.rm = TRUE), .groups = "drop")
   
   outflows <- raw_lodes %>%
     filter(h_tract %in% affected_geoids, h_tract != w_tract) %>%
-    group_by(GEOID = h_tract, census_year) %>%
+    group_by(tract = h_tract, census_year) %>%
     summarise(outflows = sum(S000, na.rm = TRUE), .groups = "drop")
   
-  flows <- full_join(inflows, outflows, by = c("GEOID", "census_year")) %>%
+  flows <- full_join(inflows, outflows, by = c("tract", "census_year")) %>%
     mutate(inflows  = replace_na(inflows,  0),
-           outflows = replace_na(outflows, 0))
+           outflows = replace_na(outflows, 0)) %>%
+    rename(tracts = tract) %>%
+    mutate(census_vintage = case_when(
+      census_year < 2010 ~ 2000L,
+      census_year < 2020 ~ 2010L,
+      TRUE               ~ 2020L
+    ))
   
-  # Join station pairing metadata --------------------------------------------
+  # Join inverted pairings, matching each LODES year to the correct tract vintage
   result <- flows %>%
-    left_join(pairings %>% dplyr::select(GEOID, starts_with("within_")),
-              by = "GEOID")
+    left_join(pairings_inverted, by = c("tracts", "census_vintage"))
   
   write_rds(result, out_path)
   message("Saved ", nrow(result), " tract-year observations to ", out_path)
