@@ -43,8 +43,8 @@ download_lodes <- function(version      = "LODES8",
   pairing_files   <- list.files(pairings_dir, pattern = "_tract_station_pairings\\.rds$",
                                 recursive = TRUE, full.names = TRUE)
   affected_geoids <- map_dfr(pairing_files, ~{
-    read_rds(.x) %>% st_drop_geometry() %>% dplyr::select(GEOID)
-  }) %>% pull(GEOID) %>% unique()
+    read_rds(.x) %>% st_drop_geometry() %>% dplyr::select(tracts)
+  }) %>% pull(tracts) %>% unlist() %>% unique()
   
   for (st in states_needed) {
     message("\nProcessing ", st, "...")
@@ -88,8 +88,11 @@ download_lodes <- function(version      = "LODES8",
       
       tryCatch({
         filtered <- fread(raw_file) %>%
-          mutate(w_tract     = as.character(w_geocode),
-                 h_tract     = as.character(h_geocode),
+          # Raw LODES files are block-level (15-digit w_geocode/h_geocode).
+          # Truncate to 11 characters to get the tract GEOID:
+          # [2 state][3 county][6 tract] = 11, dropping the trailing [4 block].
+          mutate(w_tract     = str_sub(str_pad(as.character(w_geocode), 15, pad = "0"), 1, 11),
+                 h_tract     = str_sub(str_pad(as.character(h_geocode), 15, pad = "0"), 1, 11),
                  S000        = as.numeric(S000),
                  census_year = yr) %>%
           dplyr::select(w_tract, h_tract, S000, census_year) %>%
