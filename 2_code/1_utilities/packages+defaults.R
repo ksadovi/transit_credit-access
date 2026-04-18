@@ -1,4 +1,3 @@
-invisible(lapply(setdiff(c("tidyverse","data.table","readxl","janitor","maps","tidycensus","tmap","osrm","tigris","sf","tmaptools","rJava","rJavaEnv","osmextract","raster","elevatr","r5r"), rownames(installed.packages())), \(p) try(install.packages(p), silent = TRUE)))
 library(tidyverse)
 library(data.table)
 library(readxl)
