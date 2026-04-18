@@ -28,18 +28,17 @@ echo "======================================"
 echo "Creating remote directory structure..."
 ssh "${ACROPOLIS}" "mkdir -p ${REMOTE_PROJECT}"
 
-# Copy code (skip data/output/junk)
+# Copy code (skip anything in .gitignore, plus .git itself)
 echo ""
 echo "Copying code..."
-rsync -avz --progress \
-  --exclude='*.pyc' \
-  --exclude='__pycache__/' \
-  --exclude='.git/' \
-  --exclude='1_data/' \
-  --exclude='data/' \
-  --exclude='output/' \
-  --exclude='results/' \
-  --exclude='.DS_Store' \
+
+RSYNC_CMD="rsync -avz --progress --exclude='.git/' --exclude='*.pdf'"
+
+if [ -f "$SCRIPT_DIR/.gitignore" ]; then
+    RSYNC_CMD="$RSYNC_CMD --exclude-from='$SCRIPT_DIR/.gitignore'"
+fi
+
+eval $RSYNC_CMD \
   "$SCRIPT_DIR/" \
   "${ACROPOLIS}:${REMOTE_PROJECT}/"
 
