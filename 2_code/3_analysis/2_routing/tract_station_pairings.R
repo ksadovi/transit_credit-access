@@ -244,3 +244,7 @@ tract_station_pairings = function(transit_system, overwrite_all = F){
     system(sprintf('pdfcrop "%s" "%s"', graph_path, graph_path))
   }
 }
+
+for(system in unique(all_stations$system)){
+    tract_station_pairings(transit_system = system, overwrite_all = F)
+  }
