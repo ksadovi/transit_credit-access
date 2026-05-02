@@ -9,6 +9,7 @@
 *.html
 3_output/1_cleaned_data/3_LODES/1_preaggregated_metros/
 3_output/1_cleaned_data/3_LODES/
+3_output/1_cleaned_data/4_ACS/acs_controls_raw.rds
 1_data/3_LODES
 6_sources/EIS_records
 .Rprofile
