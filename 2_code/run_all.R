@@ -17,7 +17,7 @@ run_all = function(overwrite = F){
   # Update the CSV with all of the stations I've geolocated and matched w construction
   # delays. This is my manual work. 
   source("2_code/2_cleaning/1_clean_station_geographies/update_stations.R")
-  update_stations()
+  all_stations = update_stations()
   
   # Identify closest transit station to each Census tract 
   source("2_code/3_analysis/2_routing/tract_station_pairings.R")
