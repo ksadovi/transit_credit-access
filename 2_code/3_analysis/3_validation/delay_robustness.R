@@ -9,12 +9,7 @@ dir.create(out_dir, showWarnings = FALSE, recursive = TRUE)
 dir.create(tab_dir, showWarnings = FALSE, recursive = TRUE)
 
 # ── Data loading ───────────────────────────────────────────────────────────────
-all_stations <- update_stations() %>%
-  mutate(
-    initial_expected_open_date = as.Date(initial_expected_open_date, format = "%m/%d/%y"),
-    initial_DEIS_date          = as.Date(initial_DEIS_date,          format = "%m/%d/%y")
-  ) %>%
-  mutate(delay = difftime(open_date, initial_expected_open_date))
+all_stations <- update_stations() 
 
 # ── 1. Extract state from geometry ────────────────────────────────────────────
 states_sf <- states(cb = TRUE, resolution = "20m") %>%
