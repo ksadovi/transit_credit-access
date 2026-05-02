@@ -13,11 +13,16 @@ update_stations = function(){
     stations = rbind(stations, fread(paste0("1_data/2_station_geographies/", i)))
   }
   stations = stations %>% 
-    mutate(open_date = as.Date(stations$open_date, format = "%m/%d/%y"))
+    mutate(open_date = as.Date(stations$open_date, format = "%m/%d/%y")) %>%
+    mutate(
+      initial_expected_open_date = as.Date(initial_expected_open_date, format = "%m/%d/%y"),
+      initial_DEIS_date          = as.Date(initial_DEIS_date,          format = "%m/%d/%y")
+    ) %>%
+    mutate(delay = difftime(open_date, initial_expected_open_date))
   # Here I am converting these coordinates to geometric points
   station_poly <- st_as_sf(stations, coords = c("longitude", "latitude"), 
                            crs = 4326, agr = "constant")
   
-  fwrite(stations, file = "3_output/1_cleaned_data/2_station_geographies/stations_timeline_comprehensive.csv")
+  write_rds(station_poly, file = "3_output/1_cleaned_data/2_station_geographies/stations_timeline_comprehensive.rds")
   return(station_poly)
 }
