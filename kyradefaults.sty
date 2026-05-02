@@ -1,35 +1,42 @@
 \ProvidesPackage{kyradefaults}
 
-%%% Math packages
+%%% Math
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
 
-%%% Tables and formatting
+%%% Layout and formatting
+\usepackage[margin=1in]{geometry}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{titling}
+\usepackage{float}
+\usepackage{pdflscape}
+\usepackage{subcaption}
+\usepackage[affil-it]{authblk}
+
+%%% Tables
 \usepackage{booktabs}
 \usepackage{longtable}
+
+%%% Graphics
+\usepackage{graphicx}
+
+%%% Text utilities
 \usepackage{xcolor}
 \usepackage{soul}
-\usepackage{graphicx}
-\usepackage{hyperref}
 \usepackage{xparse}
 
-%%% Language setup
+%%% Language
 \usepackage[english]{babel}
 \usepackage{csquotes}
 
-%need to fix this so that it can take multiple citations
-%\newcommand{\kyracite}[1]{\textcolor{gray}{\scriptsize\citeauthor{#1} \citeyear{#1}}}
-
-%%%%% My functions 
-\newcommand{\var}[1]{\text{Var}(#1)}
-
-\NewDocumentCommand{\kyracite}{>{\SplitList{,}}m}{%
-  \ProcessList{#1}{\mycmdprocess}%
+%%% References and hyperlinks
+\usepackage{hyperref}
+\pdfstringdefDisableCommands{%
+  \def\mathbf#1{#1}%
+  \def\text#1{#1}%
 }
 
-\NewDocumentCommand{\mycmdprocess}{m}{%
-  % Define what happens to each argument here
-  {\textcolor{gray}{\scriptsize\citeauthor{#1} \citeyear{#1}}}
-}
-
+%%% Bibliography
+\usepackage[backend=biber,style=authoryear]{biblatex}
