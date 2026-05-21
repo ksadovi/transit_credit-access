@@ -4,20 +4,35 @@
 # Preliminaries --------
 source("2_code/3_analysis/4_regs/regs_prep.R")
 
-controls <- c("transit_share", "drove_share", "walk_share",
-              "median_hh_inc", "poverty_rate")
+controls <- c("median_hh_inc", "poverty_rate")
+iso_levels <- c(5, 15, 30)
 
-feols(
-  as.formula(paste0(
-    "c(log_inflows, log_outflows) ~ open*factor(isochrone) + station_type +",
-    paste(controls, collapse = " + "),
-    " | tracts + j"
-  )),
-  data    = working_df,
+mods <- lapply(iso_levels, \(iso) feols(
+  as.formula(paste0("c(log_inflows, log_outflows) ~ open*station_type +",
+                    paste(controls, collapse = " + "),
+                    " | tracts + j")),
+  data    = working_df[working_df$isochrone == iso, ],
   cluster = ~tracts
-) 
+))
 
-es = feols(
+# Split into inflow and outflow models
+mods_in  <- lapply(mods, \(m) m[[1]])
+mods_out <- lapply(mods, \(m) m[[2]])
+
+etable(mods_in, keep = "^open",
+       depvar = FALSE,
+       headers = list("Isochrone" = .("5 min", "15 min", "30 min")),
+       extralines = list("Controls" = list("Yes", "Yes", "Yes")),
+       tex = TRUE,
+       file = "3_output/3_tables/inflows_by_isochrone.tex")
+
+etable(mods_out, keep = "^open",
+       headers = list("Isochrone" = .("5 min", "15 min", "30 min")),
+       extralines = list("Controls" = list("Yes", "Yes", "Yes")),
+       tex = TRUE,
+       file = "3_output/3_tables/outflows_by_isochrone.tex")
+
+es <- feols(
   as.formula(paste0(
     "c(log_inflows, log_outflows) ~ i(k, factor(isochrone), ref = -1) + ",
     paste(controls, collapse = " + "),
@@ -25,7 +40,7 @@ es = feols(
   )),
   data    = working_df,
   cluster = ~tracts
-) 
+)
 
 tidy_es <- function(model, label) {
   broom::tidy(model, conf.int = TRUE) %>%
@@ -35,30 +50,44 @@ tidy_es <- function(model, label) {
            outcome   = label)
 }
 
-inflows = bind_rows(
+es_data <- bind_rows(
   tidy_es(es[[1]], "Log Inflows"),
   tidy_es(es[[2]], "Log Outflows")
 ) %>%
-  filter(isochrone == "15", outcome == "Log Outflows", k >= -16) %>%
-  ggplot(aes(x = k, y = estimate, ymin = conf.low, ymax = conf.high)) +
-  geom_ribbon(alpha = 0.15, fill = "steelblue") +
-  geom_hline(yintercept = 0, color = "grey40", linewidth = 0.4) +
-  geom_vline(xintercept = -1, linetype = "dashed", color = "grey40", linewidth = 0.4) +
-  geom_line(color = "steelblue", linewidth = 0.8) +
-  geom_point(color = "steelblue", size = 1.8) +
-  scale_x_continuous(breaks = c(-15, -10, -5, 0, 5, 10, 15)) + 
-  facet_wrap(~outcome, scales = "free_y") +
-  labs(
-    x = "Years relative to opening",
-    y = "Coefficient (log points)"
-  ) +
-  theme_minimal(base_size = 13) +
-  theme(
-    panel.grid.minor  = element_blank(),
-    panel.grid.major  = element_line(color = "grey92"),
-    strip.text        = element_text(face = "bold"),
-    axis.title        = element_text(size = 11),
-    plot.background   = element_rect(fill = "white", color = NA)
-  )
+  filter(k >= -16)
 
-ggsave("3_output/2_figures/3_reg_output_plots/inflows_es.pdf", inflows)
+plot_es <- function(data, iso, out) {
+  data %>%
+    filter(isochrone == iso, outcome == out) %>%
+    ggplot(aes(x = k, y = estimate, ymin = conf.low, ymax = conf.high)) +
+    geom_ribbon(alpha = 0.15, fill = "steelblue") +
+    geom_hline(yintercept = 0, color = "grey40", linewidth = 0.4) +
+    geom_vline(xintercept = -1, linetype = "dashed", color = "grey40", linewidth = 0.4) +
+    geom_line(color = "steelblue", linewidth = 0.8) +
+    geom_point(color = "steelblue", size = 1.8) +
+    scale_x_continuous(breaks = c(-15, -10, -5, 0, 5, 10, 15)) +
+    labs(
+      title = paste0(out, " \u2014 ", iso, " min isochrone"),
+      x     = "Years relative to opening",
+      y     = "Coefficient (log points)"
+    ) +
+    theme_minimal(base_size = 13) +
+    theme(
+      panel.grid.minor = element_blank(),
+      panel.grid.major = element_line(color = "grey92"),
+      axis.title       = element_text(size = 11),
+      plot.background  = element_rect(fill = "white", color = NA)
+    )
+}
+
+# One PDF per isochrone × outcome
+for (iso in unique(es_data$isochrone)) {
+  for (out in unique(es_data$outcome)) {
+    p     <- plot_es(es_data, iso, out)
+    fname <- paste0(
+      "3_output/2_figures/3_reg_output_plots/es_iso", iso, "_",
+      tolower(gsub(" ", "_", out)), ".pdf"
+    )
+    ggsave(fname, p, width = 7, height = 4.5)
+  }
+}
