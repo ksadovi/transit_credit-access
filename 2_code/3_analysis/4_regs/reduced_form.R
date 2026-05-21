@@ -112,7 +112,7 @@ etable(mods_in, keep = "%^open",
        tex = TRUE, 
        file = "3_output/3_tables/2_regression_tabs/inflows_by_isochrone.tex")
 
-etable(mods_out, keep = "^open",
+etable(mods_out, keep = "%^open",
        depvar = FALSE,
        dict = dict,
        headers = list("Isochrone" = .("5 min", "15 min", "30 min")),
