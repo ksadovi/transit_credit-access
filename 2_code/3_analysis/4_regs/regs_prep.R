@@ -3,6 +3,7 @@
 # Last updated: 4/18/2026
 # Preliminaries --------
 data_out = "3_output/1_cleaned_data/"
+source("2_code/1_utilities/packages+defaults.R")
 lodes_stations = read_rds(paste0(data_out, "3_LODES/tract_station_lodes.rds"))
 delays = update_stations()
 
@@ -12,7 +13,7 @@ delays = update_stations()
 # closest band, then pick the earliest-projected station across all bands.
 # Built at the vintage level (not year level) since pairings don't change
 # year-to-year within a vintage.
-best_station <- lodes_stations %>%
+best_station = lodes_stations %>%
   distinct(tracts, census_vintage, within_5, within_15, within_30) %>%
   pivot_longer(c(within_5, within_15, within_30),
                names_to     = "isochrone",
@@ -37,11 +38,11 @@ best_station <- lodes_stations %>%
 
 # Working df: all LODES rows, list columns replaced with single-valued
 # station/system/delay fields from the earliest-projected station.
-working_df <- lodes_stations %>%
+working_df = lodes_stations %>%
   dplyr::select(-within_5, -within_15, -within_30, -transit_system) %>%
   left_join(best_station, by = c("tracts", "census_vintage"))
 
-working_df <- working_df %>%
+working_df = working_df %>%
   mutate(
     log_inflows  = log(inflows  + 1),
     log_outflows = log(outflows + 1),
@@ -55,7 +56,7 @@ working_df <- working_df %>%
 # Coverage begins in 2009 (first ACS 5-year release); LODES years 2002-2008
 # will have NA controls. Note that 5-year estimates are rolling averages
 # (e.g. the "2019" release covers 2015-2019), so adjacent years overlap heavily.
-acs_vars <- c(
+acs_vars = c(
   # Employment
   labor_force    = "B23025_003",
   employed       = "B23025_004",
@@ -70,42 +71,38 @@ acs_vars <- c(
   median_hh_inc  = "B19013_001",
   # Poverty
   poverty_denom  = "B17001_001",
-  poverty_count  = "B17001_002",
+  poverty_count  = "B17001_002"
   # Educational attainment (population 25+)
-  educ_total     = "B15003_001",
-  hs_diploma     = "B15003_017",
-  bachelors      = "B15003_022",
-  masters        = "B15003_023",
-  professional   = "B15003_024",
-  doctorate      = "B15003_025",
+  # educ_total     = "B15003_001",
+  # hs_diploma     = "B15003_017",
+  # bachelors      = "B15003_022",
+  # masters        = "B15003_023",
+  # professional   = "B15003_024",
+  # doctorate      = "B15003_025"
   # Industry (civilian employed 16+)
-  ind_total      = "C24030_001",
-  ind_agric      = "C24030_003",
-  ind_construct  = "C24030_004",
-  ind_manuf      = "C24030_005",
-  ind_wholesale  = "C24030_006",
-  ind_retail     = "C24030_007",
-  ind_transport  = "C24030_008",
-  ind_info       = "C24030_009",
-  ind_finance    = "C24030_010",
-  ind_prof       = "C24030_011",
-  ind_educ_hlth  = "C24030_012",
-  ind_arts       = "C24030_013",
-  ind_other      = "C24030_014",
-  ind_pubadmin   = "C24030_015"
+  # ind_total      = "C24030_001",
+  # ind_agric      = "C24030_003",
+  # ind_construct  = "C24030_004",
+  # ind_manuf      = "C24030_005",
+  # ind_wholesale  = "C24030_006",
+  # ind_retail     = "C24030_007",
+  # ind_transport  = "C24030_008",
+  # ind_info       = "C24030_009",
+  # ind_finance    = "C24030_010",
+  # ind_prof       = "C24030_011",
+  # ind_educ_hlth  = "C24030_012",
+  # ind_arts       = "C24030_013",
+  # ind_other      = "C24030_014",
+  # ind_pubadmin   = "C24030_015"
 )
-vars_2009 <- load_variables(2009, "acs5")
-acs_vars = acs_vars[acs_vars %in% vars_2009$name]
-states_needed <- working_df %>% pull(state) %>% unique() %>% na.omit()
-acs_cache_path <- paste0(data_out, "4_ACS/acs_controls_raw.rds")
 
 if (file.exists(acs_cache_path)) {
   message("Loading ACS controls from cache...")
-  acs_raw <- read_rds(acs_cache_path)
+  acs_raw = read_rds(acs_cache_path)
 } else {
   message("No cache found — pulling ACS from API...")
   dir.create(dirname(acs_cache_path), recursive = TRUE, showWarnings = FALSE)
-  acs_raw <- map_dfr(2009:2023, ~{
+  acs_raw = map_dfr(2009:2023, ~{
     message("Pulling ACS ", .x, "...")
     get_acs(
       geography = "tract",
@@ -121,7 +118,7 @@ if (file.exists(acs_cache_path)) {
   message("ACS controls cached to ", acs_cache_path)
 }
 
-acs_controls <- acs_raw %>%
+acs_controls = acs_raw %>%
   transmute(
     tracts         = GEOID,
     census_year,
@@ -136,6 +133,7 @@ acs_controls <- acs_raw %>%
     pubadmin_share = ind_pubadminE / ind_totalE
   )
 
-working_df <- working_df %>%
+working_df = working_df %>%
   left_join(acs_controls, by = c("tracts", "census_year")) %>%
   mutate(log_med_inc = log(median_hh_inc  + 1))
+
