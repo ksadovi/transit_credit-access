@@ -1,0 +1,96 @@
+\ProvidesPackage{kyrabeamer}
+
+%%% Math
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+%%% Tables
+\usepackage{booktabs}
+\usepackage{longtable}
+
+%%% Graphics
+\usepackage{graphicx}
+\usepackage{tikz}
+
+%%% Layout utilities (Beamer-safe)
+\usepackage{float}
+\usepackage{pdflscape}
+\usepackage{subcaption}
+
+%%% Text utilities
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage{xparse}
+
+%%% UChicago brand color
+\definecolor{uchicagored}{RGB}{128,0,0}
+
+%%% Font encoding (fixes missing small-caps shapes in Beamer)
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+
+%%% Language
+\usepackage[english]{babel}
+\usepackage{csquotes}
+
+%%% References and hyperlinks
+% hyperref is loaded automatically by Beamer; just configure it
+\hypersetup{
+  colorlinks=true,
+  linkcolor=.,        % inherit Beamer theme color
+  urlcolor=blue,
+  citecolor=gray,
+}
+\pdfstringdefDisableCommands{%
+  \def\mathbf#1{#1}%
+  \def\text#1{#1}%
+}
+
+%%% Bibliography
+\usepackage[backend=biber,style=authoryear]{biblatex}
+
+%%% ============================================================
+%%% Beamer theme defaults (UChicago)
+%%% ============================================================
+
+\AtBeginDocument{%
+
+  %% Color: UChicago red navigation bar (solid, no gradient)
+  \setbeamercolor{palette primary}{bg=uchicagored, fg=white}
+  \setbeamercolor{palette secondary}{bg=uchicagored, fg=white}
+  \setbeamercolor{palette tertiary}{bg=uchicagored, fg=white}
+  \setbeamercolor{palette quaternary}{bg=uchicagored, fg=white}
+  \setbeamercolor{section in head/foot}{bg=uchicagored, fg=white}
+  \setbeamercolor{subsection in head/foot}{bg=uchicagored, fg=white}
+
+  %% Color: frametitle — no background bar, black title text
+  \setbeamercolor{frametitle}{bg=white, fg=black}
+
+  %% Color: footer
+  \setbeamercolor{footline}{bg=uchicagored, fg=white}
+
+  %% Template: frametitle without colored band
+  \setbeamertemplate{frametitle}{%
+    \vspace{0.4em}%
+    \insertframetitle
+  }
+
+  %% Template: footer
+  \setbeamertemplate{footline}{%
+    \leavevmode%
+    \begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=1ex]{footline}%
+      \hspace{1em}%
+      \usebeamerfont{author in head/foot}\insertshortauthor%
+      \hfill
+      \usebeamerfont{date in head/foot}\textit{\insertshorttitle}%
+      \hfill
+      \usebeamerfont{date in head/foot}\insertshortdate
+      \hfill
+      \usebeamerfont{page number in head/foot}%
+      \insertframenumber{} / \inserttotalframenumber
+      \hspace{1em}
+    \end{beamercolorbox}%
+  }
+
+}

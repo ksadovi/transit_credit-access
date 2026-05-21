@@ -1,47 +1,11 @@
 \documentclass{beamer}
-\usepackage{kyradefaults}
-
-% Custom UChicago theme color
-\definecolor{uchicagored}{RGB}{128,0,0}
-
-\usepackage[style=chicago-authordate,backend=biber]{biblatex}
+\usepackage{kyrabeamer}
 \addbibresource{references.bib}
 
-\usepackage{tikz}
-\usetikzlibrary{arrows.meta,calc}
-\usepackage{graphicx}
-\usepackage{hyperref}
-\usepackage{subcaption}
-\usepackage{amsmath,amssymb}
-\usepackage{booktabs}
-\usepackage{adjustbox}
-
-% Theme setup
 \usetheme{Madrid}
-\useoutertheme{smoothbars}
+\useoutertheme[subsection=false]{smoothbars}
 \usecolortheme[named=uchicagored]{structure}
-
-% Remove navigation symbols
 \setbeamertemplate{navigation symbols}{}
-
-% Footer
-\setbeamertemplate{footline}{
-  \leavevmode%
-  \vspace{1ex}
-  \hbox to \paperwidth{%
-    \hspace{1em}%
-    \usebeamerfont{author in head/foot}Kyra Sadovi (UChicago Harris)%
-    \hfill
-    \usebeamerfont{date in head/foot}\textit{All Aboard? New Rail Stations and Labor Markets}%
-    \hfill
-    \usebeamerfont{date in head/foot}\insertshortdate\hspace{1em}%
-    \usebeamerfont{page number in head/foot}%
-    \usebeamercolor[fg]{page number in head/foot}%
-    \insertframenumber{} / \inserttotalframenumber\hspace{1em}%
-    \vspace{1em}%
-  }%
-  \vspace{0.5ex}%
-}
 
 % Title info
 \title[New Rail Stations \& Labor Markets]{All Aboard? Causal Evidence on Labor-Market Effects of New Rail Stations}
@@ -138,7 +102,7 @@ Labor markets are networked. Existing literature links:
 \begin{itemize}
   \item Communication networks $\to$ job flows \parencite{patacchini_referral_fx}.
   \item Geographic dispersion $\to$ welfare losses from reduced social interaction
-        \parencite{kim_spatial_2023}.
+        \parencite{kimSpatialInteractions2023}.
   \item Proximity to financial services $\to$ credit access, especially for marginalized
         groups \parencite{Relihan2017BranchesIL}.
 \end{itemize}
@@ -178,7 +142,7 @@ on nearby residents' labor-market outcomes?
         in off-the-shelf data.
   \item \textbf{Identification:} Construction delays create quasi-random variation in
         \emph{when} neighborhoods gain access, holding \emph{which} neighborhoods were
-        chosen constant. In progress: adapt \textcite{borusyak_nonrandom_2023}
+        chosen constant. In progress: adapt \textcite{borusyakNonrandomExposureExogenous2023}
         recentering to a stacked DiD framework, purging non-random exposure from baseline
         geography.
   \item \textbf{Labor-market focus:} Unlike Tyndall's airport IV (city-specific geography),
@@ -193,42 +157,42 @@ on nearby residents' labor-market outcomes?
 % ══════════════════════════════════════════════════════════════════
 
 % ------ Slide 10 ------
-\begin{frame}{The Basic Estimating Equation}
-\small
-\textbf{Baseline TWFE:}
+\begin{frame}{Static TWFE}
 \[
-  y_{i,j} = \alpha_j + \beta \cdot \text{Open}_{s(i),j} + \varepsilon_{i,j}
+  \log Y_{ij} = \alpha_i + \delta_j
+  + \beta\,\mathbf{1}[\text{census year} \ge \text{open year}_i]
+  + \mathbf{X}_{ij}'\gamma + \varepsilon_{ij}
 \]
 \begin{itemize}
-  \item $i$: Catchment region of a given station;\quad
-        $j = t - P_s$: project-time index
-  \item $\text{Open}_{s(i),j} = \mathbf{1}\!\left\{j \ge D_{s(i)}\right\}$:
-        station is open at project-time $j$
-  \item $\alpha_j$: project-time FE --- compares catchments at the same
-        stage of their project timeline; no catchment FE by design
+  \item $i$: census tract;\quad $j = \text{census year} - \text{initial expected open year}$: project-time index
+  \item $\alpha_i$: tract fixed effects;\quad $\delta_j$: project-time fixed effects
+  \item $\beta$: ATT of station opening on log worker inflows/outflows
+  \item Never-opened/currently-delayed stations enter as controls ($\text{Open}=0$ throughout), giving the broadest possible control group
 \end{itemize}
-
 \medskip
-\textbf{Event-study extension:}
-\[
-  y_{i,j} = \alpha_j
-  + \sum_{k \ne -1} \beta_k \cdot
-    \mathbf{1}\!\left\{j - D_{s(i)} = k\right\} + \varepsilon_{i,j}
-\]
-\begin{itemize}
-  \item $k = j - D_{s(i)}$: years relative to actual opening ($k{=}0$ = opening year)
-  \item $\beta_k$ for $k < 0$: pre-trends test (key validity check given no unit FE)
-  \item $\beta_k$ for $k \ge 0$: dynamic ATT
-\end{itemize}
-
-\medskip
-\textit{Problem:} $D_{s(i)}$ is the delay --- delay length may be endogenous.
-The next slides explain why and how I address it.
+\textit{Problem:} actual open year may be endogenous to neighborhood conditions. The next slide explains how the event study addresses this.
 \end{frame}
 
-\begin{frame}{Catchment Region Visual}
+\begin{frame}{Event Study}
+\[
+  \log Y_{ij} = \delta_j
+  + \sum_{k \ne -1}\sum_l \beta_{kl}
+    \cdot \mathbf{1}[K_{ij} = k]
+    \cdot \mathbf{1}[L_i = l]
+  + \mathbf{X}_{ij}'\gamma + \varepsilon_{ij}
+\]
+\begin{itemize}
+  \item $k = \text{census year} - \text{actual open year}$: event time, normalized to $k = -1$
+  \item $l \in \{5, 15, 30\}$: isochrone band (minutes of walking time)
+  \item $\beta_{kl}$: dynamic ATT by event time and isochrone; $\beta_{kl}$ for $k \ge 0$ traces how the effect builds post-opening
+  \item Control group: pre-opening observations from eventually-opened stations only (never-opened stations have $k = \text{NA}$ and are dropped)
+  \item Flat pre-opening coefficients ($k < 0$) support parallel trends conditional on project-time $j$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
     \begin{figure}
-        \includegraphics[width=0.65\linewidth]{3_output/2_figures/1_maps/1_station_geographies/MTA NYCT.pdf}
+        \includegraphics[width=0.6\linewidth]{3_output/2_figures/1_maps/1_station_geographies/LA Metro_2020.pdf}
     \end{figure}
 \end{frame}
 
@@ -240,7 +204,7 @@ The next slides explain why and how I address it.
     \begin{itemize}
       \item Households and workers respond at announcement, not just at opening.
       \item House prices capitalize expected access up to 6 years early
-            \parencite{mcmillen_reaction_2004}.
+            \parencite{mcmillenReactionHousePrices2004}.
     \end{itemize}
   \item \textbf{Non-random exposure:}
     \begin{itemize}
@@ -532,10 +496,10 @@ not state-level political economy.
 \bigskip
 \textbf{Identification (in progress):}
 \begin{itemize}
-  \item Adapt \textcite{borusyak_nonrandom_2023} recentering: construct
+  \item Adapt \textcite{borusyakNonrandomExposureExogenous2023} recentering: construct
         $\tilde{z}_{ct} = z_{ct} - \mu_{ct}$ by permuting delays within
         project cohorts, purging non-random geographic exposure
-  \item Embed in stacked DiD \parencite{wing_stacked_2024} with
+  \item Embed in stacked DiD \parencite{wingStackedDifferenceinDifferences2024} with
         Wing--Freedman--Hollingsworth weights $\Rightarrow$ trimmed aggregate ATT
 \end{itemize}
 
