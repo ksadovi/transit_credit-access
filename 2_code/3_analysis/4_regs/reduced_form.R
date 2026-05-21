@@ -4,26 +4,28 @@
 # Preliminaries --------
 source("2_code/3_analysis/4_regs/regs_prep.R")
 
-controls <- ~ transit_share + drove_share + walk_share +
-  wfh_share + median_hh_inc + poverty_rate + station_type
+controls <- c("transit_share", "drove_share", "walk_share",
+              "median_hh_inc", "poverty_rate")
 
-# Static TWFE — controls absorbed by tract FE (time-invariant), so excluded
-feols(c(log_inflows, log_outflows) ~ open + factor(isochrone) | tracts + j,
-      data    = working_df,
-      cluster = ~tracts)
+feols(
+  as.formula(paste0(
+    "c(log_inflows, log_outflows) ~ open*factor(isochrone) + station_type +",
+    paste(controls, collapse = " + "),
+    " | tracts + j"
+  )),
+  data    = working_df,
+  cluster = ~tracts
+) 
 
-# Event study — isochrone as a fixed effect
-es = feols(c(log_inflows, log_outflows) ~ i(k, factor(isochrone), ref = -1) +
-             transit_share + drove_share + walk_share +
-             wfh_share + median_hh_inc + poverty_rate | j,
-           data    = working_df,
-           cluster = ~tracts)
-
-es_15 = feols(c(log_inflows, log_outflows) ~ i(k, ref = -1) +
-             transit_share + drove_share + walk_share +
-             wfh_share + median_hh_inc + poverty_rate + station_type | j,
-           data    = working_df %>% filter(isochrone == "15"),
-           cluster = ~tracts)
+es = feols(
+  as.formula(paste0(
+    "c(log_inflows, log_outflows) ~ i(k, factor(isochrone), ref = -1) + ",
+    paste(controls, collapse = " + "),
+    " | j"
+  )),
+  data    = working_df,
+  cluster = ~tracts
+) 
 
 tidy_es <- function(model, label) {
   broom::tidy(model, conf.int = TRUE) %>%
@@ -37,7 +39,7 @@ inflows = bind_rows(
   tidy_es(es[[1]], "Log Inflows"),
   tidy_es(es[[2]], "Log Outflows")
 ) %>%
-  filter(isochrone == "15", outcome == "Log Inflows") %>%
+  filter(isochrone == "15", outcome == "Log Outflows", k >= -16) %>%
   ggplot(aes(x = k, y = estimate, ymin = conf.low, ymax = conf.high)) +
   geom_ribbon(alpha = 0.15, fill = "steelblue") +
   geom_hline(yintercept = 0, color = "grey40", linewidth = 0.4) +

@@ -415,3 +415,20 @@ ggsave(file.path(out_dir, "cross_vs_within_system_coef_plot.png"),
 
 # quick delay visuals 
 summary(df_full$delay_days)
+
+# ── 13. Hist of delays by system ─────────────────────────────────────────
+diff_delays = stations %>%
+  filter(!is.na(delay)) %>%
+  mutate(delay_years = as.numeric(delay/1000, units = "days")) %>%
+  group_by(system) %>%
+  filter(n() > 1) %>%
+  ungroup() %>%
+  mutate(system = reorder(system, delay_years, median)) %>%
+  ggplot(aes(x = delay_years)) +
+  geom_histogram(binwidth = 0.2, fill = "steelblue", color = "white") +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "gray40") +
+  facet_wrap(~system, scales = "free_y") +
+  labs(x = "Delay (thousands of days)", y = "Stations") +
+  theme_minimal(base_size = 16)
+ggsave("3_output/2_figures/3_delay_robustness/delay_hist.pdf", diff_delays)
+
