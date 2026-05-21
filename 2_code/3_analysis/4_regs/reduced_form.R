@@ -23,18 +23,19 @@ etable(mods_in, keep = "^open",
        depvar = FALSE,
        headers = list("Isochrone" = .("5 min", "15 min", "30 min")),
        extralines = list("Controls" = list("Yes", "Yes", "Yes")),
-       tex = TRUE,
+       drop.section = "fixef",
+       tex = TRUE, 
        file = "3_output/3_tables/inflows_by_isochrone.tex")
 
 etable(mods_out, keep = "^open",
        headers = list("Isochrone" = .("5 min", "15 min", "30 min")),
        extralines = list("Controls" = list("Yes", "Yes", "Yes")),
-       tex = TRUE,
+       tex = TRUE, drop.section = "fixef",
        file = "3_output/3_tables/outflows_by_isochrone.tex")
 
 es <- feols(
   as.formula(paste0(
-    "c(log_inflows, log_outflows) ~ i(k, factor(isochrone), ref = -1) + ",
+    "c(log_inflows, log_outflows) ~ i(k, factor(isochrone), ref = -1) + station_type +",
     paste(controls, collapse = " + "),
     " | j"
   )),
