@@ -7,6 +7,12 @@ source("2_code/3_analysis/4_regs/regs_prep.R")
 controls <- c("median_hh_inc", "poverty_rate")
 iso_levels <- c(5, 15, 30)
 
+working_df <- working_df %>%
+  mutate(station_type = recode(station_type,
+                               "residential: suburban" = "Residential Suburban",
+                               "residential: urban"    = "Residential Urban"
+  ))
+
 mods <- lapply(iso_levels, \(iso) feols(
   as.formula(paste0("c(log_inflows, log_outflows) ~ open*station_type +",
                     paste(controls, collapse = " + "),
@@ -18,23 +24,6 @@ mods <- lapply(iso_levels, \(iso) feols(
 # Split into inflow and outflow models
 mods_in  <- lapply(mods, \(m) m[[1]])
 mods_out <- lapply(mods, \(m) m[[2]])
-
-etable(mods_in, keep = "^open",
-       depvar = FALSE,
-       headers = list("Isochrone" = .("5 min", "15 min", "30 min")),
-       extralines = list("Controls" = list("Yes", "Yes", "Yes")),
-       drop.section = "fixef",
-       replace = T,
-       tex = TRUE, 
-       file = "3_output/3_tables/2_regression_tabs/inflows_by_isochrone.tex")
-
-etable(mods_out, keep = "^open",
-       depvar = FALSE,
-       headers = list("Isochrone" = .("5 min", "15 min", "30 min")),
-       extralines = list("Controls" = list("Yes", "Yes", "Yes")),
-       tex = TRUE, drop.section = "fixef",
-       file = "3_output/3_tables/2_regression_tabs/outflows_by_isochrone.tex",
-       replace = T)
 
 es <- feols(
   as.formula(paste0(
@@ -95,3 +84,39 @@ for (iso in unique(es_data$isochrone)) {
     ggsave(fname, p, width = 7, height = 4.5)
   }
 }
+
+dict <- c(
+  # Treatment
+  "open"                              = "Station Open",
+  
+  # Station types
+  "station_typeResidential Suburban" = "Suburban Residential",
+  "station_typeResidential Urban"    = "Urban Residential",
+  "station_typeCBD"                   = "CBD",
+  "station_typecommuter-rail-interchange" = "Commuter Rail Interchange",
+  
+  # Isochrones
+  "factor(isochrone)5"                = "5 min",
+  "factor(isochrone)15"               = "15 min",
+  "factor(isochrone)30"               = "30 min"
+)
+
+
+etable(mods_in, keep = "%^open",
+       depvar = FALSE,
+       headers = list("Isochrone" = .("5 min", "15 min", "30 min")),
+       extralines = list("Controls" = list("Yes", "Yes", "Yes")),
+       drop.section = "fixef",
+       replace = T,
+       dict = dict, 
+       tex = TRUE, 
+       file = "3_output/3_tables/2_regression_tabs/inflows_by_isochrone.tex")
+
+etable(mods_out, keep = "^open",
+       depvar = FALSE,
+       dict = dict,
+       headers = list("Isochrone" = .("5 min", "15 min", "30 min")),
+       extralines = list("Controls" = list("Yes", "Yes", "Yes")),
+       tex = TRUE, drop.section = "fixef",
+       file = "3_output/3_tables/2_regression_tabs/outflows_by_isochrone.tex",
+       replace = T)
