@@ -156,6 +156,35 @@ on nearby residents' labor-market outcomes?
 \section{Identification Design}
 % ══════════════════════════════════════════════════════════════════
 
+\begin{frame}{Two Time Indexes}
+\textbf{Project time} $j$: where is this station in its planned lifecycle?
+\begin{equation}\label{eq:proj_time}
+  j = \text{census year} - \text{initial expected open year}
+\end{equation}
+\begin{itemize}
+  \item Defined for \emph{all} stations --- opened, delayed, and never-opened alike
+  \item $j < 0$: pre-expected-opening;\quad $j = 0$: originally scheduled opening year;\quad $j > 0$: overdue
+  \item Fixed at the DEIS/FEIS stage, years before construction --- predates any local economic response
+\end{itemize}
+\bigskip
+\textbf{Event time} $k$: how long has this station actually been open?
+\begin{equation}\label{eq:event_time}
+  k = \text{census year} - \text{actual open year}
+\end{equation}
+\begin{itemize}
+  \item Defined \emph{only} for stations that have opened ($k = \text{NA}$ for never-opened)
+  \item $k = -1$ is the normalization period; $k \ge 0$ traces post-opening dynamics
+\end{itemize}
+\bigskip
+\textit{Identification conditions on $j$; the event study traces effects in $k$.}
+\end{frame}
+
+\begin{frame}{Isochrones}
+    \begin{figure}
+        \includegraphics[width=0.6\linewidth]{3_output/2_figures/1_maps/1_station_geographies/LA Metro_2020.pdf}
+    \end{figure}
+\end{frame}
+
 % ------ Slide 10 ------
 \begin{frame}{Static TWFE}
 \[
@@ -188,12 +217,6 @@ on nearby residents' labor-market outcomes?
   \item Control group: pre-opening observations from eventually-opened stations only (never-opened stations have $k = \text{NA}$ and are dropped)
   \item Flat pre-opening coefficients ($k < 0$) support parallel trends conditional on project-time $j$
 \end{itemize}
-\end{frame}
-
-\begin{frame}{}
-    \begin{figure}
-        \includegraphics[width=0.6\linewidth]{3_output/2_figures/1_maps/1_station_geographies/LA Metro_2020.pdf}
-    \end{figure}
 \end{frame}
 
 % ------ Slide 10 ------
@@ -363,38 +386,6 @@ Possible sources of endogeneity in delay length:
   \end{columns}
 \end{frame}
 
-% ------ Slide 15 ------
-\begin{frame}{Constructing the Project-Time Index}
-\small
-All analyses are indexed by $j = t - P_s$ (years from projected opening):
-
-\bigskip
-\def\xmax{8}
-\def\xmin{0}
-\pgfmathsetmacro{\xmid}{(\xmin + \xmax)/2}
-\begin{tikzpicture}
-  % Top arrow: delayed station
-  \draw[dashed, ->, thick] (\xmin,1) -- (\xmax,1);
-  \node at (\xmin,1) {\textbullet};
-  \node at (\xmid,1) {\textbullet};
-  \node[above] at (\xmin,1) {\footnotesize Announced};
-  \node[above] at (\xmid,1) {\footnotesize Projected open ($j=0$)};
-  \node[right] at (\xmax,1) {\footnotesize $\text{Open}=0$ \textit{(delayed)}};
-  % Bottom arrow: on-time station
-  \draw[dashed, thick] (\xmin,0) -- (\xmid,0);
-  \draw[->, thick, uchicagored] (\xmid,0) -- (\xmax,0);
-  \node at (\xmin,0) {\textbullet};
-  \node at (\xmid,0) {\textbullet};
-  \node[below] at (\xmin,0) {\footnotesize $j < 0$};
-  \node[below] at (\xmid,0) {\footnotesize $j=0$};
-  \node[right] at (\xmax,0) {\footnotesize $\text{Open}=1$ \textit{(on-time)}};
-\end{tikzpicture}
-
-\bigskip
-At each $j$, compare tracts near \textcolor{uchicagored}{on-time} stations to
-those near still-delayed stations. Delays generate as-good-as-random variation
-in $\text{Open}_{s,j}$ at each project-time.
-\end{frame}
 
 % ══════════════════════════════════════════════════════════════════
 \section{Validation}
@@ -478,6 +469,11 @@ not state-level political economy.
 
 \medskip
 \hyperlink{app:lm_table}{\beamerbutton{Regression table $\to$}}
+\end{frame}
+
+\section{Preliminary Results}
+\begin{frame}{TWFE}
+    
 \end{frame}
 
 % ══════════════════════════════════════════════════════════════════
