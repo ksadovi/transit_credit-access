@@ -1,0 +1,44 @@
+\documentclass[12pt]{article}
+\usepackage{kyradefaults}
+\addbibresource{references.bib}
+
+\title{\textbf{All Aboard? Causal Evidence on the Labor-Market Effects of New Rail Stations}\\ \medskip
+\large Interim Proposal for Topics in Social Insurance}
+\author{Kyra Sadovi%
+  \thanks{E-Mail: \texttt{ksadovi@uchicago.edu}}}
+\affil{Harris School of Public Policy, University of Chicago}
+\date{}
+
+\begin{document}
+\noindent Since we last met, I have completed data collection and run preliminary estimates. The short version: data collection is on track, the identification strategy passes balance checks, and the event study yields encouraging preliminary results.
+
+\subsubsection*{Data Collection}
+I have cataloged 230 U.S.\ rail stations opened or planned since 2000, 94 of which have opened. I built on the Levy (2025) dataset and added overlooked projects as I worked through each system. For each station I recorded two reference dates from primary federal sources. The first is the publication date of the Draft Environmental Impact Statement (DEIS) that first evaluated the as-built alignment.The second is the earliest specific projected completion date found in the DEIS, FEIS, or contemporaneous sources. Where a project's alignment changed substantially (e.g., SF Central Subway), I use the first supplemental DEIS that evaluated the final configuration. These dates anchor the ``project time'' index ($j = \text{census year} - \text{initial expected open year}$) used in the regression.
+
+\subsubsection*{Identification Checks}
+
+The design exploits construction delays as quasi-random variation in opening timing. I ran several balance diagnostics to support this assumption:
+\begin{itemize}
+  \item \textbf{Covariate balance across delay-length groups:} point estimates are small relative to confidence intervals and centered near zero across all six pre-treatment tract characteristics.
+  \item \textbf{Delay vs.\ median household income:} no discernible relationship --- longer delays are not concentrated in systematically richer or poorer neighborhoods.
+  \item \textbf{Regression of delay length on pre-treatment tract characteristics:} no covariate is precisely estimated; all confidence intervals include zero.
+  \item \textbf{Geographic spread:} delay variation is distributed across states and transit systems, reducing concern about system-level confounders.
+\end{itemize}
+Taken together, these checks are consistent with the core assumption that construction delays are driven by engineering and contracting failures rather than anticipatory neighborhood economic trends.
+
+\subsubsection*{Preliminary Results}
+The headline specification is a static two-way fixed effects regression with census tract fixed effects~($\alpha_i$) and project-time fixed effects~($\delta_j$), with the key coefficient on an indicator for whether the station has opened by census year~$t$. The event-study extension of this shows promise. Pre-opening coefficients are flat and statistically indistinguishable from zero, consistent with parallel trends. Following station opening, inflows rise steadily and persistently, reaching approximately one log point above baseline by ten years post-opening. The gradual build-up suggests transit access reshapes residential sorting over time rather than producing a discrete one-time jump at opening.
+
+
+\subsubsection*{Next Steps}
+
+\begin{itemize}
+  \item Finalize the stacked DiD/event-study estimator and add robustness checks.
+  \item Think more about \textcite{borusyakNonrandomExposureExogenous2023} extensions with stacked DiD.
+  \item Expand the station sample with newly identified historical projects and stations coming online in 2024--25.
+  \item Explore access to confidential LODES or Infogroup residential microdata for individual-level estimates.
+\end{itemize}
+
+\newpage
+\printbibliography
+\end{document}
