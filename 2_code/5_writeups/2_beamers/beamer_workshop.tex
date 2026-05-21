@@ -438,14 +438,14 @@ not state-level political economy.
 % ------ Slide 18 (Political: figure) ------
 \begin{frame}{Delay Length Is Not Politically Structured}
 \centering
-\includegraphics[width=0.85\textwidth]{3_output/2_figures/3_delay_robustness/mean_delay_by_state.png}
+\includegraphics[width=0.85\textwidth]{3_output/2_figures/2_delay_robustness/mean_delay_by_state.png}
 \end{frame}
 
 % ------ Slide 19 (Income: figure + button) ------
 \begin{frame}{Test 2: Neighborhood Income Does Not Predict Delay}
 \label{slide:income}
 \centering
-\includegraphics[width=0.82\textwidth]{3_output/2_figures/3_delay_robustness/delay_vs_income.png}
+\includegraphics[width=0.82\textwidth]{3_output/2_figures/2_delay_robustness/delay_vs_income.png}
 
 \medskip
 \hyperlink{app:income_table}{\beamerbutton{Regression table $\to$}}
@@ -455,7 +455,7 @@ not state-level political economy.
 \begin{frame}{Test 3: Labor Market Chars.\ Don't Predict Delay (Within System)}
 \label{slide:withinsystem}
 \centering
-\includegraphics[width=0.82\textwidth]{3_output/2_figures/3_delay_robustness/within_system_coef_plot.png}
+\includegraphics[width=0.82\textwidth]{3_output/2_figures/2_delay_robustness/within_system_coef_plot.png}
 
 \medskip
 \hyperlink{app:lm_table}{\beamerbutton{Full regression table $\to$}}
@@ -465,7 +465,7 @@ not state-level political economy.
 \begin{frame}{Test 4: No Cross-System Pattern Either}
 \label{slide:crosssystem}
 \centering
-\includegraphics[width=0.82\textwidth]{3_output/2_figures/3_delay_robustness/cross_vs_within_system_coef_plot.png}
+\includegraphics[width=0.82\textwidth]{3_output/2_figures/2_delay_robustness/cross}
 
 \medskip
 \hyperlink{app:lm_table}{\beamerbutton{Regression table $\to$}}
@@ -473,7 +473,11 @@ not state-level political economy.
 
 \section{Preliminary Results}
 \begin{frame}{TWFE}
-    \input{3}
+\begin{center}
+\resizebox{\textheight}{!}{%
+\input{3_output/3_tables/2_regression_tabs/inflows_by_isochrone}%
+}
+\end{center}
 \end{frame}
 
 % ══════════════════════════════════════════════════════════════════
@@ -542,7 +546,7 @@ not state-level political economy.
 \begin{frame}[noframenumbering]{Appendix: Delays by Transit System}
 \hypertarget{app:system_plot}{}
 \centering
-\includegraphics[width=0.85\textwidth]{3_output/2_figures/3_delay_robustness/mean_delay_by_system.png}
+\includegraphics[width=0.85\textwidth]{3_output/2_figures/2_delay_robustness/mean_delay_by_system.png}
 
 \bigskip
 \hyperlink{slide:political}{\beamerbutton{$\leftarrow$ Back}}
@@ -552,7 +556,7 @@ not state-level political economy.
 \begin{frame}[noframenumbering]{Appendix: Income Regression Table}
 \hypertarget{app:income_table}{}
 \centering
-\input{3_output/3_tables/3_delay_robustness/delay_income_state_system_fe.tex}
+\input{3_output/3_tables/1_delay_robustness/delay_income_state_system_fe.tex}
 
 \bigskip
 \hyperlink{slide:income}{\beamerbutton{$\leftarrow$ Back}}
@@ -562,7 +566,7 @@ not state-level political economy.
 \begin{frame}[noframenumbering]{Appendix: Labor Market Regressions}
 \hypertarget{app:lm_table}{}
 \centering
-\input{3_output/3_tables/3_delay_robustness/delay_labormarket_combined.tex}
+\input{3_output/3_tables/1_delay_robustness/delay_labormarket_combined.tex}
 
 \bigskip
 \hyperlink{slide:withinsystem}{\beamerbutton{$\leftarrow$ Tests 3}}
