@@ -24,6 +24,7 @@ etable(mods_in, keep = "^open",
        headers = list("Isochrone" = .("5 min", "15 min", "30 min")),
        extralines = list("Controls" = list("Yes", "Yes", "Yes")),
        drop.section = "fixef",
+       replace = T,
        tex = TRUE, 
        file = "3_output/3_tables/2_regression_tabs/inflows_by_isochrone.tex")
 
@@ -31,7 +32,8 @@ etable(mods_out, keep = "^open",
        headers = list("Isochrone" = .("5 min", "15 min", "30 min")),
        extralines = list("Controls" = list("Yes", "Yes", "Yes")),
        tex = TRUE, drop.section = "fixef",
-       file = "3_output/3_tables/2_regression_tabs/outflows_by_isochrone.tex")
+       file = "3_output/3_tables/2_regression_tabs/outflows_by_isochrone.tex",
+       replace = T)
 
 es <- feols(
   as.formula(paste0(
