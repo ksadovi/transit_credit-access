@@ -3,7 +3,7 @@ source("2_code/2_cleaning/1_clean_station_geographies/update_stations.R")
 options(tigris_use_cache = TRUE)
 
 # Output directories ───────────────────────────────────────────────────────────
-out_dir <- file.path("3_output", "2_figures", "3_delay_robustness")
+out_dir <- file.path("3_output", "2_figures", "2_delay_robustness")
 tab_dir <- file.path("3_output", "3_tables", "3_delay_robustness")
 dir.create(out_dir, showWarnings = FALSE, recursive = TRUE)
 dir.create(tab_dir, showWarnings = FALSE, recursive = TRUE)
