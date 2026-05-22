@@ -50,6 +50,9 @@
 %%% Bibliography
 \usepackage[backend=biber,style=authoryear]{biblatex}
 
+%%% Exclude appendix frames from slide counter
+\usepackage{appendixnumberbeamer}
+
 %%% ============================================================
 %%% Beamer theme defaults (UChicago)
 %%% ============================================================
@@ -85,7 +88,7 @@
       \hfill
       \usebeamerfont{date in head/foot}\textit{\insertshorttitle}%
       \hfill
-      \usebeamerfont{date in head/foot}\insertshortdate
+      \usebeamerfont{date in head/foot}\insertshortdate%
       \hfill
       \usebeamerfont{page number in head/foot}%
       \insertframenumber{} / \inserttotalframenumber

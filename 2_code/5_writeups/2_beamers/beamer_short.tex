@@ -1,75 +1,19 @@
 \documentclass{beamer}
-\usepackage{kyradefaults}
-
-% Custom UChicago theme color (Maroon)
-\definecolor{uchicagored}{RGB}{128,0,0}
-\setbeamercolor{footline}{fg=white,bg=uchicagored}
-
-\usepackage[style=chicago-authordate,backend=biber]{biblatex}
+\usepackage{kyrabeamer}
 \addbibresource{references.bib}
-
-\usepackage{graphicx}
-\usepackage{hyperref}
-\usepackage{amsmath,amssymb}
-
-% Theme setup
 \usetheme{Madrid}
+\useoutertheme[subsection=false]{smoothbars}
 \usecolortheme[named=uchicagored]{structure}
-
-% Footer setup (same as your full deck)
-\setbeamertemplate{footline}{
-  \leavevmode
-  \begin{beamercolorbox}[wd=\paperwidth,ht=2.75ex,dp=1.25ex,left]{footline}
-    \hspace{1em}
-    \usebeamerfont{author in head/foot}Kyra Sadovi (UChicago Harris)
-    \hfill
-    \usebeamerfont{date in head/foot}\textit{All Aboard? New Rail Stations and Labor Markets}
-    \hfill
-    \usebeamerfont{date in head/foot}\insertshortdate
-    \hspace{1em}
-    \usebeamerfont{page number in head/foot}
-    \insertframenumber{} / \inserttotalframenumber
-    \hspace{1em}
-  \end{beamercolorbox}
-}
-
-% Remove navigation symbols
 \setbeamertemplate{navigation symbols}{}
-
 % Title info
-\title[New Rail Stations and Labor Markets]{All Aboard? Causal Evidence on Labor-Market Effects of New Rail Stations}
+\title[New Rail Stations \& Labor Markets]{All Aboard? Causal Evidence on Labor-Market Effects of New Rail Stations}
 \author{Kyra Sadovi}
-\institute{University of Chicago Harris School of Public Policy\\
+\institute{University of Chicago Harris School of Public Policy \\
 \href{mailto:ksadovi@uchicago.edu}{ksadovi@uchicago.edu}}
 \date{\today}
-
+\includeonlyframes{%
+  title,motivation1,rq,contribution,projtime,eventtime,isochrones,twfe,eventstudy,challenges,data,test1fig,test2fig,twfeout,twfein,es15in,nextsteps,references,appsystemplot,appincometable,applmtable,appdelaysystem,es5in,es30in,es5out,es15out,es30out,delaytype1,delaytype2,delaytype3
+}
 \begin{document}
-
-% Slide 1: Title
-\begin{frame}[plain]
-  \titlepage
-\end{frame}
-
-% Slide 2: 3-minute overview
-\begin{frame}{Research Question, Motivation, and Approach}
-\small
-
-\textbf{Research question:} What is the causal effect of gaining access to a new rail station on local labor-market outcomes?
-
-\medskip
-\textbf{Why it matters:}
-\begin{itemize}
-  \item Transit changes effective access to jobs and people (commuting + networks), but station placement is endogenous.
-  \item Many evaluations struggle to separate access effects from underlying trends in dense, already-connected places.
-\end{itemize}
-\medskip
-\textbf{Broad strokes of the design:}
-\begin{enumerate}
-  \item \textbf{Measure access:} Use \texttt{r5r} to compute tract-level walking/transit travel times and a continuous market-access index (CMA).
-  \item \textbf{Identify with timing:} Exploit quasi-random \emph{construction delays} (planned vs.\ realized opening dates) as shocks to when access improves.
-  \item \textbf{Correct non-random exposure:} Apply Borusyak--Hull recentering to isolate delay-driven variation in access, and (in ongoing work) embed it in a stacked DiD event-time framework for dynamics.
-\end{enumerate}
-
-\end{frame}
-
+\input{2_code/5_writeups/2_beamers/slides_body}
 \end{document}
