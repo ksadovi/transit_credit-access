@@ -59,10 +59,10 @@ sum_tbl <- tibble::tribble(
   "Median delay (days)",                 sprintf("%.0f", median(df_desc$delay_days)),
   "SD of delay (days)",                  sprintf("%.0f", sd(df_desc$delay_days)),
   "Min / max delay (days)",              sprintf(
-                                           "%d / %d",
-                                           as.integer(min(df_desc$delay_days)),
-                                           as.integer(max(df_desc$delay_days))
-                                         )
+    "%d / %d",
+    as.integer(min(df_desc$delay_days)),
+    as.integer(max(df_desc$delay_days))
+  )
 )
 
 # Write bare LaTeX fragments (no \documentclass wrapper) so \input{} works in Beamer.
@@ -128,7 +128,7 @@ p_hist <- ggplot(df_desc, aes(x = delay_yrs)) +
     x = mean(df_desc$delay_yrs) + 0.15, y = Inf,
     vjust = 1.5, hjust = 0,
     label = sprintf("Mean = %.1f yrs", mean(df_desc$delay_yrs)),
-    size = 3, color = "grey30"
+    size = 3.5, color = "grey30"
   ) +
   scale_x_continuous(
     breaks = seq(0, ceiling(max(df_desc$delay_yrs)), by = 1),
@@ -139,7 +139,7 @@ p_hist <- ggplot(df_desc, aes(x = delay_yrs)) +
     x     = "Delay (years past projected opening)",
     y     = "Number of stations"
   ) +
-  theme_minimal(base_size = 11) +
+  theme_minimal(base_size = 13) +
   theme(panel.grid.minor = element_blank())
 
 ggsave(
@@ -193,9 +193,11 @@ p_income <- ggplot(df_full, aes(x = median_income / 1000, y = delay_days, color 
     title = "Delay vs. neighborhood median income",
     x     = "Median household income (tract)",
     y     = "Delay (days)",
-    color = "System"
+    color = NULL
   ) +
-  theme_minimal()
+  guides(color = guide_legend(nrow = 2, title.position = "top")) +
+  theme_minimal(base_size = 13) +
+  theme(legend.position = "bottom")
 
 ggsave(file.path(out_dir, "delay_vs_income.png"),
        p_income, width = 8, height = 5, dpi = 300)
@@ -220,7 +222,7 @@ p_state <- ggplot(state_stats, aes(x = mean, y = reorder(state, mean))) +
   geom_point(aes(size = n), color = "steelblue") +
   scale_size_continuous(range = c(2, 6), guide = "none") +
   labs(title = "Mean delay by state (95% CI)", x = "Delay (days)", y = NULL) +
-  theme_minimal()
+  theme_minimal(base_size = 13)
 
 ggsave(file.path(out_dir, "mean_delay_by_state.png"),
        p_state, width = 7, height = 5, dpi = 300)
@@ -245,7 +247,7 @@ p_system <- ggplot(system_stats, aes(x = mean, y = reorder(system, mean))) +
   geom_point(aes(size = n), color = "steelblue") +
   scale_size_continuous(range = c(2, 6), guide = "none") +
   labs(title = "Mean delay by transit system (95% CI)", x = "Delay (days)", y = NULL) +
-  theme_minimal()
+  theme_minimal(base_size = 13)
 
 ggsave(file.path(out_dir, "mean_delay_by_system.png"),
        p_system, width = 7, height = 5, dpi = 300)
@@ -341,7 +343,7 @@ p_coef <- ggplot(coef_df, aes(x = estimate, y = reorder(term, estimate))) +
     x        = "Effect on delay (days per SD)",
     y        = NULL
   ) +
-  theme_minimal()
+  theme_minimal(base_size = 13)
 
 ggsave(file.path(out_dir, "within_system_coef_plot.png"),
        p_coef, width = 7, height = 5, dpi = 300)
@@ -407,28 +409,12 @@ p_coef_cs <- ggplot(coef_combined,
     color    = NULL,
     shape    = NULL
   ) +
-  theme_minimal() +
-  theme(legend.position = "bottom")
+  theme_minimal(base_size = 13) +
+  theme(legend.position = "bottom") +
+  guides(color = guide_legend(nrow = 1), shape = guide_legend(nrow = 1))
 
 ggsave(file.path(out_dir, "cross_vs_within_system_coef_plot.png"),
        p_coef_cs, width = 8, height = 5.5, dpi = 300)
 
 # quick delay visuals 
 summary(df_full$delay_days)
-
-# ── 13. Hist of delays by system ─────────────────────────────────────────
-diff_delays = stations %>%
-  filter(!is.na(delay)) %>%
-  mutate(delay_years = as.numeric(delay/1000, units = "days")) %>%
-  group_by(system) %>%
-  filter(n() > 1) %>%
-  ungroup() %>%
-  mutate(system = reorder(system, delay_years, median)) %>%
-  ggplot(aes(x = delay_years)) +
-  geom_histogram(binwidth = 0.2, fill = "steelblue", color = "white") +
-  geom_vline(xintercept = 0, linetype = "dashed", color = "gray40") +
-  facet_wrap(~system, scales = "free_y") +
-  labs(x = "Delay (thousands of days)", y = "Stations") +
-  theme_minimal(base_size = 16)
-ggsave("3_output/2_figures/3_delay_robustness/delay_hist.pdf", diff_delays)
-
