@@ -309,6 +309,7 @@ not state-level political economy.
 \label{slide:income}
 \centering
 \includegraphics[width=0.82\textwidth]{3_output/2_figures/2_delay_robustness/delay_vs_income.png}
+\medskip
 \hyperlink{app:income_table}{\beamerbutton{Regression table $\to$}}
 \end{frame}
 \begin{frame}[label=test3fig]{Test 3: Labor Market Chars.\ Don't Predict Delay (Within System)}
@@ -354,8 +355,27 @@ not state-level political economy.
 % ══════════════════════════════════════════════════════════════════
 \begin{frame}[label=nextsteps]{Next Steps}
 \label{slide:nextsteps}
-\textbf{Data:} Get residential data to track who is entering/exiting tracts. Incumbents vs new residents are different dynamics at work. 
-\textbf{Heterogeneous effects:} Stratify by baseline transit access (transit-desert vs.\ connected), pedestrian network density
+\small
+\textbf{Data \& measurement:}
+\begin{itemize}
+  \item Complete and finalize delay dataset across all systems
+\end{itemize}
+\bigskip
+\textbf{Identification (in progress):}
+\begin{itemize}
+  \item Adapt \textcite{borusyakNonrandomExposureExogenous2023} recentering: construct
+        $\tilde{z}_{ct} = z_{ct} - \mu_{ct}$ by permuting delays within
+        project cohorts, purging non-random geographic exposure
+  \item Embed in stacked DiD \parencite{wingStackedDifferenceinDifferences2024} with
+        Wing--Freedman--Hollingsworth weights $\Rightarrow$ trimmed aggregate ATT
+\end{itemize}
+\bigskip
+\textbf{Heterogeneous effects:}
+\begin{itemize}
+  \item Stratify by baseline transit access (transit-desert vs.\ connected),
+        pedestrian network density, and neighborhood income
+  \item By neighborhood income and transit take-up propensity
+\end{itemize}
 \end{frame}
 \begin{frame}[label=wrestling]{What I'm Wrestling With}
 \small
@@ -376,12 +396,12 @@ not state-level political economy.
         are a starting point.
 \end{itemize}
 \end{frame}
+
 % ══════════════════════════════════════════════════════════════════
+\appendix
 \begin{frame}[noframenumbering,plain,allowframebreaks,label=references]{References}
   \printbibliography[heading=none]
 \end{frame}
-% ══════════════════════════════════════════════════════════════════
-\appendix
 % ══════════════════════════════════════════════════════════════════
 \begin{frame}[noframenumbering,label=appsystemplot]{Appendix: Delays by Transit System}
 \hypertarget{app:system_plot}{}
@@ -413,7 +433,7 @@ not state-level political economy.
 \bigskip
 \hyperlink{slide:datastats}{\beamerbutton{$\leftarrow$ Back}}
 \end{frame}
-\begin{frame}[label=es5in]{Event Study: Inflows, 5 min}
+\begin{frame}[noframenumbering,label=es5in]{Event Study: Inflows, 5 min}
     \begin{figure}
         \centering
         \includegraphics[width=0.85\linewidth]{3_output/2_figures/3_reg_output_plots/es_iso5_log_inflows.pdf}
@@ -481,10 +501,10 @@ not state-level political economy.
 {\footnotesize\textit{Shock: regulatory / engineering process --- federal NEPA requirements}}
 \medskip
 \begin{minipage}[t]{0.48\textwidth}
-  \includegraphics[width=\linewidth]{6_sources/anecdotal_evidence/Screenshot 2026-04-14 at 10.57.17 AM.png}
+  \includegraphics[width=\linewidth]{6_sources/anecdotal_evidence/Screenshot 2026-04-14 at 10.57.17 AM.png}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\textwidth}
-  \includegraphics[width=\linewidth]{6_sources/anecdotal_evidence/Screenshot 2026-04-14 at 11.00.07 AM.png}
+  \includegraphics[width=\linewidth]{6_sources/anecdotal_evidence/Screenshot 2026-04-14 at 11.00.07 AM.png}
 \end{minipage}
 \medskip
 \begin{itemize}

@@ -1,8 +1,9 @@
 \documentclass{beamer}
 \usepackage{kyrabeamer}
-\addbibresource{references.bib}
 \usetheme{Madrid}
 \useoutertheme[subsection=false]{smoothbars}
+\addbibresource{references.bib}
+
 \usecolortheme[named=uchicagored]{structure}
 \setbeamertemplate{navigation symbols}{}
 % Title info
@@ -13,6 +14,40 @@
 \date{\today}
 \includeonlyframes{%
   title,motivation1,rq,contribution,projtime,eventtime,isochrones,twfe,eventstudy,challenges,data,test1fig,test2fig,twfeout,twfein,es15in,nextsteps,references,appsystemplot,appincometable,applmtable,appdelaysystem,es5in,es30in,es5out,es15out,es30out,delaytype1,delaytype2,delaytype3
+}
+
+\newcommand{\bstotal}{?}
+\IfFileExists{beamer_short_pages.aux}{\input{beamer_short_pages.aux}}{}
+\newwrite\bspagewrite
+\immediate\openout\bspagewrite=beamer_short_pages.aux
+\AtEndDocument{\immediate\closeout\bspagewrite}
+\newif\ifbsappendix
+\AtBeginDocument{%
+  \let\bsorigappendix\appendix
+  \renewcommand{\appendix}{\bsorigappendix\bsappendixtrue}%
+}
+\newcommand{\bswriteifmain}{%
+  \ifbsappendix\else
+    \immediate\write\bspagewrite{%
+      \string\renewcommand{\string\bstotal}{\insertpagenumber}}%
+  \fi}
+\AtBeginDocument{%
+  \setbeamertemplate{footline}{%
+    \leavevmode%
+    \bswriteifmain%
+    \begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=2ex]{footline}%
+      \hspace{1em}%
+      \usebeamerfont{author in head/foot}\insertshortauthor%
+      \hfill
+      \usebeamerfont{date in head/foot}\textit{\insertshorttitle}%
+      \hfill
+      \usebeamerfont{date in head/foot}\insertshortdate%
+      \hfill
+      \usebeamerfont{page number in head/foot}%
+      \insertpagenumber{} / \the\numexpr\bstotal-1\relax
+      \hspace{1em}
+    \end{beamercolorbox}%
+  }%
 }
 \begin{document}
 \input{2_code/5_writeups/2_beamers/slides_body}

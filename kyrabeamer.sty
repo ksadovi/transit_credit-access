@@ -17,6 +17,7 @@
 \usepackage{float}
 \usepackage{pdflscape}
 \usepackage{subcaption}
+\usepackage{appendixnumberbeamer}
 
 %%% Text utilities
 \usepackage{xcolor}
@@ -50,8 +51,6 @@
 %%% Bibliography
 \usepackage[backend=biber,style=authoryear]{biblatex}
 
-%%% Exclude appendix frames from slide counter
-\usepackage{appendixnumberbeamer}
 
 %%% ============================================================
 %%% Beamer theme defaults (UChicago)
@@ -82,7 +81,7 @@
   %% Template: footer
   \setbeamertemplate{footline}{%
     \leavevmode%
-    \begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=1ex]{footline}%
+    \begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=2ex]{footline}%
       \hspace{1em}%
       \usebeamerfont{author in head/foot}\insertshortauthor%
       \hfill
@@ -92,7 +91,7 @@
       \hfill
       \usebeamerfont{page number in head/foot}%
       \insertframenumber{} / \inserttotalframenumber
-      \hspace{1em}
+      \hspace{0.75em}
     \end{beamercolorbox}%
   }
 
