@@ -103,7 +103,7 @@ dict <- c(
 
 
 etable(mods_in, keep = "%^open",
-       depvar = FALSE,
+       depvar = T,
        headers = list("Isochrone" = .("5 min", "15 min", "30 min")),
        extralines = list("Controls" = list("Yes", "Yes", "Yes")),
        drop.section = "fixef",
@@ -113,7 +113,7 @@ etable(mods_in, keep = "%^open",
        file = "3_output/3_tables/2_regression_tabs/inflows_by_isochrone.tex")
 
 etable(mods_out, keep = "%^open",
-       depvar = FALSE,
+       depvar = T,
        dict = dict,
        headers = list("Isochrone" = .("5 min", "15 min", "30 min")),
        extralines = list("Controls" = list("Yes", "Yes", "Yes")),
