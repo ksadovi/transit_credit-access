@@ -7,7 +7,8 @@
   \tableofcontents
 \end{frame}
 % ══════════════════════════════════════════════════════════════════
-\section{Motivation}
+\section{Overview}
+\subsection{Motivation}
 % ══════════════════════════════════════════════════════════════════
 % ------ Slide 3 ------
 \begin{frame}[label=motivation1]{A Historic Moment for Transit Investment}
@@ -78,7 +79,7 @@ Transit is, in part, a \text{network expansion technology}. The question is whet
 that expansion is large enough to register in labor-market outcomes --- and for whom.
 \end{frame}
 % ══════════════════════════════════════════════════════════════════
-\section{Research Question \& Contribution}
+\subsection{Research Question \& Contribution}
 % ══════════════════════════════════════════════════════════════════
 % ------ Slide 7 ------
 \begin{frame}[label=rq]{Research Question}
@@ -121,8 +122,9 @@ on nearby residents' labor-market outcomes?
 \end{enumerate}
 \end{frame}
 % ══════════════════════════════════════════════════════════════════
-\section{Identification Design}
+\section{Identification \& Model Design}
 % ══════════════════════════════════════════════════════════════════
+\subsection{Instruments \& Measurement Tools}
 \begin{frame}[label=projtime]{Two Time Indexes: Project Time}
 \textbf{Project time} $j$: where is this station in its planned lifecycle?
 $$j = \text{census year} - \text{initial expected open year}$$
@@ -149,6 +151,7 @@ $$j = \text{census year} - \text{initial expected open year}$$
         \includegraphics[width=0.6\linewidth]{3_output/2_figures/1_maps/1_station_geographies/LA Metro_2020.pdf}
     \end{figure}
 \end{frame}
+\subsection{Model Design}
 \begin{frame}[label=twfe]{Static TWFE}
 \[
   \log Y_{ij} = \alpha_i + \delta_j
@@ -180,6 +183,7 @@ $$j = \text{census year} - \text{initial expected open year}$$
   \item Flat pre-opening coefficients ($k < 0$) support parallel trends conditional on project-time $j$.
 \end{itemize}
 \end{frame}
+\subsection{Identification Challenges}
 \begin{frame}[label=challenges]{Three Identification Challenges}
 \small
 \begin{enumerate}
@@ -226,6 +230,7 @@ Possible sources of endogeneity in delay length:
 \end{frame}
 % ══════════════════════════════════════════════════════════════════
 \section{Data}
+\subsection{Data}
 % ══════════════════════════════════════════════════════════════════
 \begin{frame}[label=data]{Data}
 \small
@@ -246,6 +251,7 @@ Possible sources of endogeneity in delay length:
     and ROD dates
 \end{description}
 \end{frame}
+\subsection{Delay Descriptive Stats}
 \begin{frame}[label=datastats]{Station Delay: Overview}
 \label{slide:datastats}
 \begin{columns}[T]
@@ -267,6 +273,7 @@ Possible sources of endogeneity in delay length:
 % ══════════════════════════════════════════════════════════════════
 \section{Validation}
 % ══════════════════════════════════════════════════════════════════
+\subsection{Challenges}
 \begin{frame}[label=designchallenges]{Design challenges}
 \small
 Four anticipated challenges:
@@ -283,6 +290,7 @@ Four anticipated challenges:
         treatment effects may not generalize.
 \end{enumerate}
 \end{frame}
+\subsection{Delay Instrument Validation}
 \begin{frame}[label=test1arg]{Test 1: Delay Length Is Not Politically Structured}
 \label{slide:political}
 \small
@@ -328,21 +336,23 @@ not state-level political economy.
 % ══════════════════════════════════════════════════════════════════
 \section{Preliminary Results}
 % ══════════════════════════════════════════════════════════════════
-\begin{frame}[label=twfeout]{TWFE: Worker Outflows}
+\subsection{TWFE}
+\begin{frame}[label=twfeout]{Worker Outflows}
 \begin{center}
 \resizebox{\textheight}{!}{%
 \input{3_output/3_tables/2_regression_tabs/outflows_by_isochrone}%
 }
 \end{center}
 \end{frame}
-\begin{frame}[label=twfein]{TWFE: Worker Inflows}
+\begin{frame}[label=twfein]{Worker Inflows}
 \begin{center}
 \resizebox{\textheight}{!}{%
 \input{3_output/3_tables/2_regression_tabs/inflows_by_isochrone}%
 }
 \end{center}
 \end{frame}
-\begin{frame}[label=es15in]{Event Study: Inflows, 15 min}
+\subsection{Event Study}
+\begin{frame}[label=es15in]{Inflows, 15 min}
     \begin{figure}
         \centering
         \includegraphics[width=0.85\linewidth]{3_output/2_figures/3_reg_output_plots/es_iso15_log_inflows.pdf}
@@ -377,23 +387,66 @@ not state-level political economy.
   \item By neighborhood income and transit take-up propensity
 \end{itemize}
 \end{frame}
-\begin{frame}[label=wrestling]{What I'm Wrestling With}
+% ------ Concern 1 ------
+\begin{frame}[label=concern1]{Concern 1: Limited Delay Variation}
 \small
+\textbf{Within-system clumping:}
 \begin{itemize}
-  \item \textbf{Control group:} Clean controls vs.\ never-treated vs.\
-        not-yet-treated in the stacked DiD --- different choices yield
-        different estimands.
-  \item \textbf{Anticipation:} Households start responding at announcement,
-        not at $j=0$. Should the ``event'' shift to the announcement date?
-        How do I estimate the announcement effect itself?
-  \item \textbf{Delay classification:} Cleanly assigning funding / opposition /
-        environmental type to each delay episode; and whether delay type should
-        enter the BH permutation cohorts.
-  \item \textbf{Stations that move:} A handful of stations change location during
-        environmental review --- they should be excluded from the exposure measure.
-  \item \textbf{Take-up and HTE:} Proxying individual-level transit propensity
-        without individual data; car-ownership rates at the tract level
-        are a starting point.
+  \item A system like BART or SFMTA contributes many stations, but may have only
+        one or two system-wide delay episodes --- leaving little \textit{within-system}
+        variation in delay length across stations.
+\end{itemize}
+\medskip
+\textbf{Cross-system clumping:}
+\begin{itemize}
+  \item Sound Transit contributes 38 stations; Miami contributes just 1.
+  \item Identifying variation may be dominated by a few large systems ---
+        raising concerns about whether delay is truly a station-level shock.
+\end{itemize}
+\bigskip
+$\Rightarrow$ Need to verify that sufficient within-system, cross-station
+variation in delay length exists to estimate credible tract-level effects.
+\end{frame}
+% ------ Concern 2 ------
+\begin{frame}[label=concern2]{Concern 2: SUTVA Violations and Spillovers}
+\small
+\textbf{Setup:} Residents near station B (not yet open) serve as controls.
+But neighboring stations A and C have \textit{already opened}.
+
+\medskip
+\begin{center}
+    \begin{tikzpicture}
+        \draw[thick] (0,0) -- (9,0);
+        \filldraw[green!60!black] (0,0) circle (8pt) node[below=8pt] {$A$};
+        \filldraw[red]            (3,0) circle (8pt) node[below=8pt] {$B$};
+        \filldraw[green!60!black] (6,0) circle (8pt) node[below=8pt] {$C$};
+        \filldraw[black]          (9,0) circle (8pt) node[below=8pt] {$D$};
+    \end{tikzpicture}
+\end{center}
+
+\medskip
+B's residents can access newly-opened A and C $\Rightarrow$
+``control'' units are partially treated.
+Need to account for \textbf{treatment intensity} rather than binary treatment status.
+\end{frame}
+% ------ Concern 3 ------
+\begin{frame}[label=concern3]{Concern 3: Incumbent vs.\ Incoming Residents}
+\small
+\textbf{The core identification problem:}
+\begin{itemize}
+  \item LODES measures workers \textit{at the tract}, not individuals over time.
+  \item A station opening may change the \textit{composition} of who lives nearby ---
+        attracting higher-income newcomers while displacing long-term residents.
+  \item Measured ``gains'' in tract-level earnings or employment may reflect
+        \textbf{population sorting}, not improvements for incumbent residents.
+\end{itemize}
+\bigskip
+\textbf{What would fix it:}
+\begin{itemize}
+  \item Confidential LODES microdata or a commercial panel (e.g., Infogroup)
+        to track the same individuals before and after station opening.
+  \item Without this, the reduced-form estimates are composition effects as much
+        as they are treatment effects on incumbents.
 \end{itemize}
 \end{frame}
 
