@@ -98,7 +98,11 @@ dict <- c(
   # Isochrones
   "factor(isochrone)5"                = "5 min",
   "factor(isochrone)15"               = "15 min",
-  "factor(isochrone)30"               = "30 min"
+  "factor(isochrone)30"               = "30 min", 
+  
+  #depvars 
+  "log_outflows" = "Log Worker Outflows", 
+  "log_inflows" = "Log Worker Inflows"
 )
 
 
