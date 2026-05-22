@@ -472,12 +472,29 @@ not state-level political economy.
 \end{frame}
 
 \section{Preliminary Results}
-\begin{frame}{TWFE}
+\begin{frame}{TWFE: Worker Outflows}
 \begin{center}
 \resizebox{\textheight}{!}{%
 \input{3_output/3_tables/2_regression_tabs/outflows_by_isochrone}%
 }
 \end{center}
+\end{frame}
+
+\begin{frame}{TWFE: Worker Inflows}
+\begin{center}
+\resizebox{\textheight}{!}{%
+\input{3_output/3_tables/2_regression_tabs/inflows_by_isochrone}%
+}
+\end{center}
+\end{frame}
+
+\begin{frame}{Event Study: Inflows, 15 min}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.85\linewidth]{3_output/2_figures/3_reg_output_plots/es_iso15_log_inflows.pdf}
+    \end{figure}
+    \hyperlink{es5in}{\beamergotobutton{Other Inflow Isochrones}}
+    \hyperlink{es5out}{\beamergotobutton{All Outflow Isochrones}}
 \end{frame}
 
 % ══════════════════════════════════════════════════════════════════
@@ -582,6 +599,41 @@ not state-level political economy.
 
 \bigskip
 \hyperlink{slide:datastats}{\beamerbutton{$\leftarrow$ Back}}
+\end{frame}
+
+\begin{frame}[label=es5in]{Event Study: Inflows, 5 min}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.85\linewidth]{3_output/2_figures/3_reg_output_plots/es_iso5_log_inflows.pdf}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Event Study}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.85\linewidth]{3_output/2_figures/3_reg_output_plots/es_iso30_log_inflows.pdf}
+    \end{figure}
+\end{frame}
+
+\begin{frame}[label=es5out]{Event Study: Outflows, 5 min}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.85\linewidth]{3_output/2_figures/3_reg_output_plots/es_iso5_log_outflows.pdf}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Event Study}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.85\linewidth]{3_output/2_figures/3_reg_output_plots/es_iso15_log_outflows.pdf}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Event Study}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.85\linewidth]{3_output/2_figures/3_reg_output_plots/es_iso30_log_outflows.pdf}
+    \end{figure}
 \end{frame}
 
 \end{document}
