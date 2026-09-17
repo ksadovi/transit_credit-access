@@ -28,19 +28,23 @@ best_station = lodes_stations %>%
   left_join(
     delays %>%
       st_drop_geometry() %>%
-      dplyr::select(station, station_type, system, open_date, initial_expected_open_date, initial_DEIS_date, delay) %>% 
+      # Treatment stations only — legacy stations (initial_expected_open_date = NA)
+      # feed pre_existing_access but must not appear as treatment observations.
+      filter(!is.na(initial_expected_open_date)) %>%
+      dplyr::select(station, station_type, system, open_date, initial_expected_open_date, initial_DEIS_date, delay) %>%
       filter(station %in% c("Silver Spring", "Wilshire/Fairfax") == F), # don't know why these are causing issues
     by = "station"
   ) %>%
   group_by(tracts, census_vintage) %>%
   slice_min(initial_expected_open_date, n = 1, with_ties = FALSE) %>%
-  ungroup()
+  ungroup() %>%
+  filter(!is.na(initial_expected_open_date))  # drop tracts whose only nearby stations are legacy
 
 # Working df: all LODES rows, list columns replaced with single-valued
 # station/system/delay fields from the earliest-projected station.
 working_df = lodes_stations %>%
   dplyr::select(-within_5, -within_15, -within_30, -transit_system) %>%
-  left_join(best_station, by = c("tracts", "census_vintage"))
+  inner_join(best_station, by = c("tracts", "census_vintage"))
 
 working_df = working_df %>%
   mutate(
@@ -137,3 +141,71 @@ working_df = working_df %>%
   left_join(acs_controls, by = c("tracts", "census_year")) %>%
   mutate(log_med_inc = log(median_hh_inc  + 1))
 
+# Pre-existing transit access  --------
+# For each (tract, treatment cohort), we want to know the minimum walking time
+# to any station that was ALREADY OPEN before the treatment station opened.
+# This is time-invariant within a cohort and is used as a treatment-effect
+# moderator (interacted with event time), not as a plain covariate — a
+# time-invariant variable would be absorbed by tract fixed effects anyway.
+#
+# Values: 5, 15, 30 (minutes, from isochrone bands) or 45 (sentinel = none
+# within 30 min).  The reference category in regressions is "none" (45).
+
+# Step 1: Build a flat (tract, station, census_vintage) coverage table from
+# every system's isochrone RDS files, keeping only the closest band per station.
+# Extract the transit system name from the filename so we can join on
+# (station, system) — guarding against cross-system name collisions.
+rds_files = list.files(
+  paste0(data_out, "2_station_geographies"),
+  pattern  = "_tract_station_pairings\\.rds$",
+  full.names = TRUE
+)
+
+all_coverage = map_dfr(rds_files, function(f) {
+  vintage = as.integer(str_extract(basename(f), "\\d{4}"))
+  sys     = str_remove(basename(f), "_\\d{4}_tract_station_pairings\\.rds$")
+  
+  read_rds(f) %>%
+    st_drop_geometry() %>%
+    dplyr::select(id, isochrone, tracts) %>%
+    unnest(tracts) %>%
+    rename(station = id, tract = tracts) %>%
+    # Keep only the closest isochrone band for each (tract, station) pair
+    group_by(tract, station) %>%
+    slice_min(isochrone, n = 1, with_ties = FALSE) %>%
+    ungroup() %>%
+    mutate(census_vintage = vintage, system = sys)
+}) %>%
+  left_join(
+    delays %>% st_drop_geometry() %>% dplyr::select(station, system, open_date),
+    by = c("station", "system")
+  )
+
+# Step 2: For each treated (tract, vintage), find all stations that were open
+# before the treatment station and take the minimum isochrone band.
+# open_date here comes from the actual historical dates (now correctly parsed
+# with parse_date_flex in update_stations.R) so the comparison is meaningful.
+pre_existing_access = best_station %>%
+  dplyr::select(tracts, census_vintage, open_date) %>%
+  rename(treatment_open = open_date) %>%
+  left_join(all_coverage, by = c("tracts" = "tract", "census_vintage")) %>%
+  filter(!is.na(open_date), open_date < treatment_open) %>%
+  group_by(tracts, census_vintage) %>%
+  summarize(pre_existing_access = min(isochrone, na.rm = TRUE), .groups = "drop")
+
+# Step 3: Join to working_df. Tracts with no prior station within 30 min get
+# the sentinel value 45. Create an ordered factor for use in interactions.
+working_df = working_df %>%
+  left_join(pre_existing_access, by = c("tracts", "census_vintage")) %>%
+  mutate(
+    pre_existing_access = replace_na(pre_existing_access, 45L),
+    pre_existing_bin    = factor(
+      case_when(
+        pre_existing_access == 5  ~ "<=5 min",
+        pre_existing_access == 15 ~ "<=15 min",
+        pre_existing_access == 30 ~ "<=30 min",
+        TRUE                      ~ "none"
+      ),
+      levels = c("none", "<=30 min", "<=15 min", "<=5 min")
+    )
+  )
