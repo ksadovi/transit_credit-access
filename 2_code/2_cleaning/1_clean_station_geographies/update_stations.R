@@ -8,15 +8,30 @@ source("2_code/1_utilities/packages+defaults.R")
 # called from any other file in this project, achieving easy updating for the stations whenever I add more.
 
 update_stations = function(){
+  # Parse dates that may be 2-digit ("%m/%d/%y", e.g. "9/13/15" → 2015) or
+  # 4-digit ("%m/%d/%Y", e.g. "6/22/1915" → 1915).  Try 4-digit first so that
+  # "1904" is not silently truncated to "19" → 2019 by %y.
+  parse_date_flex = function(x) {
+    # Route by string structure, not by coalesce — coalesce fails because R's
+    # %Y will parse "25" as year AD 25 (a valid date, not NA), so the fallback
+    # to %m/%d/%y never fires.  Check whether the year field is 4 digits first.
+    dplyr::case_when(
+      is.na(x) | x == "NA"          ~ as.Date(NA_character_),
+      grepl("/\\d{4}$", trimws(x))  ~ as.Date(x, format = "%m/%d/%Y"),
+      TRUE                           ~ as.Date(x, format = "%m/%d/%y")
+    )
+  }
+  
   stations = data.frame()
   for(i in list.files("1_data/2_station_geographies/", pattern = "*.csv")){
     stations = rbind(stations, fread(paste0("1_data/2_station_geographies/", i)))
   }
-  stations = stations %>% 
-    mutate(open_date = as.Date(stations$open_date, format = "%m/%d/%y")) %>%
+  stations = stations %>%
+    distinct() %>%   # drop exact-duplicate rows introduced by CSV edits
     mutate(
-      initial_expected_open_date = as.Date(initial_expected_open_date, format = "%m/%d/%y"),
-      initial_DEIS_date          = as.Date(initial_DEIS_date,          format = "%m/%d/%y")
+      open_date                  = parse_date_flex(open_date),
+      initial_expected_open_date = parse_date_flex(initial_expected_open_date),
+      initial_DEIS_date          = parse_date_flex(initial_DEIS_date)
     ) %>%
     mutate(delay = difftime(open_date, initial_expected_open_date))
   # Here I am converting these coordinates to geometric points
