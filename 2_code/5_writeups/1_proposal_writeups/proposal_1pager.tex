@@ -1,90 +1,29 @@
-\documentclass[12pt]{article}
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{geometry}
-\usepackage{xcolor}
-\usepackage{setspace}
-\usepackage{soul}
-\usepackage{hyperref}
-\usepackage{graphicx}
-\usepackage{float}
-\usepackage{subcaption}
-\hypersetup{
-    colorlinks=true,
-    linkcolor=blue,
-    filecolor=black,      
-    urlcolor=blue,
-    pdftitle={Overleaf Example},
-    pdfpagemode=FullScreen,
-    citecolor=black
-    }
-\usepackage{titlesec}
-\usepackage{ebgaramond} % Garamond font
-\usepackage{titling} % Control title spacing
-\usepackage[backend=biber,style=chicago-authordate]{biblatex}
-\addbibresource{../../../references.bib}
-
-
-% Set page margins
-\geometry{letterpaper, margin=1in}
-
-% Single-spacing with spacing between paragraphs
-\setstretch{1}
-\setlength{\parskip}{.5em}
-
-% Custom section formatting
-\titleformat{\section}{\normalfont\Large\bfseries}{\thesection.}{0.5em}{}[\titlerule] % Horizontal line under section title
-\titleformat{\subsection}{\normalfont\large\bfseries}{\thesubsection.}{0.5em}{} % Subsections without lines
-
-% Title and author
-\title{\textbf{Effects of Increased Access to Public Transit}}
-\author{}
-\date{\vspace{-2em}\today} % Minimal space for the date
-
+\documentclass[11pt]{article}
+\usepackage{kyradefaults}
+\usepackage{parskip}
+\usepackage{microtype}
+\addbibresource{references.bib}
+\definecolor{uchired}{HTML}{800000}
+\hypersetup{colorlinks=true, linkcolor=uchired, urlcolor=uchired, citecolor=uchired}
+\renewcommand*{\bibfont}{\footnotesize}
+\setlength{\parskip}{4pt}
+\pagestyle{empty}
+\newcommand{\h}[1]{\textbf{\color{uchired}#1}\;}
 \begin{document}
+\begin{center}
+  {\large\bfseries\color{uchired} All Aboard? Causal Evidence on the Labor-Market Effects of New Rail Stations}\\[3pt]
+  {\normalsize Kyra Sadovi \enspace\textbullet\enspace Harris School of Public Policy, University of Chicago \enspace\textbullet\enspace \href{mailto:ksadovi@uchicago.edu}{ksadovi@uchicago.edu}}
+\end{center}
+\vspace{2pt}
 
-% Custom concise header
-\noindent
-\textbf{Kyra Sadovi} \hfill \textbf{\today} \\
-\textbf{Effects of Increased Access to Public Transit}
+\h{Motivation.} Do workers change their behavior when given physical access to a new transit station? This paper provides causal evidence on the labor-market effects of new U.S. light rail stations, focusing on the residential node of the commute. While much of the transit literature examines effects at the place of work, I argue there are substantial welfare gains to be measured at the place of residence: transit access expands workers' plausible job-search radii and social networks, increasing referral effects and employment outcomes in receiving neighborhoods. This paper isolates that mechanism and sets up a first stage for downstream residential welfare analysis.
 
-% Introduction
-\section{Introduction}
-I want to measure the impact of increased access to public transit on nearby residents. Specifically, I want to measure the impact of physical access to a new train station on the labor market outcomes of residents surrounding the station. I will focus on two metrics: worker flows and income. 
+\h{Setting and Data.} I have collected planning and construction records for 230 new light rail stations opened in U.S. cities over the last 20 years, 94 of which are currently open. For each project, I record the initial expected opening date from the Draft Environmental Impact Statement (DEIS)---fixed in federal planning documents years before construction begins---and the actual opening date, yielding a measure of construction delay. I define station catchment areas using isochrones at 5, 15, and 30 minutes of pedestrian travel time and merge these to census-tract-level worker flow data from the public LEHD Origin-Destination Employment Statistics (LODES).
 
-I posit there are three mechanisms that would affect residents' labor market outcomes. First, residents are more likely to be able to retain current jobs with a more reliable mode of transportation. I am starting my analysis by measuring the impact of transit on worker flows for this reason. Second, this newfound mobility allows residents to search for higher-paying jobs in a wider selection of areas in their metro region. Third, having access to new networks that are less constrained by physical proximity will increase referral effects, i.e. the likelihood that an individual will hear about or be recommended for an employment opportunity by someone in their geographically expanded social networks. 
+\h{Identification.} The central challenge is that station locations are chosen endogenously. My strategy exploits construction delays as quasi-random variation in opening timing. I construct two time indexes: project time $j$ (calendar year minus initial expected opening year, fixed at the DEIS stage) and event time $k$ (calendar year minus actual opening year). Conditional on project-time and tract fixed effects, I argue that actual opening timing is as-good-as-random---the proximate causes of delay are engineering complications, contracting failures, and subsurface geology, not the economic trajectory of adjacent neighborhoods. The baseline specification is a two-way fixed effects regression of log worker flows on a station-open indicator; for dynamic effects I estimate a full event-study specification with coefficients indexed by $k$ and isochrone level $l$, normalizing to $k = -1$. Covariate balance checks support the identifying assumption: delay length is uncorrelated with pre-treatment tract characteristics or baseline income, and delay variation is distributed across states and systems rather than concentrated in any single agency.
 
-To evaluate this effectively, I will exploit the as-good-as-random variation of transit project construction delays to parse out public transit’s effects on these metrics from exogenous labor-market trends. I employ \cite{borusyak_nonrandom_2023}'s recentered instrument approach to justify my treatment of delays as plausibly exogenous. 
-% Model Setup
-\section{Request for Advice: Incorporating Stacked Diff-in-Diff}\label{sec:advice}
-I am currently thinking about how to incorporate \citeauthor{borusyak_nonrandom_2023}'s non-random exposure instrument into \citeauthor{wing_stacked_2024}'s stacked difference-in-differences approach. I think that my setup lends itself to stacked DiD. I would compare across groups of treatment time (in terms of my construction index) and within calendar year; however, I'm having trouble envisioning how I should set up my time index. 
+\h{Preliminary Results.} Event-study estimates are encouraging. Pre-opening coefficients on log inflows are flat and indistinguishable from zero, consistent with parallel trends. Following opening, inflows rise steadily and persistently, reaching approximately one log point above baseline by ten years post-opening. The gradual buildup---rather than a discrete jump at opening---is consistent with transit access reshaping residential sorting over time as workers update location decisions in response to improved commute options.
 
-One of the two key assumptions in \cite{wing_stacked_2024} is the absence of anticipation effects, which I initially accounted for here by comparing projects in project-time rather than calendar time. However, \citeauthor{wing_stacked_2024} require that $ATT(a,a+e)=0\quad\forall e<0$, which is the average causal effect of adopting treatment in period $a$ on outcomes experienced in $a+e$ among units in period $a$. In other words, no treatment effect before units are treated. 
+\h{Next Steps.} There are three main issues I'm currently dealing with. First, within-system delay clustering reduces effective variation when all stations in a system share the same delay shock; I am working to accommodate treatment intensity across overlapping isochrones, which also helps address SUTVA concerns in densely networked systems. Second, the current setup is agnostic about whether effects are driven by incumbents or new arrivals; I plan to address this with individual-level residential data. Third, I am extending the analysis toward a residential welfare model, where increased worker flows serve as the instrument for identifying downstream social spillovers---labor market referral effects and related outcomes---treating each station as a residential locus rather than only a workplace locus.
 
-While some project-time index would help with this, I think I have two paths forward: one where I define the index such that $i=0$ when a station opens, or $i=0$ when a station was \textit{expected} to open, hence my EIS approach. I contend that the latter approach combined with a dummy indicating whether a station has opened mitigates any anticipation effects; however, I wonder if the former more accurately measures anticipation effects while the latter measures the effects of delays. There's a chance that these two effects go in opposite directions -- anticipation effects encourage residents to anticipate (pardon the redundancy) future policies; excessive delays make residents less sensitive -- and less knowledgeable -- about the next period's station status. 
-
-\begin{figure}[H]
-  \centering
-  % First subfigure
-  \begin{subfigure}[b]{0.45\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{3_output/2_figures/1_maps/1_station_geographies/WMATA.png}
-    \caption{Isochrones}
-    \label{fig:dmv_walkingmap}
-  \end{subfigure}
-  \hfill
-  % Second subfigure
-  \begin{subfigure}[b]{0.45\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{3_output/dmv_map.png}
-    \caption{Worker Outflows}
-    \label{fig:outflows}
-  \end{subfigure}
-  %
-  \caption{Example of what \texttt{r5r} Implementation will look like. This will become more compelling as I use change in worker flows (this is just a cross-section here).}
-  \label{fig:two_side_by_side}
-\end{figure}
-
-\newpage
-\printbibliography
 \end{document}
