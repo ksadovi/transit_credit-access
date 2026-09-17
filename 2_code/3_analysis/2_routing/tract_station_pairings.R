@@ -106,6 +106,8 @@ tract_station_pairings = function(transit_system, overwrite_all = F){
       stop("osmfilter produced an empty result for ", transit_system,
            ". The clipped area may contain no highway features.")
     run_cmd(sprintf('osmconvert "%s" -o="%s"', newosm_path, system_pbf), "osmconvert osm→pbf")
+    file.remove(osm_path)      # delete system.osm (~1–2 GB)
+    file.remove(newosm_path)   # delete highways.osm
   }
   
   # Setup elevation data
@@ -245,6 +247,8 @@ tract_station_pairings = function(transit_system, overwrite_all = F){
   }
 }
 
-for(system in unique(all_stations$system)){
-    tract_station_pairings(transit_system = system, overwrite_all = F)
-  }
+#Uncomment this to run this for all stations
+# all_stations = update_stations()
+# for(system in unique(all_stations$system)){
+#     tract_station_pairings(transit_system = system, overwrite_all = F)
+#   }
