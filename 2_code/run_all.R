@@ -35,18 +35,4 @@ run_all = function(overwrite = F){
   flow_calcs(states = c("all"), overwrite = overwrite)
 }
 
-run_all(overwrite = F)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+run_all(overwrite = T)
