@@ -19,7 +19,7 @@ working_df = working_df %>%
   filter(!is.na(open_date))
 
 mods <- lapply(iso_levels, \(iso) feols(
-  as.formula(paste0("c(log_inflows, log_outflows) ~ open*station_type + pre_existing_access +",
+  as.formula(paste0("c(log_inflows, log_outflows) ~ open + open:station_type + pre_existing_access +",
                     paste(controls, collapse = " + "),
                     " | tracts + j")),
   data    = working_df[working_df$isochrone == iso, ],
@@ -127,7 +127,7 @@ plot_es <- function(data, iso, out) {
 # Stratified plot: prior vs. no prior access, same isochrone, faceted
 plot_es_strat <- function(data, iso, out) {
   data %>%
-    filter(isochrone == iso, outcome == out) %>%
+    filter(isochrone == iso, outcome == out, k >= -10) %>%
     ggplot(aes(x = k, y = estimate, ymin = conf.low, ymax = conf.high)) +
     geom_ribbon(alpha = 0.15, fill = "steelblue") +
     geom_hline(yintercept = 0, color = "grey40", linewidth = 0.4) +
