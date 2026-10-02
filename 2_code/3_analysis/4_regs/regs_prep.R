@@ -4,8 +4,11 @@
 # Preliminaries --------
 data_out = "3_output/1_cleaned_data/"
 source("2_code/1_utilities/packages+defaults.R")
+source("2_code/2_cleaning/1_clean_station_geographies/update_stations.R")
 lodes_stations = read_rds(paste0(data_out, "3_LODES/tract_station_lodes.rds"))
 delays = update_stations()
+
+acs_cache_path = "3_output/1_cleaned_data/4_ACS/acs_controls_raw.rds"
 
 # For each (tract, vintage), identify the single station projected to open
 # first (by initial_expected_open_date). Since isochrones are cumulative
@@ -50,8 +53,8 @@ working_df = working_df %>%
   mutate(
     log_inflows  = log(inflows  + 1),
     log_outflows = log(outflows + 1),
-    j = census_year - year(initial_expected_open_date),
-    k = census_year - ifelse(year(initial_expected_open_date) > year(Sys.Date()), 
+    j = census_year - year(initial_expected_open_date),# j indicates that at a given census year, how far away was this station expected to have been
+    k = census_year - ifelse(year(initial_expected_open_date) > year(Sys.Date()), # k indicates that at a given census year, how far away from being open was this station? 
                              year(initial_expected_open_date), year(open_date)),
     open = as.integer(!is.na(open_date) & census_year >= year(open_date))
   ) 
