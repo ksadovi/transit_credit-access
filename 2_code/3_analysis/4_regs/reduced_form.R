@@ -191,7 +191,11 @@ dict = c(
   
   #depvars
   "log_outflows" = "Log Worker Outflows",
-  "log_inflows" = "Log Worker Inflows"
+  "log_inflows" = "Log Worker Inflows",
+  
+  # indexes 
+  "j" = "Project Time $j$", 
+  "k" = "Event Time $k$"
 )
 
 
